@@ -29,7 +29,7 @@ namespace CORE_WebAPI
            // var connection = @"Server=.;Database=ProjectCAL;Trusted_Connection=True;ConnectRetryCount=0";
 
             //services.AddDbContext<ProjectCALContext>(options => options.UseSqlServer(connection));
-            services.AddDbContext<ProjectCALContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ProjectCALDB")));
+            services.AddDbContext<ProjectCALContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:ProjectCALDB"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
