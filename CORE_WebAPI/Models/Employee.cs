@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.ComponentModel;
 
 namespace CORE_WebAPI.Models
 {
@@ -12,7 +11,6 @@ namespace CORE_WebAPI.Models
         }
 
         public int EmployeeId { get; set; }
-        //[DisplayName("Emp. Name")]
         public string EmployeeName { get; set; }
         public string EmployeeSurname { get; set; }
         public string EmployeeEmail { get; set; }

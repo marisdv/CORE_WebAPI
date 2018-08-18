@@ -10,8 +10,6 @@ namespace CORE_WebAPI.Models
         {
         }
 
-        //https://medium.com/@maheshi.gunarathne1994/web-api-crud-operations-using-asp-net-858453b9ea77
-        //add constructor that allows configurations to be pssed in the dependecy injection
         public ProjectCALContext(DbContextOptions<ProjectCALContext> options)
             : base(options)
         {
@@ -28,6 +26,7 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<AuditType> AuditType { get; set; }
         public virtual DbSet<City> City { get; set; }
         public virtual DbSet<Company> Company { get; set; }
+        public virtual DbSet<DownloadLocation> DownloadLocation { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
         public virtual DbSet<FixedRatePrice> FixedRatePrice { get; set; }
         public virtual DbSet<LicenceImage> LicenceImage { get; set; }
@@ -328,6 +327,18 @@ namespace CORE_WebAPI.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.PayGateId)
+                    .IsRequired()
+                    .HasColumnName("PayGate_ID")
+                    .HasMaxLength(11)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PayGatePassword)
+                    .IsRequired()
+                    .HasColumnName("PayGate_Password")
+                    .HasMaxLength(32)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.RegistrationNo)
                     .IsRequired()
                     .HasColumnName("Registration_No")
@@ -339,6 +350,27 @@ namespace CORE_WebAPI.Models
                     .HasColumnName("VAT_No")
                     .HasMaxLength(15)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<DownloadLocation>(entity =>
+            {
+                entity.HasKey(e => e.DownloadId);
+
+                entity.ToTable("DOWNLOAD_LOCATION");
+
+                entity.Property(e => e.DownloadId).HasColumnName("Download_ID");
+
+                entity.Property(e => e.CityId).HasColumnName("City_ID");
+
+                entity.Property(e => e.DownloadDateTime)
+                    .HasColumnName("Download_DateTime")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.City)
+                    .WithMany(p => p.DownloadLocation)
+                    .HasForeignKey(d => d.CityId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DOWNLOAD_LOCATION_CITY");
             });
 
             modelBuilder.Entity<Employee>(entity =>
@@ -448,6 +480,8 @@ namespace CORE_WebAPI.Models
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
+
+                entity.Property(e => e.UserTypeId).HasColumnName("UserType_ID");
             });
 
             modelBuilder.Entity<PackageContent>(entity =>
@@ -1024,11 +1058,10 @@ namespace CORE_WebAPI.Models
             {
                 entity.ToTable("USER_TYPE");
 
-                entity.Property(e => e.UserTypeId)
-                    .HasColumnName("User_Type_ID")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.UserTypeId).HasColumnName("User_Type_ID");
 
                 entity.Property(e => e.UserTypeDescr)
+                    .IsRequired()
                     .HasColumnName("User_Type_Descr")
                     .HasMaxLength(50)
                     .IsUnicode(false);

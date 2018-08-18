@@ -15,5 +15,7 @@ namespace CORE_WebAPI.Models
         public string CompanyPostalCode { get; set; }
         public string VatNo { get; set; }
         public string RegistrationNo { get; set; }
+        public string PayGateId { get; set; }
+        public string PayGatePassword { get; set; }
     }
 }

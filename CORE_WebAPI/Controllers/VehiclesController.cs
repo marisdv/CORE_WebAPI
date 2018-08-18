@@ -24,7 +24,9 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Vehicle> GetVehicle()
         {
-            return _context.Vehicle;
+
+            return _context.Vehicle.Include(vehicle => vehicle.VehicleMake).Include(vehicle => vehicle.VehicleType);
+           
         }
 
         // GET: api/Vehicles/5

@@ -7,6 +7,7 @@ namespace CORE_WebAPI.Models
     {
         public City()
         {
+            DownloadLocation = new HashSet<DownloadLocation>();
             ShipmentAgent = new HashSet<ShipmentAgent>();
         }
 
@@ -16,6 +17,7 @@ namespace CORE_WebAPI.Models
         public int ProvinceId { get; set; }
 
         public Province Province { get; set; }
+        public ICollection<DownloadLocation> DownloadLocation { get; set; }
         public ICollection<ShipmentAgent> ShipmentAgent { get; set; }
     }
 }

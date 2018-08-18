@@ -24,7 +24,9 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Application> GetApplication()
         {
-            return _context.Application;
+            IEnumerable<Application> x = _context.Application;
+            var y = x.FirstOrDefault().ApplicationStatus.Description;
+            return x;
         }
 
         // GET: api/Applications/5

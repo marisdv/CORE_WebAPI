@@ -15,6 +15,7 @@ namespace CORE_WebAPI.Models
         public int LoginId { get; set; }
         public string PhoneNo { get; set; }
         public string Password { get; set; }
+        public int UserTypeId { get; set; }
 
         public ICollection<Employee> Employee { get; set; }
         public ICollection<Sender> Sender { get; set; }
