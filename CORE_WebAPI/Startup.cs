@@ -32,7 +32,12 @@ namespace CORE_WebAPI
 
             services.AddDbContext<ProjectCALContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:ProjectCALDB"]));
 
-            services.AddCors();
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

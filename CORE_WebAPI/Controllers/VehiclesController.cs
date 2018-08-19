@@ -8,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using CORE_WebAPI.Models;
 using System.Json;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Cors;
 
 namespace CORE_WebAPI.Controllers
 {
     [Produces("application/json")]
     [Route("api/Vehicles")]
+    [EnableCors("MyPolicy")]
     public class VehiclesController : Controller
     {
         private readonly ProjectCALContext _context;

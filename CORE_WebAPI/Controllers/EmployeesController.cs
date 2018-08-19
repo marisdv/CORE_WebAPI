@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CORE_WebAPI.Models;
 using CORE_WebAPI.Models.API;
+using Microsoft.AspNetCore.Cors;
 
 namespace CORE_WebAPI.Controllers
 {
     [Produces("application/json")]
     [Route("api/Employees")]
+    [EnableCors("MyPolicy")]
     public class EmployeesController : Controller
     {
         private readonly ProjectCALContext _context;

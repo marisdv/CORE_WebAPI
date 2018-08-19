@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CORE_WebAPI.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace CORE_WebAPI.Controllers
 {
     [Produces("application/json")]
     [Route("api/Penalties")]
+    [EnableCors("MyPolicy")]
     public class PenaltiesController : Controller
     {
         private readonly ProjectCALContext _context;
