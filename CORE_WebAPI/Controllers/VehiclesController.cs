@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CORE_WebAPI.Models;
+using System.Json;
+using Newtonsoft.Json;
 
 namespace CORE_WebAPI.Controllers
 {
@@ -22,11 +24,10 @@ namespace CORE_WebAPI.Controllers
 
         // GET: api/Vehicles
         [HttpGet]
+        //[JsonIgnore]
         public IEnumerable<Vehicle> GetVehicle()
         {
-
-            return _context.Vehicle.Include(vehicle => vehicle.VehicleMake).Include(vehicle => vehicle.VehicleType);
-           
+            return _context.Vehicle.Include(vehicle => vehicle.VehicleMake).Include(vehicle => vehicle.VehicleType).Include(vehicle => vehicle.VehicleStatus);
         }
 
         // GET: api/Vehicles/5
@@ -38,7 +39,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var vehicle = await _context.Vehicle.SingleOrDefaultAsync(m => m.VehicleId == id);
+            var vehicle = await _context.Vehicle.Include(myVehicle => myVehicle.VehicleMake).Include(myVehicle => myVehicle.VehicleType).Include(myVehicle => myVehicle.VehicleStatus).SingleOrDefaultAsync(m => m.VehicleId == id);
 
             if (vehicle == null)
             {

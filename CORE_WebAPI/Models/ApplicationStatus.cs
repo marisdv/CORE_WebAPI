@@ -11,7 +11,7 @@ namespace CORE_WebAPI.Models
         }
 
         public int ApplicationStatusId { get; set; }
-        public string Description { get; set; }
+        public string ApplicationStatusDescr { get; set; }
 
         public ICollection<Application> Application { get; set; }
     }

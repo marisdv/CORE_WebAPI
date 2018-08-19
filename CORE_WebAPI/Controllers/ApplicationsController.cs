@@ -24,9 +24,7 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Application> GetApplication()
         {
-            IEnumerable<Application> x = _context.Application;
-            var y = x.FirstOrDefault().ApplicationStatus.Description;
-            return x;
+           return _context.Application.Include(employee => employee.Employee).Include(application => application.ApplicationStatus);
         }
 
         // GET: api/Applications/5
@@ -38,7 +36,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var application = await _context.Application.SingleOrDefaultAsync(m => m.ApplicationId == id);
+            var application = await _context.Application.Include(employee => employee.Employee).Include(app => app.ApplicationStatus).SingleOrDefaultAsync(m => m.ApplicationId == id);
 
             if (application == null)
             {

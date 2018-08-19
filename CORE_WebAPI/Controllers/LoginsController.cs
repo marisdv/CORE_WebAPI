@@ -10,59 +10,57 @@ using CORE_WebAPI.Models;
 namespace CORE_WebAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/AuditLogs")]
-    public class AuditLogsController : Controller
+    [Route("api/Logins")]
+    public class LoginsController : Controller
     {
         private readonly ProjectCALContext _context;
 
-        public AuditLogsController(ProjectCALContext context)
+        public LoginsController(ProjectCALContext context)
         {
             _context = context;
         }
 
-        // GET: api/AuditLogs
+        // GET: api/Logins
         [HttpGet]
-        public IEnumerable<AuditLog> GetAuditLog()
+        public IEnumerable<Login> GetLogin()
         {
-            //return _context.AuditLog;
-            
-            return _context.AuditLog.Include(auditLog => auditLog.AuditType);
+            return _context.Login.Include(login => login.UserType);
         }
 
-        // GET: api/AuditLogs/5
+        // GET: api/Logins/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAuditLog([FromRoute] int id)
+        public async Task<IActionResult> GetLogin([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var auditLog = await _context.AuditLog.Include(audit => audit.AuditType).SingleOrDefaultAsync(m => m.AuditId == id);
+            var login = await _context.Login.Include(myLogin => myLogin.UserType).SingleOrDefaultAsync(m => m.LoginId == id);
 
-            if (auditLog == null)
+            if (login == null)
             {
                 return NotFound();
             }
 
-            return Ok(auditLog);
+            return Ok(login);
         }
 
-        // PUT: api/AuditLogs/5
+        // PUT: api/Logins/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAuditLog([FromRoute] int id, [FromBody] AuditLog auditLog)
+        public async Task<IActionResult> PutLogin([FromRoute] int id, [FromBody] Login login)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != auditLog.AuditId)
+            if (id != login.LoginId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(auditLog).State = EntityState.Modified;
+            _context.Entry(login).State = EntityState.Modified;
 
             try
             {
@@ -70,7 +68,7 @@ namespace CORE_WebAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AuditLogExists(id))
+                if (!LoginExists(id))
                 {
                     return NotFound();
                 }
@@ -83,45 +81,45 @@ namespace CORE_WebAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/AuditLogs
+        // POST: api/Logins
         [HttpPost]
-        public async Task<IActionResult> PostAuditLog([FromBody] AuditLog auditLog)
+        public async Task<IActionResult> PostLogin([FromBody] Login login)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.AuditLog.Add(auditLog);
+            _context.Login.Add(login);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAuditLog", new { id = auditLog.AuditId }, auditLog);
+            return CreatedAtAction("GetLogin", new { id = login.LoginId }, login);
         }
 
-        // DELETE: api/AuditLogs/5
+        // DELETE: api/Logins/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAuditLog([FromRoute] int id)
+        public async Task<IActionResult> DeleteLogin([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var auditLog = await _context.AuditLog.SingleOrDefaultAsync(m => m.AuditId == id);
-            if (auditLog == null)
+            var login = await _context.Login.SingleOrDefaultAsync(m => m.LoginId == id);
+            if (login == null)
             {
                 return NotFound();
             }
 
-            _context.AuditLog.Remove(auditLog);
+            _context.Login.Remove(login);
             await _context.SaveChangesAsync();
 
-            return Ok(auditLog);
+            return Ok(login);
         }
 
-        private bool AuditLogExists(int id)
+        private bool LoginExists(int id)
         {
-            return _context.AuditLog.Any(e => e.AuditId == id);
+            return _context.Login.Any(e => e.LoginId == id);
         }
     }
 }

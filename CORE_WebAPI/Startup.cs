@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using CORE_WebAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace CORE_WebAPI
 {
@@ -24,12 +25,14 @@ namespace CORE_WebAPI
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc();
-           // var connection = @"Server=.;Database=ProjectCAL;Trusted_Connection=True;ConnectRetryCount=0";
+        {   
+            services.AddMvc().AddJsonOptions(options => {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
 
-            //services.AddDbContext<ProjectCALContext>(options => options.UseSqlServer(connection));
             services.AddDbContext<ProjectCALContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:ProjectCALDB"]));
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

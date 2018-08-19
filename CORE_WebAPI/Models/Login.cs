@@ -17,6 +17,7 @@ namespace CORE_WebAPI.Models
         public string Password { get; set; }
         public int UserTypeId { get; set; }
 
+        public UserType UserType { get; set; }
         public ICollection<Employee> Employee { get; set; }
         public ICollection<Sender> Sender { get; set; }
         public ICollection<ShipmentAgent> ShipmentAgent { get; set; }

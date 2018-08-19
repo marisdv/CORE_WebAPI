@@ -54,17 +54,14 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<VehicleStatus> VehicleStatus { get; set; }
         public virtual DbSet<VehicleType> VehicleType { get; set; }
 
-        // Unable to generate entity type for table 'dbo.DOWNLOAD_LOCATION'. Please see the warning messages.
-
-        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //        {
-        //            if (!optionsBuilder.IsConfigured)
-        //            {
-        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-        //                optionsBuilder.UseSqlServer("Server=.;Database=ProjectCAL;Trusted_Connection=True;");
-        //            }
-        //        }
-
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=.;Database=ProjectCAL;Trusted_Connection=True;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -194,8 +191,9 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.ApplicationStatusId).HasColumnName("Application_Status_ID");
 
-                entity.Property(e => e.Description)
+                entity.Property(e => e.ApplicationStatusDescr)
                     .IsRequired()
+                    .HasColumnName("Application_Status_Descr")
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
@@ -482,6 +480,12 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserTypeId).HasColumnName("UserType_ID");
+
+                entity.HasOne(d => d.UserType)
+                    .WithMany(p => p.Login)
+                    .HasForeignKey(d => d.UserTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LOGIN_USER_TYPE");
             });
 
             modelBuilder.Entity<PackageContent>(entity =>
