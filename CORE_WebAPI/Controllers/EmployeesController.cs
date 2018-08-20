@@ -27,7 +27,7 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Employee> GetEmployee()
         {
-            return _context.Employee;
+            return _context.Employee.Include(login => login.Login).Include(accessRole => accessRole.AccessRole);
         }
 
         //// GET: api/Employees/BasicDetails
