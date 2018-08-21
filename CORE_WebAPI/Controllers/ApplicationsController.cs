@@ -26,7 +26,7 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Application> GetApplication()
         {
-           return _context.Application.Include(employee => employee.Employee).Include(application => application.ApplicationStatus).Include(agent => agent.Agent);
+            return _context.Application.Include(employee => employee.Employee).Include(application => application.ApplicationStatus).Include(agent => agent.Agent).ThenInclude(login => login.Login);//.ThenInclude(city => city.City);
         }
 
         // GET: api/Applications/5

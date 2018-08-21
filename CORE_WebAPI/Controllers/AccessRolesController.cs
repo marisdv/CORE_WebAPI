@@ -26,7 +26,7 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<AccessRole> GetAccessRole()
         {
-            return _context.AccessRole;
+            return _context.AccessRole;//.Include(accessArea => accessArea.Access;
         }
 
         // GET: api/AccessRoles/5
