@@ -15,8 +15,10 @@ namespace CORE_WebAPI.Models
         }
 
         public int ShipmentId { get; set; }
-        public string StartLocation { get; set; }
-        public string EndLocation { get; set; }
+        public string StartLongitude { get; set; }
+        public string StartLatitude { get; set; }
+        public string EndLongitude { get; set; }
+        public string EndLatitude { get; set; }
         public DateTime ShipmentDate { get; set; }
         public string SpecialInstruction { get; set; }
         public DateTime? CollectionTime { get; set; }

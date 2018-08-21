@@ -43,6 +43,7 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<Shipment> Shipment { get; set; }
         public virtual DbSet<ShipmentAddress> ShipmentAddress { get; set; }
         public virtual DbSet<ShipmentAgent> ShipmentAgent { get; set; }
+        public virtual DbSet<ShipmentAgentLocation> ShipmentAgentLocation { get; set; }
         public virtual DbSet<ShipmentLocation> ShipmentLocation { get; set; }
         public virtual DbSet<ShipmentStatus> ShipmentStatus { get; set; }
         public virtual DbSet<SignatureImage> SignatureImage { get; set; }
@@ -785,10 +786,16 @@ namespace CORE_WebAPI.Models
                     .HasColumnName("Delivery_Time")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.EndLocation)
+                entity.Property(e => e.EndLatitude)
                     .IsRequired()
-                    .HasColumnName("End_Location")
-                    .HasMaxLength(255)
+                    .HasColumnName("End_Latitude")
+                    .HasMaxLength(35)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EndLongitude)
+                    .IsRequired()
+                    .HasColumnName("End_Longitude")
+                    .HasMaxLength(35)
                     .IsUnicode(false);
 
                 entity.Property(e => e.PaymentReference)
@@ -821,10 +828,16 @@ namespace CORE_WebAPI.Models
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.StartLocation)
+                entity.Property(e => e.StartLatitude)
                     .IsRequired()
-                    .HasColumnName("Start_Location")
-                    .HasMaxLength(255)
+                    .HasColumnName("Start_Latitude")
+                    .HasMaxLength(35)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StartLongitude)
+                    .IsRequired()
+                    .HasColumnName("Start_Longitude")
+                    .HasMaxLength(35)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Agent)
@@ -864,6 +877,16 @@ namespace CORE_WebAPI.Models
                     .IsRequired()
                     .HasColumnName("Address_Description")
                     .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLatitude)
+                    .HasColumnName("Address_Latitude")
+                    .HasMaxLength(35)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLongitude)
+                    .HasColumnName("Address_Longitude")
+                    .HasMaxLength(35)
                     .IsUnicode(false);
 
                 entity.Property(e => e.AddressTypeId).HasColumnName("Address_Type_ID");
@@ -997,6 +1020,27 @@ namespace CORE_WebAPI.Models
                     .HasForeignKey(d => d.LoginId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_AGENT_LOGIN");
+            });
+
+            modelBuilder.Entity<ShipmentAgentLocation>(entity =>
+            {
+                entity.HasKey(e => e.CurrentLocId);
+
+                entity.ToTable("SHIPMENT_AGENT_LOCATION");
+
+                entity.Property(e => e.CurrentLocId).HasColumnName("CurrentLoc_ID");
+
+                entity.Property(e => e.CurrentLocLatitude)
+                    .IsRequired()
+                    .HasColumnName("CurrentLoc_Latitude")
+                    .HasMaxLength(35)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CurrentLocLongitude)
+                    .IsRequired()
+                    .HasColumnName("CurrentLoc_Longitude")
+                    .HasMaxLength(35)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<ShipmentLocation>(entity =>
