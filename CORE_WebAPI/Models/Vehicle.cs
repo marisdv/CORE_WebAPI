@@ -19,6 +19,7 @@ namespace CORE_WebAPI.Models
         public int? VehicleImageId { get; set; }
 
         public ShipmentAgent Agent { get; set; }
+        public VehicleProofImage VehicleImage { get; set; }
         public VehicleMake VehicleMake { get; set; }
         public VehicleStatus VehicleStatus { get; set; }
         public VehicleType VehicleType { get; set; }

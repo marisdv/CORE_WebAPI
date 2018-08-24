@@ -7,7 +7,7 @@ namespace CORE_WebAPI.Models
     {
         public Sender()
         {
-            Shipment = new HashSet<Shipment>();
+            Basket = new HashSet<Basket>();
         }
 
         public int SenderId { get; set; }
@@ -20,8 +20,7 @@ namespace CORE_WebAPI.Models
         public int AccessRoleId { get; set; }
         public int LoginId { get; set; }
 
-        public AccessRole AccessRole { get; set; }
         public Login Login { get; set; }
-        public ICollection<Shipment> Shipment { get; set; }
+        public ICollection<Basket> Basket { get; set; }
     }
 }

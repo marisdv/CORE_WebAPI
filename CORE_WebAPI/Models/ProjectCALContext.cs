@@ -18,12 +18,12 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<AccessArea> AccessArea { get; set; }
         public virtual DbSet<AccessRole> AccessRole { get; set; }
         public virtual DbSet<AccessRoleArea> AccessRoleArea { get; set; }
-        public virtual DbSet<AddressType> AddressType { get; set; }
         public virtual DbSet<AgentProfileImage> AgentProfileImage { get; set; }
         public virtual DbSet<Application> Application { get; set; }
         public virtual DbSet<ApplicationStatus> ApplicationStatus { get; set; }
         public virtual DbSet<AuditLog> AuditLog { get; set; }
         public virtual DbSet<AuditType> AuditType { get; set; }
+        public virtual DbSet<Basket> Basket { get; set; }
         public virtual DbSet<City> City { get; set; }
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<DownloadLocation> DownloadLocation { get; set; }
@@ -31,8 +31,8 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<FixedRatePrice> FixedRatePrice { get; set; }
         public virtual DbSet<LicenceImage> LicenceImage { get; set; }
         public virtual DbSet<Login> Login { get; set; }
+        public virtual DbSet<Package> Package { get; set; }
         public virtual DbSet<PackageContent> PackageContent { get; set; }
-        public virtual DbSet<PackageLine> PackageLine { get; set; }
         public virtual DbSet<PackageType> PackageType { get; set; }
         public virtual DbSet<PackageTypePrice> PackageTypePrice { get; set; }
         public virtual DbSet<PaymentReference> PaymentReference { get; set; }
@@ -119,19 +119,6 @@ namespace CORE_WebAPI.Models
                     .HasForeignKey(d => d.AccessRoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ACCESS_ROLE_AREA_ACCESS_ROLE");
-            });
-
-            modelBuilder.Entity<AddressType>(entity =>
-            {
-                entity.ToTable("ADDRESS_TYPE");
-
-                entity.Property(e => e.AddressTypeId).HasColumnName("Address_Type_ID");
-
-                entity.Property(e => e.AddressTypeDescr)
-                    .IsRequired()
-                    .HasColumnName("Address_Type_Descr")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<AgentProfileImage>(entity =>
@@ -249,6 +236,27 @@ namespace CORE_WebAPI.Models
                     .HasColumnName("Audit_Type_Name")
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Basket>(entity =>
+            {
+                entity.ToTable("BASKET");
+
+                entity.Property(e => e.BasketId)
+                    .HasColumnName("Basket_ID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.BasketDateTime)
+                    .HasColumnName("Basket_DateTime")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.SenderId).HasColumnName("Sender_ID");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.Basket)
+                    .HasForeignKey(d => d.SenderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BASKET_SENDER");
             });
 
             modelBuilder.Entity<City>(entity =>
@@ -489,6 +497,41 @@ namespace CORE_WebAPI.Models
                     .HasConstraintName("FK_LOGIN_USER_TYPE");
             });
 
+            modelBuilder.Entity<Package>(entity =>
+            {
+                entity.ToTable("PACKAGE");
+
+                entity.Property(e => e.PackageId)
+                    .HasColumnName("Package_ID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.BasketId).HasColumnName("Basket_ID");
+
+                entity.Property(e => e.PackageContentId).HasColumnName("Package_Content_ID");
+
+                entity.Property(e => e.PackageTypeId).HasColumnName("Package_Type_ID");
+
+                entity.Property(e => e.PackageTypeQty).HasColumnName("Package_Type_Qty");
+
+                entity.HasOne(d => d.Basket)
+                    .WithMany(p => p.Package)
+                    .HasForeignKey(d => d.BasketId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PACKAGE_BASKET");
+
+                entity.HasOne(d => d.PackageContent)
+                    .WithMany(p => p.Package)
+                    .HasForeignKey(d => d.PackageContentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PACKAGE_PACKAGE_CONTENT");
+
+                entity.HasOne(d => d.PackageType)
+                    .WithMany(p => p.Package)
+                    .HasForeignKey(d => d.PackageTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PACKAGE_PACKAGE_TYPE1");
+            });
+
             modelBuilder.Entity<PackageContent>(entity =>
             {
                 entity.ToTable("PACKAGE_CONTENT");
@@ -505,47 +548,6 @@ namespace CORE_WebAPI.Models
                     .HasColumnName("Package_QRCode")
                     .HasMaxLength(10)
                     .IsUnicode(false);
-
-                entity.Property(e => e.PackageTypeId).HasColumnName("Package_Type_ID");
-
-                entity.Property(e => e.ShipmentId).HasColumnName("Shipment_ID");
-
-                entity.HasOne(d => d.PackageType)
-                    .WithMany(p => p.PackageContent)
-                    .HasForeignKey(d => d.PackageTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PACKAGE_CONTENT_PACKAGE_TYPE");
-
-                entity.HasOne(d => d.Shipment)
-                    .WithMany(p => p.PackageContent)
-                    .HasForeignKey(d => d.ShipmentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PACKAGE_CONTENT_SHIPMENT");
-            });
-
-            modelBuilder.Entity<PackageLine>(entity =>
-            {
-                entity.HasKey(e => new { e.ShipmentId, e.PackageTypeId });
-
-                entity.ToTable("PACKAGE_LINE");
-
-                entity.Property(e => e.ShipmentId).HasColumnName("Shipment_ID");
-
-                entity.Property(e => e.PackageTypeId).HasColumnName("Package_Type_ID");
-
-                entity.Property(e => e.PackageTypeQty).HasColumnName("Package_Type_Qty");
-
-                entity.HasOne(d => d.Shipment)
-                    .WithMany(p => p.PackageLine)
-                    .HasForeignKey(d => d.ShipmentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PACKAGE_LINE_PACKAGE_TYPE");
-
-                entity.HasOne(d => d.ShipmentNavigation)
-                    .WithMany(p => p.PackageLine)
-                    .HasForeignKey(d => d.ShipmentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PACKAGE_LINE_SHIPMENT");
             });
 
             modelBuilder.Entity<PackageType>(entity =>
@@ -646,7 +648,7 @@ namespace CORE_WebAPI.Models
                     .HasConstraintName("FK_PAYMENT_REFERENCE_PENALTY");
 
                 entity.HasOne(d => d.Shipment)
-                    .WithMany(p => p.PaymentReferenceNavigation)
+                    .WithMany(p => p.PaymentReference)
                     .HasForeignKey(d => d.ShipmentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PAYMENT_REFERENCE_SHIPMENT");
@@ -673,12 +675,6 @@ namespace CORE_WebAPI.Models
                     .HasColumnType("decimal(5, 2)");
 
                 entity.Property(e => e.ShipmentId).HasColumnName("Shipment_ID");
-
-                entity.HasOne(d => d.Shipment)
-                    .WithMany(p => p.Penalty)
-                    .HasForeignKey(d => d.ShipmentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PENALTY_SHIPMENT");
             });
 
             modelBuilder.Entity<Province>(entity =>
@@ -757,12 +753,6 @@ namespace CORE_WebAPI.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.AccessRole)
-                    .WithMany(p => p.Sender)
-                    .HasForeignKey(d => d.AccessRoleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SENDER_ACCESS_ROLE");
-
                 entity.HasOne(d => d.Login)
                     .WithMany(p => p.Sender)
                     .HasForeignKey(d => d.LoginId)
@@ -777,6 +767,8 @@ namespace CORE_WebAPI.Models
                 entity.Property(e => e.ShipmentId).HasColumnName("Shipment_ID");
 
                 entity.Property(e => e.AgentId).HasColumnName("Agent_ID");
+
+                entity.Property(e => e.BasketId).HasColumnName("Basket_ID");
 
                 entity.Property(e => e.CollectionTime)
                     .HasColumnName("Collection_Time")
@@ -798,15 +790,7 @@ namespace CORE_WebAPI.Models
                     .HasMaxLength(35)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PaymentReference)
-                    .IsRequired()
-                    .HasColumnName("Payment_Reference")
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.ReceiverId).HasColumnName("Receiver_ID");
-
-                entity.Property(e => e.SenderId).HasColumnName("Sender_ID");
 
                 entity.Property(e => e.ShipmentDate)
                     .HasColumnName("Shipment_Date")
@@ -846,23 +830,29 @@ namespace CORE_WebAPI.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_SHIPMENT_AGENT");
 
+                entity.HasOne(d => d.Basket)
+                    .WithMany(p => p.Shipment)
+                    .HasForeignKey(d => d.BasketId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SHIPMENT_BASKET");
+
                 entity.HasOne(d => d.Receiver)
                     .WithMany(p => p.Shipment)
                     .HasForeignKey(d => d.ReceiverId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_RECEIVER");
 
-                entity.HasOne(d => d.Sender)
-                    .WithMany(p => p.Shipment)
-                    .HasForeignKey(d => d.SenderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SHIPMENT_SENDER");
-
                 entity.HasOne(d => d.ShipmentStatus)
                     .WithMany(p => p.Shipment)
                     .HasForeignKey(d => d.ShipmentStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_SHIPMENT_STATUS");
+
+                entity.HasOne(d => d.Signature)
+                    .WithMany(p => p.Shipment)
+                    .HasForeignKey(d => d.SignatureId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SHIPMENT_SIGNATURE_IMAGE");
             });
 
             modelBuilder.Entity<ShipmentAddress>(entity =>
@@ -909,12 +899,6 @@ namespace CORE_WebAPI.Models
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.AddressType)
-                    .WithMany(p => p.ShipmentAddress)
-                    .HasForeignKey(d => d.AddressTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SHIPMENT_ADDRESS_ADDRESS_TYPE");
             });
 
             modelBuilder.Entity<ShipmentAgent>(entity =>
@@ -1002,12 +986,6 @@ namespace CORE_WebAPI.Models
                 entity.Property(e => e.LicenceImageId).HasColumnName("Licence_Image_ID");
 
                 entity.Property(e => e.LoginId).HasColumnName("Login_ID");
-
-                entity.HasOne(d => d.AccessRole)
-                    .WithMany(p => p.ShipmentAgent)
-                    .HasForeignKey(d => d.AccessRoleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SHIPMENT_AGENT_ACCESS_ROLE");
 
                 entity.HasOne(d => d.City)
                     .WithMany(p => p.ShipmentAgent)
@@ -1162,6 +1140,11 @@ namespace CORE_WebAPI.Models
                     .HasForeignKey(d => d.AgentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VEHICLE_SHIPMENT_AGENT");
+
+                entity.HasOne(d => d.VehicleImage)
+                    .WithMany(p => p.Vehicle)
+                    .HasForeignKey(d => d.VehicleImageId)
+                    .HasConstraintName("FK_VEHICLE_VEHICLE_PROOF_IMAGE");
 
                 entity.HasOne(d => d.VehicleMake)
                     .WithMany(p => p.Vehicle)

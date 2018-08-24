@@ -16,7 +16,6 @@ namespace CORE_WebAPI.Models
         public decimal PenaltyAmount { get; set; }
         public int ShipmentId { get; set; }
 
-        public Shipment Shipment { get; set; }
         public ICollection<PaymentReference> PaymentReference { get; set; }
     }
 }

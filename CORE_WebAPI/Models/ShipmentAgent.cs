@@ -34,7 +34,6 @@ namespace CORE_WebAPI.Models
         public int? LicenceImageId { get; set; }
         public int? AgentImageId { get; set; }
 
-        public AccessRole AccessRole { get; set; }
         public City City { get; set; }
         public Login Login { get; set; }
         public ICollection<Application> Application { get; set; }

@@ -5,13 +5,15 @@ namespace CORE_WebAPI.Models
 {
     public partial class PackageContent
     {
+        public PackageContent()
+        {
+            Package = new HashSet<Package>();
+        }
+
         public int PackageContentId { get; set; }
         public string PackageContent1 { get; set; }
         public string PackageQrcode { get; set; }
-        public int ShipmentId { get; set; }
-        public int PackageTypeId { get; set; }
 
-        public PackageType PackageType { get; set; }
-        public Shipment Shipment { get; set; }
+        public ICollection<Package> Package { get; set; }
     }
 }
