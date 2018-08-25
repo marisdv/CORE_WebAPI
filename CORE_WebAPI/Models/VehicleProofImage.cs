@@ -11,7 +11,7 @@ namespace CORE_WebAPI.Models
         }
 
         public int VehicleImageId { get; set; }
-        public byte[] VehicleImage { get; set; }
+        public string VehicleImage { get; set; }
 
         public ICollection<Vehicle> Vehicle { get; set; }
     }

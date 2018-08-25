@@ -18,7 +18,6 @@ namespace CORE_WebAPI.Models
         public int ShipmentId { get; set; }
         public int PenaltyId { get; set; }
 
-        public Penalty Penalty { get; set; }
         public Shipment Shipment { get; set; }
     }
 }

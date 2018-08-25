@@ -132,7 +132,8 @@ namespace CORE_WebAPI.Models
                 entity.Property(e => e.AgentImage)
                     .IsRequired()
                     .HasColumnName("Agent_Image")
-                    .HasColumnType("image");
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Application>(entity =>
@@ -469,7 +470,8 @@ namespace CORE_WebAPI.Models
                 entity.Property(e => e.LicenceImage1)
                     .IsRequired()
                     .HasColumnName("Licence_Image")
-                    .HasColumnType("image");
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Login>(entity =>
@@ -641,12 +643,6 @@ namespace CORE_WebAPI.Models
                     .HasMaxLength(80)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Penalty)
-                    .WithMany(p => p.PaymentReference)
-                    .HasForeignKey(d => d.PenaltyId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PAYMENT_REFERENCE_PENALTY");
-
                 entity.HasOne(d => d.Shipment)
                     .WithMany(p => p.PaymentReference)
                     .HasForeignKey(d => d.ShipmentId)
@@ -675,6 +671,12 @@ namespace CORE_WebAPI.Models
                     .HasColumnType("decimal(5, 2)");
 
                 entity.Property(e => e.ShipmentId).HasColumnName("Shipment_ID");
+
+                entity.HasOne(d => d.Shipment)
+                    .WithMany(p => p.Penalty)
+                    .HasForeignKey(d => d.ShipmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PENALTY_SHIPMENT");
             });
 
             modelBuilder.Entity<Province>(entity =>
@@ -718,8 +720,6 @@ namespace CORE_WebAPI.Models
                 entity.ToTable("SENDER");
 
                 entity.Property(e => e.SenderId).HasColumnName("Sender_ID");
-
-                entity.Property(e => e.AccessRoleId).HasColumnName("Access_Role_ID");
 
                 entity.Property(e => e.LoginId).HasColumnName("Login_ID");
 
@@ -909,8 +909,6 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.AgentId).HasColumnName("Agent_ID");
 
-                entity.Property(e => e.AccessRoleId).HasColumnName("Access_Role_ID");
-
                 entity.Property(e => e.AgentActive).HasColumnName("Agent_Active");
 
                 entity.Property(e => e.AgentAvailability).HasColumnName("Agent_Availability");
@@ -979,6 +977,8 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.CityId).HasColumnName("City_ID");
 
+                entity.Property(e => e.CurrentLocId).HasColumnName("CurrentLoc_ID");
+
                 entity.Property(e => e.DateEmployed)
                     .HasColumnName("Date_Employed")
                     .HasColumnType("datetime");
@@ -987,11 +987,26 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.LoginId).HasColumnName("Login_ID");
 
+                entity.HasOne(d => d.AgentImage)
+                    .WithMany(p => p.ShipmentAgent)
+                    .HasForeignKey(d => d.AgentImageId)
+                    .HasConstraintName("FK_SHIPMENT_AGENT_AGENT_PROFILE_IMAGE");
+
                 entity.HasOne(d => d.City)
                     .WithMany(p => p.ShipmentAgent)
                     .HasForeignKey(d => d.CityId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_AGENT_CITY");
+
+                entity.HasOne(d => d.CurrentLoc)
+                    .WithMany(p => p.ShipmentAgent)
+                    .HasForeignKey(d => d.CurrentLocId)
+                    .HasConstraintName("FK_SHIPMENT_AGENT_SHIPMENT_AGENT_LOCATION");
+
+                entity.HasOne(d => d.LicenceImage)
+                    .WithMany(p => p.ShipmentAgent)
+                    .HasForeignKey(d => d.LicenceImageId)
+                    .HasConstraintName("FK_SHIPMENT_AGENT_LICENCE_IMAGE");
 
                 entity.HasOne(d => d.Login)
                     .WithMany(p => p.ShipmentAgent)
@@ -1072,12 +1087,13 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.ReceiverSig)
                     .HasColumnName("Receiver_Sig")
-                    .HasColumnType("image");
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.SenderSig)
-                    .IsRequired()
                     .HasColumnName("Sender_Sig")
-                    .HasColumnType("image");
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<UserType>(entity =>
@@ -1212,7 +1228,8 @@ namespace CORE_WebAPI.Models
                 entity.Property(e => e.VehicleImage)
                     .IsRequired()
                     .HasColumnName("Vehicle_Image")
-                    .HasColumnType("image");
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VehicleStatus>(entity =>

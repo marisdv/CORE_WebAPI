@@ -11,8 +11,8 @@ namespace CORE_WebAPI.Models
         }
 
         public int SignatureId { get; set; }
-        public byte[] SenderSig { get; set; }
-        public byte[] ReceiverSig { get; set; }
+        public string SenderSig { get; set; }
+        public string ReceiverSig { get; set; }
 
         public ICollection<Shipment> Shipment { get; set; }
     }
