@@ -26,7 +26,7 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<ShipmentAgent> GetShipmentAgent()
         {
-            return _context.ShipmentAgent;
+            return _context.ShipmentAgent.Include(image => image.AgentImage).Include(loc => loc.CurrentLoc).Include(licence => licence.LicenceImage).Include(login => login.Login);
         }
 
         // GET: api/ShipmentAgents/5
