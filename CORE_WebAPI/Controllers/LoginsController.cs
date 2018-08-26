@@ -38,7 +38,8 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var login = await _context.Login.Include(myLogin => myLogin.UserType).SingleOrDefaultAsync(m => m.LoginId == id);
+            var login = await _context.Login.Include(myLogin => myLogin.UserType)
+                                            .SingleOrDefaultAsync(m => m.LoginId == id);
 
             if (login == null)
             {

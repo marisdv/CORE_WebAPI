@@ -26,7 +26,25 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Application> GetApplication()
         {
-            return _context.Application.Include(employee => employee.Employee).Include(application => application.ApplicationStatus).Include(agent => agent.Agent).ThenInclude(login => login.Login);//.ThenInclude(city => city.City);
+            return _context.Application.Include(application => application.ApplicationStatus)
+                                       .Include(employee => employee.Employee)
+                                       .Include(agent => agent.Agent)
+                                            .ThenInclude(login => login.Login)
+                                       //.Include(agent => agent.Agent)
+                                            //.ThenInclude(city => city.City)
+                                       //.Include(agent => agent.Agent)
+                                            //.ThenInclude(image => image.AgentImage)
+                                       //.Include(agent => agent.Agent)
+                                       //     .ThenInclude(licence => licence.LicenceImage)
+                                       //.Include(agent => agent.Agent)
+                                       //     .ThenInclude(loc => loc.CurrentLoc)
+                                       //.Include(agent => agent.Agent)
+                                       //     .Include(application => application.ApplicationStatus)
+                                       //.Include(agent => agent.Agent)
+                                       //     .Include(employee => employee.Employee)
+                                       ;
+
+
         }
 
         // GET: api/Applications/5
@@ -38,7 +56,11 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var application = await _context.Application.Include(employee => employee.Employee).Include(app => app.ApplicationStatus).SingleOrDefaultAsync(m => m.ApplicationId == id);
+            var application = await _context.Application.Include(appl => appl.ApplicationStatus)
+                                                        .Include(employee => employee.Employee)
+                                                        .Include(agent => agent.Agent)
+                                                             .ThenInclude(login => login.Login)
+                                                        .SingleOrDefaultAsync(m => m.ApplicationId == id);  
 
             if (application == null)
             {

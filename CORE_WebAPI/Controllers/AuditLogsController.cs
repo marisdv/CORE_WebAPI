@@ -40,7 +40,8 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var auditLog = await _context.AuditLog.Include(audit => audit.AuditType).SingleOrDefaultAsync(m => m.AuditId == id);
+            var auditLog = await _context.AuditLog.Include(audit => audit.AuditType)
+                                                  .SingleOrDefaultAsync(m => m.AuditId == id);
 
             if (auditLog == null)
             {

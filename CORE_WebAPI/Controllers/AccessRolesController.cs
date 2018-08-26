@@ -26,7 +26,8 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<AccessRole> GetAccessRole()
         {
-            return _context.AccessRole.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea);
+            return _context.AccessRole  .Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
+                                        .ThenInclude(AccessArea => AccessArea.AccessArea);
         }
 
         // GET: api/AccessRoles/5
@@ -38,7 +39,9 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var accessRole = await _context.AccessRole.SingleOrDefaultAsync(m => m.AccessRoleId == id);
+            var accessRole = await _context.AccessRole.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
+                                                      .ThenInclude(AccessArea => AccessArea.AccessArea) 
+                                                      .SingleOrDefaultAsync(m => m.AccessRoleId == id);
 
             if (accessRole == null)
             {

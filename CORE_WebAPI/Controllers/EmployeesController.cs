@@ -27,16 +27,21 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Employee> GetEmployee()
         {
-            return _context.Employee.Include(accessRole => accessRole.AccessRole).Include(login => login.Login);
+            return _context.Employee.Include(accessRole => accessRole.AccessRole)
+                                    .Include(login => login.Login);
         }
 
-        // GET: api/Employees
+        // GET: /employeegrid
         [HttpGet("/employeegrid")]
         public EmployeeGrid EmployeeGrid()
         {
             EmployeeGrid grid = new EmployeeGrid();
-            grid.totalCount = _context.Employee.Include(accessRole => accessRole.AccessRole).Include(login => login.Login).Count();
-            grid.employees = _context.Employee.Include(accessRole => accessRole.AccessRole).Include(login => login.Login);
+
+            grid.totalCount = _context.Employee.Include(accessRole => accessRole.AccessRole)
+                                                .Include(login => login.Login).Count();
+
+            grid.employees = _context.Employee.Include(accessRole => accessRole.AccessRole)
+                                              .Include(login => login.Login);
             return grid;
         }
 

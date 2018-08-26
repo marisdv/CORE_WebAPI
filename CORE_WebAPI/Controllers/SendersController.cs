@@ -26,7 +26,7 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Sender> GetSender()
         {
-            return _context.Sender;
+            return _context.Sender.Include(login => login.Login);
         }
 
         // GET: api/Senders/5
@@ -38,7 +38,8 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var sender = await _context.Sender.SingleOrDefaultAsync(m => m.SenderId == id);
+            var sender = await _context.Sender.Include(login => login.Login)
+                                              .SingleOrDefaultAsync(m => m.SenderId == id);
 
             if (sender == null)
             {

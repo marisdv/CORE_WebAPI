@@ -29,7 +29,9 @@ namespace CORE_WebAPI.Controllers
         //[JsonIgnore]
         public IEnumerable<Vehicle> GetVehicle()
         {
-            return _context.Vehicle.Include(vehicle => vehicle.VehicleMake).Include(vehicle => vehicle.VehicleType).Include(vehicle => vehicle.VehicleStatus);
+            return _context.Vehicle.Include(vehicle => vehicle.VehicleMake)
+                                   .Include(vehicle => vehicle.VehicleType)
+                                   .Include(vehicle => vehicle.VehicleStatus);
         }
 
         // GET: api/Vehicles/5
@@ -41,7 +43,10 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var vehicle = await _context.Vehicle.Include(myVehicle => myVehicle.VehicleMake).Include(myVehicle => myVehicle.VehicleType).Include(myVehicle => myVehicle.VehicleStatus).SingleOrDefaultAsync(m => m.VehicleId == id);
+            var vehicle = await _context.Vehicle.Include(veh => veh.VehicleMake)
+                                                .Include(veh => veh.VehicleType)
+                                                .Include(veh => veh.VehicleStatus)
+                                                .SingleOrDefaultAsync(m => m.VehicleId == id);
 
             if (vehicle == null)
             {

@@ -26,7 +26,11 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<ShipmentAgent> GetShipmentAgent()
         {
-            return _context.ShipmentAgent.Include(image => image.AgentImage).Include(loc => loc.CurrentLoc).Include(licence => licence.LicenceImage).Include(login => login.Login);
+            return _context.ShipmentAgent.Include(image => image.AgentImage)
+                                         .Include(loc => loc.CurrentLoc)
+                                         .Include(licence => licence.LicenceImage)
+                                         .Include(login => login.Login)
+                                         .Include(city => city.City);
         }
 
         // GET: api/ShipmentAgents/5
@@ -38,7 +42,12 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var shipmentAgent = await _context.ShipmentAgent.SingleOrDefaultAsync(m => m.AgentId == id);
+            var shipmentAgent = await _context.ShipmentAgent.Include(image => image.AgentImage)
+                                                            .Include(loc => loc.CurrentLoc)
+                                                            .Include(licence => licence.LicenceImage)
+                                                            .Include(login => login.Login)
+                                                            .Include(city => city.City)
+                                                            .SingleOrDefaultAsync(m => m.AgentId == id);
 
             if (shipmentAgent == null)
             {
