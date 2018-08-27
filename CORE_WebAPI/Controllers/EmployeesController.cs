@@ -45,17 +45,18 @@ namespace CORE_WebAPI.Controllers
             return grid;
         }
 
-        //// GET: api/Employees/BasicDetails
-        //// *** find a way to route this method
-        //[HttpGet]
-        //public IEnumerable<string> GetEmployeeBD()
-        //{
-        //    List<string> employeeDetails = new List<string>();
+        /*
+        // GET: api/Employees/BasicDetails
+        // *** find a way to route this method
+        [HttpGet]
+        public IEnumerable<string> GetEmployeeBD()
+        {
+            List<string> employeeDetails = new List<string>();
 
-        //    _context.Employee.ForEachAsync(x => employeeDetails.Add(x.GetBasicDetails()));
+            _context.Employee.ForEachAsync(x => employeeDetails.Add(x.GetBasicDetails()));
 
-        //    return employeeDetails;
-        //}
+            return employeeDetails;
+        }*/
 
         // GET: api/Employees/5
         [HttpGet("{id}")]

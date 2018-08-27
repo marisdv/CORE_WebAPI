@@ -28,7 +28,7 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<DownloadLocation> DownloadLocation { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
-        public virtual DbSet<FixedRatePrice> FixedRatePrice { get; set; }
+        public virtual DbSet<FixedPrice> FixedPrice { get; set; }
         public virtual DbSet<LicenceImage> LicenceImage { get; set; }
         public virtual DbSet<Login> Login { get; set; }
         public virtual DbSet<Package> Package { get; set; }
@@ -438,27 +438,25 @@ namespace CORE_WebAPI.Models
                     .HasConstraintName("FK_EMPLOYEE_LOGIN");
             });
 
-            modelBuilder.Entity<FixedRatePrice>(entity =>
+            modelBuilder.Entity<FixedPrice>(entity =>
             {
-                entity.HasKey(e => e.FixedRateId);
+                entity.ToTable("FIXED_PRICE");
 
-                entity.ToTable("FIXED_RATE_PRICE");
-
-                entity.Property(e => e.FixedRateId).HasColumnName("Fixed_Rate_ID");
+                entity.Property(e => e.FixedPriceId).HasColumnName("Fixed_Price_ID");
 
                 entity.Property(e => e.DateFrom).HasColumnType("datetime");
 
                 entity.Property(e => e.DateTo).HasColumnType("datetime");
 
-                entity.Property(e => e.FixedRateDescr)
+                entity.Property(e => e.FixedPrice1)
+                    .HasColumnName("Fixed_Price")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.FixedPriceDescr)
                     .IsRequired()
-                    .HasColumnName("Fixed_Rate_Descr")
+                    .HasColumnName("Fixed_Price_Descr")
                     .HasMaxLength(20)
                     .IsUnicode(false);
-
-                entity.Property(e => e.FixedRatePrice1)
-                    .HasColumnName("Fixed_Rate_Price")
-                    .HasColumnType("decimal(5, 2)");
             });
 
             modelBuilder.Entity<LicenceImage>(entity =>
