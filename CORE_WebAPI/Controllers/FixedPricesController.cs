@@ -9,8 +9,9 @@ using CORE_WebAPI.Models;
 
 namespace CORE_WebAPI.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    [Produces("application/json")]
+    [Route("api/FixedPrices")]
+    //[ApiController]
     public class FixedPricesController : ControllerBase
     {
         private readonly ProjectCALContext _context;
@@ -21,23 +22,11 @@ namespace CORE_WebAPI.Controllers
         }
 
         // GET: api/FixedPrices
+        
         [HttpGet]
         public IEnumerable<FixedPrice> GetFixedPrice()
         {
             return _context.FixedPrice;
-        }
-
-        // GET: /fixedpricesgrid
-        [HttpGet("/fixedpricesgrid")]
-        public FixedPriceGrid FixedPriceGrid()
-        {
-            FixedPriceGrid grid = new FixedPriceGrid();
-
-            grid.totalCount = _context.FixedPrice.Count();
-
-            grid.fixedPrices = _context.FixedPrice;
-
-            return grid;
         }
 
         // GET: api/FixedPrices/5
