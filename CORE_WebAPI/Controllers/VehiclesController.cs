@@ -34,6 +34,24 @@ namespace CORE_WebAPI.Controllers
                                    .Include(vehicle => vehicle.VehicleStatus);
         }
 
+        // GET: /vehiclegrid
+        [HttpGet("/vehiclegrid")]
+        public VehicleGrid VehicleGrid()
+        {
+            VehicleGrid grid = new VehicleGrid();
+
+            grid.totalCount = _context.Vehicle.Include(vehicle => vehicle.VehicleMake)
+                                              .Include(vehicle => vehicle.VehicleType)
+                                              .Include(vehicle => vehicle.VehicleStatus).Count();
+
+
+            grid.vehicles = _context.Vehicle.Include(vehicle => vehicle.VehicleMake)
+                                            .Include(vehicle => vehicle.VehicleType)
+                                            .Include(vehicle => vehicle.VehicleStatus);
+
+            return grid;
+        }
+
         // GET: api/Vehicles/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicle([FromRoute] int id)

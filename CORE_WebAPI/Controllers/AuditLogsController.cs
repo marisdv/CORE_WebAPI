@@ -31,6 +31,19 @@ namespace CORE_WebAPI.Controllers
             return _context.AuditLog.Include(auditLog => auditLog.AuditType);
         }
 
+        // GET: /auditloggrid
+        [HttpGet("/auditloggrid")]
+        public AuditLogGrid AuditLogGrid()
+        {
+            AuditLogGrid grid = new AuditLogGrid();
+
+            grid.totalCount = _context.AuditLog.Include(auditLog => auditLog.AuditType).Count();
+
+            grid.auditLogs = _context.AuditLog.Include(auditLog => auditLog.AuditType);
+
+            return grid;
+        }
+
         // GET: api/AuditLogs/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAuditLog([FromRoute] int id)

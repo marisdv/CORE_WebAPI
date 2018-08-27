@@ -29,6 +29,19 @@ namespace CORE_WebAPI.Controllers
             return _context.PackageTypePrice;
         }
 
+        // GET: /packagetypepricesgrid
+        [HttpGet("/packagetypepricesgrid")]
+        public PackageTypePriceGrid PackageTypePriceGrid()
+        {
+            PackageTypePriceGrid grid = new PackageTypePriceGrid();
+
+            grid.totalCount = _context.PackageTypePrice.Count();
+
+            grid.packageTypePrices = _context.PackageTypePrice;
+
+            return grid;
+        }
+
         // GET: api/PackageTypePrices/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPackageTypePrice([FromRoute] int id)

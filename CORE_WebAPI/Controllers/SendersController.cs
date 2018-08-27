@@ -29,6 +29,19 @@ namespace CORE_WebAPI.Controllers
             return _context.Sender.Include(login => login.Login);
         }
 
+        // GET: /sendergrid
+        [HttpGet("/sendergrid")]
+        public SenderGrid SenderGrid()
+        {
+            SenderGrid grid = new SenderGrid();
+
+            grid.totalCount = _context.Sender.Include(login => login.Login).Count();
+
+            grid.senders = _context.Sender.Include(login => login.Login);
+
+            return grid;
+        }
+
         // GET: api/Senders/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSender([FromRoute] int id)

@@ -29,6 +29,19 @@ namespace CORE_WebAPI.Controllers
             return _context.VehicleType;
         }
 
+        // GET: /vehicletypesgrid
+        [HttpGet("/vehicletypesgrid")]
+        public VehicleTypeGrid VehicleTypeGrid()
+        {
+            VehicleTypeGrid grid = new VehicleTypeGrid();
+
+            grid.totalCount = _context.VehicleType.Count();
+
+            grid.vehicleTypes= _context.VehicleType;
+
+            return grid;
+        }
+
         // GET: api/VehicleTypes/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicleType([FromRoute] int id)

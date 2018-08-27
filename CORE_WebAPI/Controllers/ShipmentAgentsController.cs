@@ -33,6 +33,27 @@ namespace CORE_WebAPI.Controllers
                                          .Include(city => city.City);
         }
 
+        // GET: /shipmentagentgrid
+        [HttpGet("/shipmentagentgrid")]
+        public ShipmentAgentGrid ShipmentAgentGrid()
+        {
+            ShipmentAgentGrid grid = new ShipmentAgentGrid();
+
+            grid.totalCount = _context.ShipmentAgent.Include(image => image.AgentImage)
+                                                    .Include(loc => loc.CurrentLoc)
+                                                    .Include(licence => licence.LicenceImage)
+                                                    .Include(login => login.Login)
+                                                    .Include(city => city.City).Count();
+
+            grid.shipmentAgents = _context.ShipmentAgent.Include(image => image.AgentImage)
+                                                        .Include(loc => loc.CurrentLoc)
+                                                        .Include(licence => licence.LicenceImage)
+                                                        .Include(login => login.Login)
+                                                        .Include(city => city.City);
+
+            return grid;
+        }
+
         // GET: api/ShipmentAgents/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetShipmentAgent([FromRoute] int id)

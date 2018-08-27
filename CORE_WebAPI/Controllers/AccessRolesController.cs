@@ -26,8 +26,23 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<AccessRole> GetAccessRole()
         {
-            return _context.AccessRole  .Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
-                                        .ThenInclude(AccessArea => AccessArea.AccessArea);
+            return _context.AccessRole.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
+                                      .ThenInclude(AccessArea => AccessArea.AccessArea);
+        }
+
+        // GET: /accessrolegrid
+        [HttpGet("/accessrolegrid")]
+        public AccessRoleGrid AccessRoleGrid()
+        {
+            AccessRoleGrid grid = new AccessRoleGrid();
+
+            grid.totalCount = _context.AccessRole.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
+                                                 .ThenInclude(AccessArea => AccessArea.AccessArea).Count();
+
+            grid.accessRoles = _context.AccessRole.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
+                                                 .ThenInclude(AccessArea => AccessArea.AccessArea);
+            
+            return grid;
         }
 
         // GET: api/AccessRoles/5
