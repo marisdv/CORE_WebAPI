@@ -41,10 +41,8 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<Receiver> Receiver { get; set; }
         public virtual DbSet<Sender> Sender { get; set; }
         public virtual DbSet<Shipment> Shipment { get; set; }
-        public virtual DbSet<ShipmentAddress> ShipmentAddress { get; set; }
         public virtual DbSet<ShipmentAgent> ShipmentAgent { get; set; }
         public virtual DbSet<ShipmentAgentLocation> ShipmentAgentLocation { get; set; }
-        public virtual DbSet<ShipmentLocation> ShipmentLocation { get; set; }
         public virtual DbSet<ShipmentStatus> ShipmentStatus { get; set; }
         public virtual DbSet<SignatureImage> SignatureImage { get; set; }
         public virtual DbSet<UserType> UserType { get; set; }
@@ -853,52 +851,6 @@ namespace CORE_WebAPI.Models
                     .HasConstraintName("FK_SHIPMENT_SIGNATURE_IMAGE");
             });
 
-            modelBuilder.Entity<ShipmentAddress>(entity =>
-            {
-                entity.HasKey(e => e.AddressId);
-
-                entity.ToTable("SHIPMENT_ADDRESS");
-
-                entity.Property(e => e.AddressId).HasColumnName("Address_ID");
-
-                entity.Property(e => e.AddressDescription)
-                    .IsRequired()
-                    .HasColumnName("Address_Description")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.AddressLatitude)
-                    .HasColumnName("Address_Latitude")
-                    .HasMaxLength(35)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.AddressLongitude)
-                    .HasColumnName("Address_Longitude")
-                    .HasMaxLength(35)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.AddressTypeId).HasColumnName("Address_Type_ID");
-
-                entity.Property(e => e.CityId).HasColumnName("City_ID");
-
-                entity.Property(e => e.PostalCode)
-                    .IsRequired()
-                    .HasColumnName("Postal_Code")
-                    .HasMaxLength(4)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.StreetAddress)
-                    .IsRequired()
-                    .HasColumnName("Street_Address")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Suburb)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<ShipmentAgent>(entity =>
             {
                 entity.HasKey(e => e.AgentId);
@@ -1032,34 +984,6 @@ namespace CORE_WebAPI.Models
                     .HasColumnName("CurrentLoc_Longitude")
                     .HasMaxLength(35)
                     .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<ShipmentLocation>(entity =>
-            {
-                entity.HasKey(e => new { e.ShipmentId, e.AddressId });
-
-                entity.ToTable("SHIPMENT_LOCATION");
-
-                entity.Property(e => e.ShipmentId).HasColumnName("Shipment_ID");
-
-                entity.Property(e => e.AddressId).HasColumnName("Address_ID");
-
-                entity.Property(e => e.Category)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.Shipment)
-                    .WithMany(p => p.ShipmentLocation)
-                    .HasForeignKey(d => d.ShipmentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SHIPMENT_LOCATION_SHIPMENT_ADDRESS");
-
-                entity.HasOne(d => d.ShipmentNavigation)
-                    .WithMany(p => p.ShipmentLocation)
-                    .HasForeignKey(d => d.ShipmentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SHIPMENT_LOCATION_SHIPMENT");
             });
 
             modelBuilder.Entity<ShipmentStatus>(entity =>

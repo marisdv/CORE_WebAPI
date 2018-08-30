@@ -9,7 +9,6 @@ namespace CORE_WebAPI.Models
         {
             PaymentReference = new HashSet<PaymentReference>();
             Penalty = new HashSet<Penalty>();
-            ShipmentLocation = new HashSet<ShipmentLocation>();
         }
 
         public int ShipmentId { get; set; }
@@ -37,6 +36,5 @@ namespace CORE_WebAPI.Models
         public SignatureImage Signature { get; set; }
         public ICollection<PaymentReference> PaymentReference { get; set; }
         public ICollection<Penalty> Penalty { get; set; }
-        public ICollection<ShipmentLocation> ShipmentLocation { get; set; }
     }
 }
