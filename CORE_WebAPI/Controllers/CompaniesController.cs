@@ -52,6 +52,10 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCompany([FromRoute] int id, [FromBody] Company company)
         {
+            Company updateCompany = _context.Company.FirstOrDefault(c => c.CompanyId == id);
+
+            updateCompany.UpdateChangedFields(company);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -62,7 +66,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(company).State = EntityState.Modified;
+            _context.Entry(updateCompany).State = EntityState.Modified;
 
             try
             {

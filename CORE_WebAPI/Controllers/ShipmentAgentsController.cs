@@ -82,6 +82,10 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShipmentAgent([FromRoute] int id, [FromBody] ShipmentAgent shipmentAgent)
         {
+            ShipmentAgent updateAgent = _context.ShipmentAgent.FirstOrDefault(c => c.AgentId == id);
+
+            updateAgent.UpdateChangedFields(shipmentAgent);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -92,7 +96,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(shipmentAgent).State = EntityState.Modified;
+            _context.Entry(updateAgent).State = EntityState.Modified;
 
             try
             {

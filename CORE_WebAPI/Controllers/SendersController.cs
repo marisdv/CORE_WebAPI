@@ -62,6 +62,26 @@ namespace CORE_WebAPI.Controllers
             return Ok(sender);
         }
 
+        //// GET: api/Senders/083...
+        //[HttpGet("/SenderPhone/{phone}")]
+        //public async Task<IActionResult> GetSenderPhone([FromRoute] int phone)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    var sender = await _context.Sender.Include(login => login.Login)
+        //                                      .SingleOrDefaultAsync(m => m.SenderId == phone);
+
+        //    if (sender == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok(sender);
+        //}
+
         // PUT: api/Senders/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSender([FromRoute] int id, [FromBody] Sender sender)
