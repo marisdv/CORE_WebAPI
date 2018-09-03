@@ -61,7 +61,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != company.CompanyId)
+            if (id != updateCompany.CompanyId)
             {
                 return BadRequest();
             }

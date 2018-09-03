@@ -91,7 +91,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != shipmentAgent.AgentId)
+            if (id != updateAgent.AgentId)
             {
                 return BadRequest();
             }
