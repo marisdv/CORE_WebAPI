@@ -82,7 +82,7 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShipmentAgent([FromRoute] int id, [FromBody] ShipmentAgent shipmentAgent)
         {
-            ShipmentAgent updateAgent = _context.ShipmentAgent.FirstOrDefault(c => c.AgentId == id);
+            ShipmentAgent updateAgent = _context.ShipmentAgent.FirstOrDefault(a => a.AgentId == id);
 
             updateAgent.UpdateChangedFields(shipmentAgent);
 

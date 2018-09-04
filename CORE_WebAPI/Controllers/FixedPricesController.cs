@@ -65,7 +65,7 @@ namespace CORE_WebAPI.Controllers
         public async Task<IActionResult> PutFixedPrice([FromRoute] int id, [FromBody] FixedPrice fixedPrice)
         {
 
-            FixedPrice updateFixedPrice = _context.FixedPrice.FirstOrDefault(c => c.FixedPriceId == id);
+            FixedPrice updateFixedPrice = _context.FixedPrice.FirstOrDefault(f => f.FixedPriceId == id);
 
             updateFixedPrice.UpdateChangedFields(fixedPrice);
 

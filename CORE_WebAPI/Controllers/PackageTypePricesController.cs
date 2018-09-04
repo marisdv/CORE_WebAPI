@@ -66,9 +66,12 @@ namespace CORE_WebAPI.Controllers
         public async Task<IActionResult> PutPackageTypePrice([FromRoute] int id, [FromBody] PackageTypePrice packageTypePrice)
         {
 
-            PackageTypePrice updatePackageTypePrice = _context.PackageTypePrice.FirstOrDefault(c => c.PackageTypePriceId == id);
+            //this has a composite key - PK/FK because it's an associative
+            //PackageTypePrice updatePackageTypePrice = _context.PackageTypePrice.FirstOrDefault(c => c.PackageTypePriceId == id);
 
-            updatePackageTypePrice.UpdateChangedFields(packageTypePrice);
+            //updatePackageTypePrice.UpdateChangedFields(packageTypePrice);
+
+            //use updatePackageTypePrice from here on ???
 
             if (!ModelState.IsValid)
             {

@@ -70,8 +70,10 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAccessRole([FromRoute] int id, [FromBody] AccessRole accessRole)
         {
-            AccessRole updateAccessRole = _context.AccessRole.FirstOrDefault(c => c.accessRoleId == id);
+            AccessRole updateAccessRole = _context.AccessRole.FirstOrDefault(a => a.AccessRoleId == id);
+
             updateAccessRole.UpdateChangedFields(accessRole);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

@@ -54,7 +54,7 @@ namespace CORE_WebAPI.Controllers
         public async Task<IActionResult> PutLogin([FromRoute] int id, [FromBody] Login login)
         {
 
-            Login updateLogin = _context.Login.FirstOrDefault(c => c.LoginId == id);
+            Login updateLogin = _context.Login.FirstOrDefault(l => l.LoginId == id);
 
             updateLogin.UpdateChangedFields(login);
 

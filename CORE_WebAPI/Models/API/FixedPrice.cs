@@ -9,19 +9,19 @@ namespace CORE_WebAPI.Models
         {
             if (fixedPrice.FixedPriceDescr != null)
             {
-                this.FixedPriceDescr = login.FixedPriceDescr;
+                this.FixedPriceDescr = fixedPrice.FixedPriceDescr;
             }
             if (fixedPrice.FixedPrice1 != null)
             {
-                this.FixedPrice1 = login.FixedPrice1;
+                this.FixedPrice1 = fixedPrice.FixedPrice1;
             }
             if (fixedPrice.DateFrom != null)
             {
-                this.DateFrom = login.DateFrom;
+                this.DateFrom = fixedPrice.DateFrom;
             }
             if (fixedPrice.DateTo != null)
             {
-                this.DateTo = login.DateTo;
+                this.DateTo = fixedPrice.DateTo;
             }
         }
 

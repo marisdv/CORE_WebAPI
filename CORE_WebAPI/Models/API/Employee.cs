@@ -5,7 +5,13 @@ namespace CORE_WebAPI.Models
 {
     public partial class Employee
     {
-       public void UpdateChangedFields(Employee employee)
+        public string GetBasicDetails()
+        {
+            return this.EmployeeName + ' ' + this.EmployeeSurname;
+
+        }
+
+        public void UpdateChangedFields(Employee employee)
         {
           
             if (employee.EmployeeName != null)

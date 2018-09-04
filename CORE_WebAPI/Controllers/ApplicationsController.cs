@@ -94,17 +94,21 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutApplication([FromRoute] int id, [FromBody] Application application)
         {
+            Application updateApplication = _context.Application.FirstOrDefault(a => a.ApplicationId == id);
+
+            updateApplication.UpdateChangedFields(application);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != application.ApplicationId)
+            if (id != updateApplication.ApplicationId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(application).State = EntityState.Modified;
+            _context.Entry(updateApplication).State = EntityState.Modified;
 
             try
             {

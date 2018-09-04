@@ -15,9 +15,6 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class PackageTypesController : Controller
     {
-
-
-
         private readonly ProjectCALContext _context;
 
         public PackageTypesController(ProjectCALContext context)
@@ -69,7 +66,7 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPackageType([FromRoute] int id, [FromBody] PackageType packageType)
         {
-            PackageType updatePackageType = _context.PackageType.FirstOrDefault(c => c.PackageTypeId == id);
+            PackageType updatePackageType = _context.PackageType.FirstOrDefault(p => p.PackageTypeId == id);
 
             updatePackageType.UpdateChangedFields(packageType);
 

@@ -86,17 +86,21 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSender([FromRoute] int id, [FromBody] Sender sender)
         {
+            Sender updateSender = _context.Sender.FirstOrDefault(s => s.SenderId == id);
+
+            updateSender.UpdateChangedFields(sender);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != sender.SenderId)
+            if (id != updateSender.SenderId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(sender).State = EntityState.Modified;
+            _context.Entry(updateSender).State = EntityState.Modified;
 
             try
             {
