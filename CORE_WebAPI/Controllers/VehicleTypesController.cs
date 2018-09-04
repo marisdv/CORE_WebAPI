@@ -65,6 +65,12 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVehicleType([FromRoute] int id, [FromBody] VehicleType vehicleType)
         {
+            VehicleType updateVehicleType = _context.VehicleType.FirstOrDefault(c => c.VehicleTypeId == id);
+
+            updateVehicleType.UpdateChangedFields(vehicleType);
+
+
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

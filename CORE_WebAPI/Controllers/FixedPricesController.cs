@@ -64,6 +64,11 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutFixedPrice([FromRoute] int id, [FromBody] FixedPrice fixedPrice)
         {
+
+            FixedPrice updateFixedPrice = _context.FixedPrice.FirstOrDefault(c => c.FixedPriceId == id);
+
+            updateFixedPrice.UpdateChangedFields(fixedPrice);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

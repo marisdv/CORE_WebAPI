@@ -53,6 +53,11 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLogin([FromRoute] int id, [FromBody] Login login)
         {
+
+            Login updateLogin = _context.Login.FirstOrDefault(c => c.LoginId == id);
+
+            updateLogin.UpdateChangedFields(login);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

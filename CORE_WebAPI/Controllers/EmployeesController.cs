@@ -81,17 +81,21 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee([FromRoute] int id, [FromBody] Employee employee)
         {
+            Employee updateEmployee = _context.Employee.FirstOrDefault(c => c.EmployeeId == id);
+
+            updateEmployee.UpdateChangedFields(Employee);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != employee.EmployeeId)
+            if (id != updateEmployee.EmployeeId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(employee).State = EntityState.Modified;
+            _context.Entry(updateEmployee).State = EntityState.Modified;
 
             try
             {
