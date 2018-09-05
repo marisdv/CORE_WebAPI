@@ -90,6 +90,28 @@ namespace CORE_WebAPI.Controllers
             return Ok(application);
         }
 
+        // GET: api/Applications/phone/0123412345
+        [HttpGet("phone/{id}")]
+        public async Task<IActionResult> GetApplicationByPhone([FromRoute] string id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var application = await _context.Application.Include(appl => appl.ApplicationStatus)
+                                                        .Include(appl => appl.Agent)
+                                                            .ThenInclude(agent => agent.Login)
+                                                        .SingleOrDefaultAsync(m => m.Agent.Login.PhoneNo == id);
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(application);
+        }
+
         // PUT: api/Applications/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutApplication([FromRoute] int id, [FromBody] Application application)

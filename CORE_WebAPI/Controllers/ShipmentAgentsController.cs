@@ -26,11 +26,11 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<ShipmentAgent> GetShipmentAgent()
         {
-            return _context.ShipmentAgent.Include(image => image.AgentImage)
+            return _context.ShipmentAgent/*.Include(image => image.AgentImage)
                                          .Include(loc => loc.CurrentLoc)
-                                         .Include(licence => licence.LicenceImage)
+                                         .Include(licence => licence.LicenceImage)*/
                                          .Include(login => login.Login)
-                                         .Include(city => city.City);
+                                         /*.Include(city => city.City)*/;
         }
 
         // GET: /shipmentagentgrid
@@ -69,6 +69,28 @@ namespace CORE_WebAPI.Controllers
                                                             .Include(login => login.Login)
                                                             .Include(city => city.City)
                                                             .SingleOrDefaultAsync(m => m.AgentId == id);
+
+            if (shipmentAgent == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(shipmentAgent);
+        }
+
+        // GET: api/ShipmentAgents/5
+        [HttpGet("phone/{id}")]
+        public async Task<IActionResult> GetShipmentAgentByPhone([FromRoute] string id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var shipmentAgent = await _context.ShipmentAgent
+                                                .Include(login => login.Login)
+                                                .SingleOrDefaultAsync(m => m.Login.PhoneNo == id);
+
 
             if (shipmentAgent == null)
             {

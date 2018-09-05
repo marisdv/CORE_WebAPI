@@ -49,6 +49,26 @@ namespace CORE_WebAPI.Controllers
             return Ok(login);
         }
 
+        // GET: api/Logins/5
+        [HttpGet("phone/{id}")]
+        public async Task<IActionResult> GetLoginByPhone([FromRoute] string id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var login = await _context.Login.Include(myLogin => myLogin.UserType)
+                                            .SingleOrDefaultAsync(m => m.PhoneNo == id);
+
+            if (login == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(login);
+        }
+
         // PUT: api/Logins/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLogin([FromRoute] int id, [FromBody] Login login)
