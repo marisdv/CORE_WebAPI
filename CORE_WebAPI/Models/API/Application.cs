@@ -12,12 +12,12 @@ namespace CORE_WebAPI.Models
                 this.ApplicationDate = application.ApplicationDate;
             }
 
-            if (application.AgentId != null)
+            if (application.AgentId != 0)
             {
                 this.AgentId = application.AgentId;
             }
 
-            if (application.ApplicationStatusId != null)
+            if (application.ApplicationStatusId != 0)
             {
                 this.ApplicationStatusId = application.ApplicationStatusId;
             }
@@ -27,7 +27,7 @@ namespace CORE_WebAPI.Models
                 this.DateAccepted = application.DateAccepted;
             }
 
-            if (application.EmployeeId != null)
+            if (application.EmployeeId != 0)
             {
                 this.EmployeeId = application.EmployeeId;
             }

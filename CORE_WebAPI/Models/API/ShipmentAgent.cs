@@ -55,35 +55,35 @@ namespace CORE_WebAPI.Models
             {
                 this.ApplicationAccepted = agent.ApplicationAccepted;
             }
-            if (agent.AgentAvailability != null)
+            if (agent.AgentAvailability != 0)
             {
                 this.AgentAvailability = agent.AgentAvailability;
             }
-            if (agent.AgentActive != null)
+            if (agent.AgentActive != 0)
             {
                 this.AgentActive = agent.AgentActive;
             }
-            if (agent.Insurance != null)
+            if (agent.Insurance != 0)
             {
                 this.Insurance = agent.Insurance;
             }
-            if (agent.CityId != null)
+            if (agent.CityId != 0)
             {
                 this.CityId = agent.CityId;
             }
-            if (agent.LoginId != null)
+            if (agent.LoginId != 0)
             {
                 this.LoginId = agent.LoginId;
             }
-            if (agent.LicenceImageId != null)
+            if (agent.LicenceImageId != 0)
             {
                 this.LicenceImageId = agent.LicenceImageId;
             }
-            if (agent.AgentImageId != null)
+            if (agent.AgentImageId != 0)
             {
                 this.AgentImageId = agent.AgentImageId;
             }
-            if (agent.CurrentLocId != null)
+            if (agent.CurrentLocId != 0)
             {
                 this.CurrentLocId = agent.CurrentLocId;
             }

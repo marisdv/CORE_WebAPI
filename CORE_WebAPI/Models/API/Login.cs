@@ -15,7 +15,7 @@ namespace CORE_WebAPI.Models
             {
                 this.Password = login.Password;
             }
-            if (login.UserTypeId != null)
+            if (login.UserTypeId != 0)
             {
                 this.UserTypeId = login.UserTypeId;
             }

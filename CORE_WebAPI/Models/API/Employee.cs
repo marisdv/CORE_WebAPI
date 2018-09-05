@@ -34,7 +34,7 @@ namespace CORE_WebAPI.Models
             {
                 this.EmployeePassportNo = employee.EmployeePassportNo;
             }
-            if (employee.EmployeeActive != null)
+            if (employee.EmployeeActive != 0)
             {
                 this.EmployeeActive = employee.EmployeeActive;
             }

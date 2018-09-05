@@ -19,11 +19,11 @@ namespace CORE_WebAPI.Models
             {
                 this.DateTo = packageTypePrice.DateTo;
             }
-            if (packageTypePrice.Active != null)
+            if (packageTypePrice.Active != 0)
             {
                 this.Active = packageTypePrice.Active;
             }
-            if (packageTypePrice.PackageTypeId != null)
+            if (packageTypePrice.PackageTypeId != 0)
             {
                 this.PackageTypeId = packageTypePrice.PackageTypeId;
             }

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CORE_WebAPI.Models;
-using CORE_WebAPI.Models.API;
 using Microsoft.AspNetCore.Cors;
 
 namespace CORE_WebAPI.Controllers
