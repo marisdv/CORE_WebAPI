@@ -49,7 +49,7 @@ namespace CORE_WebAPI.Controllers
             return Ok(login);
         }
 
-        // GET: api/Logins/5
+        // GET: api/Logins/phone/082...
         [HttpGet("phone/{id}")]
         public async Task<IActionResult> GetLoginByPhone([FromRoute] string id)
         {

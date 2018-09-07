@@ -90,7 +90,7 @@ namespace CORE_WebAPI.Controllers
             return Ok(application);
         }
 
-        // GET: api/Applications/phone/0123412345
+        // GET: api/Applications/phone/012....
         [HttpGet("phone/{id}")]
         public async Task<IActionResult> GetApplicationByPhone([FromRoute] string id)
         {

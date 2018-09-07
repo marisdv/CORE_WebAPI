@@ -66,7 +66,9 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var employee = await _context.Employee.SingleOrDefaultAsync(m => m.EmployeeId == id);
+            var employee = await _context.Employee/*.Include(accessRole => accessRole.AccessRole)*/
+                                                 .Include(login => login.Login)
+                                                 .SingleOrDefaultAsync(m => m.EmployeeId == id);
 
             if (employee == null)
             {
@@ -74,6 +76,26 @@ namespace CORE_WebAPI.Controllers
             }
 
             return Ok(employee);
+        }
+
+        // GET: api/Employees/phone/012....
+        [HttpGet("phone/{id}")]
+        public async Task<IActionResult> GetEmployeeByPhone([FromRoute] string id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var application = await _context.Employee.Include(login => login.Login)
+                                                   .SingleOrDefaultAsync(m => m.Login.PhoneNo == id);
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(application);
         }
 
         // PUT: api/Employees/5

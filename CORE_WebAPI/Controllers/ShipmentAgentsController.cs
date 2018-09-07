@@ -78,7 +78,7 @@ namespace CORE_WebAPI.Controllers
             return Ok(shipmentAgent);
         }
 
-        // GET: api/ShipmentAgents/5
+        // GET: api/ShipmentAgents/phone/082...
         [HttpGet("phone/{id}")]
         public async Task<IActionResult> GetShipmentAgentByPhone([FromRoute] string id)
         {
