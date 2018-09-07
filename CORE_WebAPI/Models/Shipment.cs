@@ -19,11 +19,11 @@ namespace CORE_WebAPI.Models
         public string EndLatitude { get; set; }
         public DateTime ShipmentDate { get; set; }
         public string SpecialInstruction { get; set; }
-        public DateTime CollectionTime { get; set; }
+        public DateTime? CollectionTime { get; set; }
         public string ShipmentDistance { get; set; }
-        public DateTime DeliveryTime { get; set; }
-        public int Terminated { get; set; }
-        public int Paid { get; set; }
+        public DateTime? DeliveryTime { get; set; }
+        public byte? Terminated { get; set; }
+        public byte Paid { get; set; }
         public int SignatureId { get; set; }
         public int AgentId { get; set; }
         public int ShipmentStatusId { get; set; }

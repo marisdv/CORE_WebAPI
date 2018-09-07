@@ -33,7 +33,7 @@ namespace CORE_WebAPI.Controllers
                                    .Include(vehicle => vehicle.VehicleType)
                                    .Include(vehicle => vehicle.VehicleStatus);
         }
-
+        
         // GET: /vehiclegrid
         [HttpGet("/vehiclegrid")]
         public VehicleGrid VehicleGrid()

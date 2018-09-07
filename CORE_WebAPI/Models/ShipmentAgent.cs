@@ -31,9 +31,9 @@ namespace CORE_WebAPI.Models
         public byte Insurance { get; set; }
         public int CityId { get; set; }
         public int LoginId { get; set; }
-        public int LicenceImageId { get; set; }
-        public int AgentImageId { get; set; }
-        public int CurrentLocId { get; set; }
+        public int? LicenceImageId { get; set; }
+        public int? AgentImageId { get; set; }
+        public int? CurrentLocId { get; set; }
 
         public AgentProfileImage AgentImage { get; set; }
         public City City { get; set; }

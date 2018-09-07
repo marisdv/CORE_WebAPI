@@ -14,7 +14,7 @@ namespace CORE_WebAPI.Models
         public int PackageTypeQty { get; set; }
         public int PackageTypeId { get; set; }
         public int PackageContentId { get; set; }
-        public int ShipmentId { get; set; }
+        public int? ShipmentId { get; set; }
 
         public PackageContent PackageContent { get; set; }
         public PackageType PackageType { get; set; }

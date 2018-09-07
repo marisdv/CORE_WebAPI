@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CORE_WebAPI.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace CORE_WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [Produces("application/json")]
+    [EnableCors("MyPolicy")]
     public class AccessRoleAreasController : ControllerBase
     {
         private readonly ProjectCALContext _context;

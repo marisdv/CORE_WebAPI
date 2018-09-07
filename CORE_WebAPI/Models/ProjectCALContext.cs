@@ -988,6 +988,7 @@ namespace CORE_WebAPI.Models
                 entity.HasOne(d => d.Agent)
                     .WithMany(p => p.ShipmentAgentLocation)
                     .HasForeignKey(d => d.AgentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_AGENT_LOCATION_SHIPMENT_AGENT");
 
                 entity.HasOne(d => d.CurrentLoc)

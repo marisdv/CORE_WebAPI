@@ -9,8 +9,8 @@ namespace CORE_WebAPI.Models
         public DateTime ApplicationDate { get; set; }
         public int AgentId { get; set; }
         public int ApplicationStatusId { get; set; }
-        public DateTime DateAccepted { get; set; }
-        public int EmployeeId { get; set; }
+        public DateTime? DateAccepted { get; set; }
+        public int? EmployeeId { get; set; }
 
         public ShipmentAgent Agent { get; set; }
         public ApplicationStatus ApplicationStatus { get; set; }

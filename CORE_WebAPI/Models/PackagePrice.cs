@@ -8,7 +8,7 @@ namespace CORE_WebAPI.Models
         public int PackagePriceId { get; set; }
         public decimal PackagePrice1 { get; set; }
         public DateTime DateFrom { get; set; }
-        public DateTime DateTo { get; set; }
+        public DateTime? DateTo { get; set; }
         public byte Active { get; set; }
         public int PackageTypeId { get; set; }
 

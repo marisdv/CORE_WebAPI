@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CORE_WebAPI.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace CORE_WebAPI.Controllers
 {
+    [Produces("application/json")]
+    [EnableCors("MyPolicy")]
     [Route("api/[controller]")]
-    [ApiController]
     public class PackagePricesController : ControllerBase
     {
         private readonly ProjectCALContext _context;
@@ -24,7 +26,7 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<PackagePrice> GetPackagePrice()
         {
-            return _context.PackagePrice;
+            return _context.PackagePrice.Include(type => type.PackageType);
         }
 
         // GET: /packagepricesgrid
@@ -49,7 +51,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var packagePrice = await _context.PackagePrice.FindAsync(id);
+            var packagePrice = await _context.PackagePrice.Include(type => type.PackageType).SingleOrDefaultAsync(packageprice => packageprice.PackagePriceId == id);
 
             if (packagePrice == null)
             {

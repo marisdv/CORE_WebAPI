@@ -7,7 +7,7 @@ namespace CORE_WebAPI.Models
     {
         public int PentaltyId { get; set; }
         public DateTime DateCharged { get; set; }
-        public DateTime DatePaid { get; set; }
+        public DateTime? DatePaid { get; set; }
         public decimal PenaltyAmount { get; set; }
         public int ShipmentId { get; set; }
 

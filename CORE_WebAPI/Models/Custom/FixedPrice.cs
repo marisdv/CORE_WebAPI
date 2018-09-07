@@ -11,7 +11,7 @@ namespace CORE_WebAPI.Models
             {
                 this.FixedPriceDescr = fixedPrice.FixedPriceDescr;
             }
-            if (fixedPrice.FixedPrice1 != null)
+            if (fixedPrice.FixedPrice1 != 0)
             {
                 this.FixedPrice1 = fixedPrice.FixedPrice1;
             }
