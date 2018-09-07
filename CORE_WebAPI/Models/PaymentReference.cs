@@ -16,7 +16,6 @@ namespace CORE_WebAPI.Models
         public string PaymentTypeMethod { get; set; }
         public string PaymentTypeDetail { get; set; }
         public int ShipmentId { get; set; }
-        public int PenaltyId { get; set; }
 
         public Shipment Shipment { get; set; }
     }

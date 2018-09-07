@@ -5,15 +5,13 @@ namespace CORE_WebAPI.Models
 {
     public partial class ShipmentAgentLocation
     {
-        public ShipmentAgentLocation()
-        {
-            ShipmentAgent = new HashSet<ShipmentAgent>();
-        }
-
         public int CurrentLocId { get; set; }
         public string CurrentLocLatitude { get; set; }
         public string CurrentLocLongitude { get; set; }
+        public int AgentId { get; set; }
 
-        public ICollection<ShipmentAgent> ShipmentAgent { get; set; }
+        public ShipmentAgent Agent { get; set; }
+        public ShipmentAgentLocation CurrentLoc { get; set; }
+        public ShipmentAgentLocation InverseCurrentLoc { get; set; }
     }
 }

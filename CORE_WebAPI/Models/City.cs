@@ -13,8 +13,8 @@ namespace CORE_WebAPI.Models
 
         public int CityId { get; set; }
         public string CityName { get; set; }
-        public string CityPostalCode { get; set; }
         public int ProvinceId { get; set; }
+        public int CityAvailability { get; set; }
 
         public Province Province { get; set; }
         public ICollection<DownloadLocation> DownloadLocation { get; set; }

@@ -13,7 +13,7 @@ namespace CORE_WebAPI.Models
 
         public int AccessRoleId { get; set; }
         public string AccessRoleName { get; set; }
-        public string RoleDescription { get; set; }
+        public string AccessRoleDescr { get; set; }
 
         public ICollection<AccessRoleArea> AccessRoleArea { get; set; }
         public ICollection<Employee> Employee { get; set; }

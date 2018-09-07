@@ -23,7 +23,7 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<ApplicationStatus> ApplicationStatus { get; set; }
         public virtual DbSet<AuditLog> AuditLog { get; set; }
         public virtual DbSet<AuditType> AuditType { get; set; }
-        public virtual DbSet<Basket> Basket { get; set; }
+        public virtual DbSet<BasketLine> BasketLine { get; set; }
         public virtual DbSet<City> City { get; set; }
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<DownloadLocation> DownloadLocation { get; set; }
@@ -33,8 +33,8 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<Login> Login { get; set; }
         public virtual DbSet<Package> Package { get; set; }
         public virtual DbSet<PackageContent> PackageContent { get; set; }
+        public virtual DbSet<PackagePrice> PackagePrice { get; set; }
         public virtual DbSet<PackageType> PackageType { get; set; }
-        public virtual DbSet<PackageTypePrice> PackageTypePrice { get; set; }
         public virtual DbSet<PaymentReference> PaymentReference { get; set; }
         public virtual DbSet<Penalty> Penalty { get; set; }
         public virtual DbSet<Province> Province { get; set; }
@@ -83,16 +83,16 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.AccessRoleId).HasColumnName("Access_Role_ID");
 
+                entity.Property(e => e.AccessRoleDescr)
+                    .IsRequired()
+                    .HasColumnName("Access_Role_Descr")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.AccessRoleName)
                     .IsRequired()
                     .HasColumnName("Access_Role_Name")
                     .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.RoleDescription)
-                    .IsRequired()
-                    .HasColumnName("Role_Description")
-                    .HasMaxLength(255)
                     .IsUnicode(false);
             });
 
@@ -237,22 +237,32 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Basket>(entity =>
+            modelBuilder.Entity<BasketLine>(entity =>
             {
-                entity.ToTable("BASKET");
+                entity.HasKey(e => new { e.SenderId, e.PackageId });
 
-                entity.Property(e => e.BasketId)
-                    .HasColumnName("Basket_ID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.BasketDateTime)
-                    .HasColumnName("Basket_DateTime")
-                    .HasColumnType("date");
+                entity.ToTable("BASKET_LINE");
 
                 entity.Property(e => e.SenderId).HasColumnName("Sender_ID");
 
+                entity.Property(e => e.PackageId).HasColumnName("Package_ID");
+
+                entity.Property(e => e.PackageTypeId).HasColumnName("Package_Type_ID");
+
+                entity.HasOne(d => d.Package)
+                    .WithMany(p => p.BasketLine)
+                    .HasForeignKey(d => d.PackageId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BASKET_LINE_PACKAGE");
+
+                entity.HasOne(d => d.PackageType)
+                    .WithMany(p => p.BasketLine)
+                    .HasForeignKey(d => d.PackageTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BASKET_LINE_PACKAGE_TYPE");
+
                 entity.HasOne(d => d.Sender)
-                    .WithMany(p => p.Basket)
+                    .WithMany(p => p.BasketLine)
                     .HasForeignKey(d => d.SenderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BASKET_SENDER");
@@ -264,16 +274,12 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.CityId).HasColumnName("City_ID");
 
+                entity.Property(e => e.CityAvailability).HasColumnName("City_Availability");
+
                 entity.Property(e => e.CityName)
                     .IsRequired()
                     .HasColumnName("City_Name")
                     .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CityPostalCode)
-                    .IsRequired()
-                    .HasColumnName("City_Postal_Code")
-                    .HasMaxLength(4)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ProvinceId).HasColumnName("Province_ID");
@@ -503,19 +509,13 @@ namespace CORE_WebAPI.Models
                     .HasColumnName("Package_ID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.BasketId).HasColumnName("Basket_ID");
-
                 entity.Property(e => e.PackageContentId).HasColumnName("Package_Content_ID");
 
                 entity.Property(e => e.PackageTypeId).HasColumnName("Package_Type_ID");
 
                 entity.Property(e => e.PackageTypeQty).HasColumnName("Package_Type_Qty");
 
-                entity.HasOne(d => d.Basket)
-                    .WithMany(p => p.Package)
-                    .HasForeignKey(d => d.BasketId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PACKAGE_BASKET");
+                entity.Property(e => e.ShipmentId).HasColumnName("Shipment_ID");
 
                 entity.HasOne(d => d.PackageContent)
                     .WithMany(p => p.Package)
@@ -528,6 +528,11 @@ namespace CORE_WebAPI.Models
                     .HasForeignKey(d => d.PackageTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PACKAGE_PACKAGE_TYPE1");
+
+                entity.HasOne(d => d.Shipment)
+                    .WithMany(p => p.Package)
+                    .HasForeignKey(d => d.ShipmentId)
+                    .HasConstraintName("FK_PACKAGE_SHIPMENT");
             });
 
             modelBuilder.Entity<PackageContent>(entity =>
@@ -548,6 +553,29 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<PackagePrice>(entity =>
+            {
+                entity.ToTable("PACKAGE_PRICE");
+
+                entity.Property(e => e.PackagePriceId).HasColumnName("Package_Price_ID");
+
+                entity.Property(e => e.DateFrom).HasColumnType("datetime");
+
+                entity.Property(e => e.DateTo).HasColumnType("datetime");
+
+                entity.Property(e => e.PackagePrice1)
+                    .HasColumnName("Package_Price")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.PackageTypeId).HasColumnName("Package_Type_ID");
+
+                entity.HasOne(d => d.PackageType)
+                    .WithMany(p => p.PackagePrice)
+                    .HasForeignKey(d => d.PackageTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PACKAGE_TYPE_PRICE_PACKAGE_TYPE");
+            });
+
             modelBuilder.Entity<PackageType>(entity =>
             {
                 entity.ToTable("PACKAGE_TYPE");
@@ -559,31 +587,6 @@ namespace CORE_WebAPI.Models
                     .HasColumnName("Package_Type_Descr")
                     .HasMaxLength(50)
                     .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<PackageTypePrice>(entity =>
-            {
-                entity.HasKey(e => e.PackagePriceId);
-
-                entity.ToTable("PACKAGE_TYPE_PRICE");
-
-                entity.Property(e => e.PackagePriceId).HasColumnName("Package_Price_ID");
-
-                entity.Property(e => e.DateFrom).HasColumnType("datetime");
-
-                entity.Property(e => e.DateTo).HasColumnType("datetime");
-
-                entity.Property(e => e.PackagePrice)
-                    .HasColumnName("Package_Price")
-                    .HasColumnType("decimal(5, 2)");
-
-                entity.Property(e => e.PackageTypeId).HasColumnName("Package_Type_ID");
-
-                entity.HasOne(d => d.PackageType)
-                    .WithMany(p => p.PackageTypePrice)
-                    .HasForeignKey(d => d.PackageTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PACKAGE_TYPE_PRICE_PACKAGE_TYPE");
             });
 
             modelBuilder.Entity<PaymentReference>(entity =>
@@ -607,8 +610,6 @@ namespace CORE_WebAPI.Models
                     .IsRequired()
                     .HasMaxLength(2)
                     .IsUnicode(false);
-
-                entity.Property(e => e.PenaltyId).HasColumnName("Penalty_ID");
 
                 entity.Property(e => e.ResultCode)
                     .IsRequired()
@@ -764,8 +765,6 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.AgentId).HasColumnName("Agent_ID");
 
-                entity.Property(e => e.BasketId).HasColumnName("Basket_ID");
-
                 entity.Property(e => e.CollectionTime)
                     .HasColumnName("Collection_Time")
                     .HasColumnType("datetime");
@@ -787,6 +786,8 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ReceiverId).HasColumnName("Receiver_ID");
+
+                entity.Property(e => e.SenderId).HasColumnName("Sender_ID");
 
                 entity.Property(e => e.ShipmentDate)
                     .HasColumnName("Shipment_Date")
@@ -826,17 +827,17 @@ namespace CORE_WebAPI.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_SHIPMENT_AGENT");
 
-                entity.HasOne(d => d.Basket)
-                    .WithMany(p => p.Shipment)
-                    .HasForeignKey(d => d.BasketId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SHIPMENT_BASKET");
-
                 entity.HasOne(d => d.Receiver)
                     .WithMany(p => p.Shipment)
                     .HasForeignKey(d => d.ReceiverId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_RECEIVER");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.Shipment)
+                    .HasForeignKey(d => d.SenderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SHIPMENT_SENDER");
 
                 entity.HasOne(d => d.ShipmentStatus)
                     .WithMany(p => p.Shipment)
@@ -948,11 +949,6 @@ namespace CORE_WebAPI.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_AGENT_CITY");
 
-                entity.HasOne(d => d.CurrentLoc)
-                    .WithMany(p => p.ShipmentAgent)
-                    .HasForeignKey(d => d.CurrentLocId)
-                    .HasConstraintName("FK_SHIPMENT_AGENT_SHIPMENT_AGENT_LOCATION");
-
                 entity.HasOne(d => d.LicenceImage)
                     .WithMany(p => p.ShipmentAgent)
                     .HasForeignKey(d => d.LicenceImageId)
@@ -971,7 +967,11 @@ namespace CORE_WebAPI.Models
 
                 entity.ToTable("SHIPMENT_AGENT_LOCATION");
 
-                entity.Property(e => e.CurrentLocId).HasColumnName("CurrentLoc_ID");
+                entity.Property(e => e.CurrentLocId)
+                    .HasColumnName("CurrentLoc_ID")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.AgentId).HasColumnName("Agent_ID");
 
                 entity.Property(e => e.CurrentLocLatitude)
                     .IsRequired()
@@ -984,6 +984,17 @@ namespace CORE_WebAPI.Models
                     .HasColumnName("CurrentLoc_Longitude")
                     .HasMaxLength(35)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Agent)
+                    .WithMany(p => p.ShipmentAgentLocation)
+                    .HasForeignKey(d => d.AgentId)
+                    .HasConstraintName("FK_SHIPMENT_AGENT_LOCATION_SHIPMENT_AGENT");
+
+                entity.HasOne(d => d.CurrentLoc)
+                    .WithOne(p => p.InverseCurrentLoc)
+                    .HasForeignKey<ShipmentAgentLocation>(d => d.CurrentLocId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SHIPMENT_AGENT_LOCATION_SHIPMENT_AGENT_LOCATION");
             });
 
             modelBuilder.Entity<ShipmentStatus>(entity =>

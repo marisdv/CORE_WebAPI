@@ -9,6 +9,7 @@ namespace CORE_WebAPI.Models
         {
             Application = new HashSet<Application>();
             Shipment = new HashSet<Shipment>();
+            ShipmentAgentLocation = new HashSet<ShipmentAgentLocation>();
             Vehicle = new HashSet<Vehicle>();
         }
 
@@ -30,17 +31,17 @@ namespace CORE_WebAPI.Models
         public byte Insurance { get; set; }
         public int CityId { get; set; }
         public int LoginId { get; set; }
-        public int? LicenceImageId { get; set; }
-        public int? AgentImageId { get; set; }
-        public int? CurrentLocId { get; set; }
+        public int LicenceImageId { get; set; }
+        public int AgentImageId { get; set; }
+        public int CurrentLocId { get; set; }
 
         public AgentProfileImage AgentImage { get; set; }
         public City City { get; set; }
-        public ShipmentAgentLocation CurrentLoc { get; set; }
         public LicenceImage LicenceImage { get; set; }
         public Login Login { get; set; }
         public ICollection<Application> Application { get; set; }
         public ICollection<Shipment> Shipment { get; set; }
+        public ICollection<ShipmentAgentLocation> ShipmentAgentLocation { get; set; }
         public ICollection<Vehicle> Vehicle { get; set; }
     }
 }
