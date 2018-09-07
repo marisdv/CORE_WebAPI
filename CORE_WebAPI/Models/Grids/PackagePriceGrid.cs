@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CORE_WebAPI.Models
 {
-    public partial class PackageTypePriceGrid
+    public partial class PackagePriceGrid
     {
         public int totalCount { get; set; }
-        public IEnumerable<PackageTypePrice> packageTypePrices { get; set; }
+        public IEnumerable<PackagePrice> packageTypePrices { get; set; }
     }
 }

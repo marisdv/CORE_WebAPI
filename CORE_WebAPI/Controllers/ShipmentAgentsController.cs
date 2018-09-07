@@ -40,13 +40,13 @@ namespace CORE_WebAPI.Controllers
             ShipmentAgentGrid grid = new ShipmentAgentGrid();
 
             grid.totalCount = _context.ShipmentAgent.Include(image => image.AgentImage)
-                                                    .Include(loc => loc.CurrentLoc)
+                                                    /*.Include(loc => loc.CurrentLoc)*/
                                                     .Include(licence => licence.LicenceImage)
                                                     .Include(login => login.Login)
                                                     .Include(city => city.City).Count();
 
             grid.shipmentAgents = _context.ShipmentAgent.Include(image => image.AgentImage)
-                                                        .Include(loc => loc.CurrentLoc)
+                                                        /*.Include(loc => loc.CurrentLoc)*/
                                                         .Include(licence => licence.LicenceImage)
                                                         .Include(login => login.Login)
                                                         .Include(city => city.City);
@@ -64,7 +64,7 @@ namespace CORE_WebAPI.Controllers
             }
 
             var shipmentAgent = await _context.ShipmentAgent.Include(image => image.AgentImage)
-                                                            .Include(loc => loc.CurrentLoc)
+                                                            /*.Include(loc => loc.CurrentLoc)*/
                                                             .Include(licence => licence.LicenceImage)
                                                             .Include(login => login.Login)
                                                             .Include(city => city.City)

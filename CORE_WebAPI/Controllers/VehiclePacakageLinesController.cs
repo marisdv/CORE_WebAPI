@@ -11,56 +11,56 @@ namespace CORE_WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BasketsController : ControllerBase
+    public class VehiclePacakageLinesController : ControllerBase
     {
         private readonly ProjectCALContext _context;
 
-        public BasketsController(ProjectCALContext context)
+        public VehiclePacakageLinesController(ProjectCALContext context)
         {
             _context = context;
         }
 
-        // GET: api/Baskets
+        // GET: api/VehiclePacakageLines
         [HttpGet]
-        public IEnumerable<Basket> GetBasket()
+        public IEnumerable<VehiclePacakageLine> GetVehiclePacakageLine()
         {
-            return _context.Basket;
+            return _context.VehiclePacakageLine;
         }
 
-        // GET: api/Baskets/5
+        // GET: api/VehiclePacakageLines/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBasket([FromRoute] int id)
+        public async Task<IActionResult> GetVehiclePacakageLine([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var basket = await _context.Basket.FindAsync(id);
+            var vehiclePacakageLine = await _context.VehiclePacakageLine.FindAsync(id);
 
-            if (basket == null)
+            if (vehiclePacakageLine == null)
             {
                 return NotFound();
             }
 
-            return Ok(basket);
+            return Ok(vehiclePacakageLine);
         }
 
-        // PUT: api/Baskets/5
+        // PUT: api/VehiclePacakageLines/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBasket([FromRoute] int id, [FromBody] Basket basket)
+        public async Task<IActionResult> PutVehiclePacakageLine([FromRoute] int id, [FromBody] VehiclePacakageLine vehiclePacakageLine)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != basket.BasketId)
+            if (id != vehiclePacakageLine.VehicleTypeId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(basket).State = EntityState.Modified;
+            _context.Entry(vehiclePacakageLine).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace CORE_WebAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BasketExists(id))
+                if (!VehiclePacakageLineExists(id))
                 {
                     return NotFound();
                 }
@@ -81,23 +81,23 @@ namespace CORE_WebAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Baskets
+        // POST: api/VehiclePacakageLines
         [HttpPost]
-        public async Task<IActionResult> PostBasket([FromBody] Basket basket)
+        public async Task<IActionResult> PostVehiclePacakageLine([FromBody] VehiclePacakageLine vehiclePacakageLine)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Basket.Add(basket);
+            _context.VehiclePacakageLine.Add(vehiclePacakageLine);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (BasketExists(basket.BasketId))
+                if (VehiclePacakageLineExists(vehiclePacakageLine.VehicleTypeId))
                 {
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
                 }
@@ -107,33 +107,33 @@ namespace CORE_WebAPI.Controllers
                 }
             }
 
-            return CreatedAtAction("GetBasket", new { id = basket.BasketId }, basket);
+            return CreatedAtAction("GetVehiclePacakageLine", new { id = vehiclePacakageLine.VehicleTypeId }, vehiclePacakageLine);
         }
 
-        // DELETE: api/Baskets/5
+        // DELETE: api/VehiclePacakageLines/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBasket([FromRoute] int id)
+        public async Task<IActionResult> DeleteVehiclePacakageLine([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var basket = await _context.Basket.FindAsync(id);
-            if (basket == null)
+            var vehiclePacakageLine = await _context.VehiclePacakageLine.FindAsync(id);
+            if (vehiclePacakageLine == null)
             {
                 return NotFound();
             }
 
-            _context.Basket.Remove(basket);
+            _context.VehiclePacakageLine.Remove(vehiclePacakageLine);
             await _context.SaveChangesAsync();
 
-            return Ok(basket);
+            return Ok(vehiclePacakageLine);
         }
 
-        private bool BasketExists(int id)
+        private bool VehiclePacakageLineExists(int id)
         {
-            return _context.Basket.Any(e => e.BasketId == id);
+            return _context.VehiclePacakageLine.Any(e => e.VehicleTypeId == id);
         }
     }
 }

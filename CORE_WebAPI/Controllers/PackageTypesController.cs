@@ -26,7 +26,7 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<PackageType> GetPackageType()
         {
-            return _context.PackageType.Include(price => price.PackageTypePrice);
+            return _context.PackageType.Include(price => price.PackagePrice);
         }
 
         // GET: /packagetypesgrid
@@ -35,9 +35,9 @@ namespace CORE_WebAPI.Controllers
         {
             PackageTypeGrid grid = new PackageTypeGrid();
 
-            grid.totalCount = _context.PackageType.Include(price => price.PackageTypePrice).Count();
+            grid.totalCount = _context.PackageType.Include(price => price.PackagePrice).Count();
 
-            grid.packageTypes = _context.PackageType.Include(price => price.PackageTypePrice);
+            grid.packageTypes = _context.PackageType.Include(price => price.PackagePrice);
 
             return grid;
         }
@@ -51,7 +51,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var packageType = await _context.PackageType.Include(price => price.PackageTypePrice)
+            var packageType = await _context.PackageType.Include(price => price.PackagePrice)
                                                         .SingleOrDefaultAsync(m => m.PackageTypeId == id);
 
             if (packageType == null)

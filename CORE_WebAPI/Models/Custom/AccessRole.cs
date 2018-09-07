@@ -11,9 +11,9 @@ namespace CORE_WebAPI.Models
             {
                 this.AccessRoleName = accessRole.AccessRoleName;
             }
-            if (accessRole.RoleDescription != null)
+            if (accessRole.AccessRoleDescr != null)
             {
-                this.RoleDescription = accessRole.RoleDescription;
+                this.AccessRoleDescr = accessRole.AccessRoleDescr;
             }
 
             //Make sure all areas come through in JSON 
