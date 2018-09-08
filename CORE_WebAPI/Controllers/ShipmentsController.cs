@@ -48,6 +48,44 @@ namespace CORE_WebAPI.Controllers
             return Ok(shipment);
         }
 
+        // GET: api/Shipments/Sender/1
+        [HttpGet("sender/{id}")]
+        public async Task<IActionResult> GetShipmentBySender([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var application = await _context.Shipment.SingleOrDefaultAsync(m => m.SenderId == id);
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(application);
+        }
+
+        // GET: api/Shipments/Agent/13
+        [HttpGet("agent/{id}")]
+        public async Task<IActionResult> GetShipmentByAgent([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var application = await _context.Shipment.SingleOrDefaultAsync(m => m.AgentId == id);
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(application);
+        }
+
         // PUT: api/Shipments/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShipment([FromRoute] int id, [FromBody] Shipment shipment)

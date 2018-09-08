@@ -7,7 +7,6 @@ namespace CORE_WebAPI.Models
     {
         public PackageType()
         {
-            BasketLine = new HashSet<BasketLine>();
             Package = new HashSet<Package>();
             PackagePrice = new HashSet<PackagePrice>();
             VehiclePacakageLine = new HashSet<VehiclePacakageLine>();
@@ -16,7 +15,6 @@ namespace CORE_WebAPI.Models
         public int PackageTypeId { get; set; }
         public string PackageTypeDescr { get; set; }
 
-        public ICollection<BasketLine> BasketLine { get; set; }
         public ICollection<Package> Package { get; set; }
         public ICollection<PackagePrice> PackagePrice { get; set; }
         public ICollection<VehiclePacakageLine> VehiclePacakageLine { get; set; }

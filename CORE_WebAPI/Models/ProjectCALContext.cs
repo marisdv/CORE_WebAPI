@@ -247,19 +247,11 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.PackageId).HasColumnName("Package_ID");
 
-                entity.Property(e => e.PackageTypeId).HasColumnName("Package_Type_ID");
-
                 entity.HasOne(d => d.Package)
                     .WithMany(p => p.BasketLine)
                     .HasForeignKey(d => d.PackageId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BASKET_LINE_PACKAGE");
-
-                entity.HasOne(d => d.PackageType)
-                    .WithMany(p => p.BasketLine)
-                    .HasForeignKey(d => d.PackageTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BASKET_LINE_PACKAGE_TYPE");
 
                 entity.HasOne(d => d.Sender)
                     .WithMany(p => p.BasketLine)
@@ -505,9 +497,7 @@ namespace CORE_WebAPI.Models
             {
                 entity.ToTable("PACKAGE");
 
-                entity.Property(e => e.PackageId)
-                    .HasColumnName("Package_ID")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.PackageId).HasColumnName("Package_ID");
 
                 entity.Property(e => e.PackageContentId).HasColumnName("Package_Content_ID");
 
@@ -974,13 +964,11 @@ namespace CORE_WebAPI.Models
                 entity.Property(e => e.AgentId).HasColumnName("Agent_ID");
 
                 entity.Property(e => e.CurrentLocLatitude)
-                    .IsRequired()
                     .HasColumnName("CurrentLoc_Latitude")
                     .HasMaxLength(35)
                     .IsUnicode(false);
 
                 entity.Property(e => e.CurrentLocLongitude)
-                    .IsRequired()
                     .HasColumnName("CurrentLoc_Longitude")
                     .HasMaxLength(35)
                     .IsUnicode(false);
