@@ -26,11 +26,11 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<ShipmentAgent> GetShipmentAgent()
         {
-            return _context.ShipmentAgent.Include(image => image.AgentImage)
+            return _context.ShipmentAgent/*.Include(image => image.AgentImage)
                                          .Include(loc => loc.ShipmentAgentLocation)
-                                         .Include(licence => licence.LicenceImage)
+                                         .Include(licence => licence.LicenceImage)*/
                                          .Include(login => login.Login)
-                                         .Include(city => city.City);
+                                         /*.Include(city => city.City)*/;
         }
 
         // GET: /shipmentagentgrid
@@ -39,17 +39,18 @@ namespace CORE_WebAPI.Controllers
         {
             ShipmentAgentGrid grid = new ShipmentAgentGrid();
 
-            grid.totalCount = _context.ShipmentAgent.Include(image => image.AgentImage)
+            grid.totalCount = _context.ShipmentAgent/*.Include(image => image.AgentImage)
                                                     .Include(loc => loc.ShipmentAgentLocation)
-                                                    .Include(licence => licence.LicenceImage)
+                                                    .Include(licence => licence.LicenceImage)*/
                                                     .Include(login => login.Login)
-                                                    .Include(city => city.City).Count();
+                                                    /*.Include(city => city.City)*/
+                                                     .Count();
 
-            grid.shipmentAgents = _context.ShipmentAgent.Include(image => image.AgentImage)
+            grid.shipmentAgents = _context.ShipmentAgent/*.Include(image => image.AgentImage)
                                                         .Include(loc => loc.ShipmentAgentLocation)
-                                                        .Include(licence => licence.LicenceImage)
+                                                        .Include(licence => licence.LicenceImage)*/
                                                         .Include(login => login.Login)
-                                                        .Include(city => city.City);
+                                                        /*.Include(city => city.City)*/;
 
             return grid;
         }

@@ -65,17 +65,22 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPackagePrice([FromRoute] int id, [FromBody] PackagePrice packagePrice)
         {
+
+            PackagePrice updatePackagePrice = _context.PackagePrice.FirstOrDefault(p => p.PackagePriceId == id);
+
+            updatePackagePrice.UpdateChangedFields(packagePrice);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != packagePrice.PackagePriceId)
+            if (id != updatePackagePrice.PackagePriceId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(packagePrice).State = EntityState.Modified;
+            _context.Entry(updatePackagePrice).State = EntityState.Modified;
 
             try
             {

@@ -10,60 +10,65 @@ using Microsoft.AspNetCore.Cors;
 
 namespace CORE_WebAPI.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
     [EnableCors("MyPolicy")]
-    public class ProvincesController : ControllerBase
+    public class PackageContentsController : ControllerBase
     {
         private readonly ProjectCALContext _context;
 
-        public ProvincesController(ProjectCALContext context)
+        public PackageContentsController(ProjectCALContext context)
         {
             _context = context;
         }
 
-        // GET: api/Provinces
+        // GET: api/PackageContents
         [HttpGet]
-        public IEnumerable<Province> GetProvince()
+        public IEnumerable<PackageContent> GetPackageContent()
         {
-            return _context.Province;
+            return _context.PackageContent;
         }
 
-        // GET: api/Provinces/5
+        // GET: api/PackageContents/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProvince([FromRoute] int id)
+        public async Task<IActionResult> GetPackageContent([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var province = await _context.Province.FindAsync(id);
+            var packageContent = await _context.PackageContent.FindAsync(id);
 
-            if (province == null)
+            if (packageContent == null)
             {
                 return NotFound();
             }
 
-            return Ok(province);
+            return Ok(packageContent);
         }
 
-        // PUT: api/Provinces/5
+        // PUT: api/PackageContents/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProvince([FromRoute] int id, [FromBody] Province province)
+        public async Task<IActionResult> PutPackageContent([FromRoute] int id, [FromBody] PackageContent packageContent)
         {
+            PackageContent updatePackageContent = _context.PackageContent.FirstOrDefault(p => p.PackageContentId == id);
+
+            updatePackageContent.UpdateChangedFields(packageContent);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != province.ProvinceId)
+            if (id != updatePackageContent.PackageContentId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(province).State = EntityState.Modified;
+            _context.Entry(updatePackageContent).State = EntityState.Modified;
 
             try
             {
@@ -71,7 +76,7 @@ namespace CORE_WebAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProvinceExists(id))
+                if (!PackageContentExists(id))
                 {
                     return NotFound();
                 }
@@ -84,45 +89,45 @@ namespace CORE_WebAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Provinces
+        // POST: api/PackageContents
         [HttpPost]
-        public async Task<IActionResult> PostProvince([FromBody] Province province)
+        public async Task<IActionResult> PostPackageContent([FromBody] PackageContent packageContent)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Province.Add(province);
+            _context.PackageContent.Add(packageContent);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProvince", new { id = province.ProvinceId }, province);
+            return CreatedAtAction("GetPackageContent", new { id = packageContent.PackageContentId }, packageContent);
         }
 
-        // DELETE: api/Provinces/5
+        // DELETE: api/PackageContents/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProvince([FromRoute] int id)
+        public async Task<IActionResult> DeletePackageContent([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var province = await _context.Province.FindAsync(id);
-            if (province == null)
+            var packageContent = await _context.PackageContent.FindAsync(id);
+            if (packageContent == null)
             {
                 return NotFound();
             }
 
-            _context.Province.Remove(province);
+            _context.PackageContent.Remove(packageContent);
             await _context.SaveChangesAsync();
 
-            return Ok(province);
+            return Ok(packageContent);
         }
 
-        private bool ProvinceExists(int id)
+        private bool PackageContentExists(int id)
         {
-            return _context.Province.Any(e => e.ProvinceId == id);
+            return _context.PackageContent.Any(e => e.PackageContentId == id);
         }
     }
 }

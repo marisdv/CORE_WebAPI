@@ -23,17 +23,12 @@ namespace CORE_WebAPI.Models
 
                 foreach (var area in accessRole.AccessRoleArea)
                 {
-
                     if (area.AccessAreaId != 0 && area.AccessRoleId != 0)
                     {
                         this.AccessRoleArea.Add(area);
                     }
                 }
             }
-
-
         }
     }
-
-  
 }

@@ -26,8 +26,8 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<AccessRole> GetAccessRole()
         {
-            return _context.AccessRole.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
-                                      .ThenInclude(AccessArea => AccessArea.AccessArea);
+            return _context.AccessRole/*.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
+                                      .Include(AccessArea => AccessArea.AccessArea)*/;
         }
 
         // GET: /accessrolegrid
@@ -36,12 +36,12 @@ namespace CORE_WebAPI.Controllers
         {
             AccessRoleGrid grid = new AccessRoleGrid();
 
-            grid.totalCount = _context.AccessRole.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
-                                                 .ThenInclude(AccessArea => AccessArea.AccessArea).Count();
+            grid.totalCount = _context.AccessRole/*.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
+                                      .Include(AccessArea => AccessArea.AccessArea)*/.Count();
 
-            grid.accessRoles = _context.AccessRole.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
-                                                 .ThenInclude(AccessArea => AccessArea.AccessArea);
-            
+            grid.accessRoles = _context.AccessRole/*.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
+                                      .Include(AccessArea => AccessArea.AccessArea)*/;
+
             return grid;
         }
 
@@ -54,8 +54,8 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var accessRole = await _context.AccessRole.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
-                                                      .ThenInclude(AccessArea => AccessArea.AccessArea) 
+            var accessRole = await _context.AccessRole/*.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
+                                      .Include(AccessArea => AccessArea.AccessArea)*/
                                                       .SingleOrDefaultAsync(m => m.AccessRoleId == id);
 
             if (accessRole == null)
@@ -79,12 +79,12 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != accessRole.AccessRoleId)
+            if (id != updateAccessRole.AccessRoleId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(accessRole).State = EntityState.Modified;
+            _context.Entry(updateAccessRole).State = EntityState.Modified;
 
             try
             {

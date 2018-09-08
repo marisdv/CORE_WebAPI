@@ -14,56 +14,56 @@ namespace CORE_WebAPI.Controllers
     [ApiController]
     [Produces("application/json")]
     [EnableCors("MyPolicy")]
-    public class PackagesController : ControllerBase
+    public class AccessAreasController : ControllerBase
     {
         private readonly ProjectCALContext _context;
 
-        public PackagesController(ProjectCALContext context)
+        public AccessAreasController(ProjectCALContext context)
         {
             _context = context;
         }
 
-        // GET: api/Packages
+        // GET: api/AccessAreas
         [HttpGet]
-        public IEnumerable<Package> GetPackage()
+        public IEnumerable<AccessArea> GetAccessArea()
         {
-            return _context.Package;
+            return _context.AccessArea;
         }
 
-        // GET: api/Packages/5
+        // GET: api/AccessAreas/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPackage([FromRoute] int id)
+        public async Task<IActionResult> GetAccessArea([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var package = await _context.Package.FindAsync(id);
+            var accessArea = await _context.AccessArea.FindAsync(id);
 
-            if (package == null)
+            if (accessArea == null)
             {
                 return NotFound();
             }
 
-            return Ok(package);
+            return Ok(accessArea);
         }
 
-        // PUT: api/Packages/5
+        // PUT: api/AccessAreas/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPackage([FromRoute] int id, [FromBody] Package package)
+        public async Task<IActionResult> PutAccessArea([FromRoute] int id, [FromBody] AccessArea accessArea)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != package.PackageId)
+            if (id != accessArea.AccessAreaId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(package).State = EntityState.Modified;
+            _context.Entry(accessArea).State = EntityState.Modified;
 
             try
             {
@@ -71,7 +71,7 @@ namespace CORE_WebAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PackageExists(id))
+                if (!AccessAreaExists(id))
                 {
                     return NotFound();
                 }
@@ -84,59 +84,45 @@ namespace CORE_WebAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Packages
+        // POST: api/AccessAreas
         [HttpPost]
-        public async Task<IActionResult> PostPackage([FromBody] Package package)
+        public async Task<IActionResult> PostAccessArea([FromBody] AccessArea accessArea)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Package.Add(package);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (PackageExists(package.PackageId))
-                {
-                    return new StatusCodeResult(StatusCodes.Status409Conflict);
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _context.AccessArea.Add(accessArea);
+            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPackage", new { id = package.PackageId }, package);
+            return CreatedAtAction("GetAccessArea", new { id = accessArea.AccessAreaId }, accessArea);
         }
 
-        // DELETE: api/Packages/5
+        // DELETE: api/AccessAreas/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePackage([FromRoute] int id)
+        public async Task<IActionResult> DeleteAccessArea([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var package = await _context.Package.FindAsync(id);
-            if (package == null)
+            var accessArea = await _context.AccessArea.FindAsync(id);
+            if (accessArea == null)
             {
                 return NotFound();
             }
 
-            _context.Package.Remove(package);
+            _context.AccessArea.Remove(accessArea);
             await _context.SaveChangesAsync();
 
-            return Ok(package);
+            return Ok(accessArea);
         }
 
-        private bool PackageExists(int id)
+        private bool AccessAreaExists(int id)
         {
-            return _context.Package.Any(e => e.PackageId == id);
+            return _context.AccessArea.Any(e => e.AccessAreaId == id);
         }
     }
 }

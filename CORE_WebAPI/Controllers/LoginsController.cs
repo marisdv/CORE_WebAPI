@@ -26,7 +26,7 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Login> GetLogin()
         {
-            return _context.Login.Include(login => login.UserType);
+            return _context.Login/*.Include(login => login.UserType)*/;
         }
 
         // GET: api/Logins/5
@@ -38,7 +38,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var login = await _context.Login.Include(myLogin => myLogin.UserType)
+            var login = await _context.Login/*.Include(login => login.UserType)*/
                                             .SingleOrDefaultAsync(m => m.LoginId == id);
 
             if (login == null)
@@ -58,7 +58,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var login = await _context.Login.Include(myLogin => myLogin.UserType)
+            var login = await _context.Login/*.Include(login => login.UserType)*/
                                             .SingleOrDefaultAsync(m => m.PhoneNo == id);
 
             if (login == null)
