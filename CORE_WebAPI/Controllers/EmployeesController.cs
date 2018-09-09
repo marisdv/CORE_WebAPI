@@ -26,7 +26,7 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Employee> GetEmployee()
         {
-            return _context.Employee.Include(accessRole => accessRole.AccessRole)
+            return _context.Employee/*.Include(accessRole => accessRole.AccessRole)*/
                                     .Include(login => login.Login);
         }
 
@@ -36,10 +36,10 @@ namespace CORE_WebAPI.Controllers
         {
             EmployeeGrid grid = new EmployeeGrid();
 
-            grid.totalCount = _context.Employee.Include(accessRole => accessRole.AccessRole)
+            grid.totalCount = _context.Employee/*.Include(accessRole => accessRole.AccessRole)*/
                                                 .Include(login => login.Login).Count();
 
-            grid.employees = _context.Employee.Include(accessRole => accessRole.AccessRole)
+            grid.employees = _context.Employee/*.Include(accessRole => accessRole.AccessRole)*/
                                               .Include(login => login.Login);
             return grid;
         }

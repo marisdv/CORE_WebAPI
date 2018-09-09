@@ -27,7 +27,7 @@ namespace CORE_WebAPI.Models
             {
                 this.AgentPassportNo = agent.AgentPassportNo;
             }
-            if (agent.DateEmployed != null)
+            if (agent.DateEmployed != null && agent.DateEmployed != new DateTime())
             {
                 this.DateEmployed = agent.DateEmployed;
             }
@@ -51,19 +51,19 @@ namespace CORE_WebAPI.Models
             {
                 this.BankBranchCode = agent.BankBranchCode;
             }
-            if (agent.ApplicationAccepted != 0)
+            if (agent.ApplicationAccepted != null)
             {
                 this.ApplicationAccepted = agent.ApplicationAccepted;
             }
-            if (agent.AgentAvailability != 0)
+            if (agent.AgentAvailability != null)
             {
                 this.AgentAvailability = agent.AgentAvailability;
             }
-            if (agent.AgentActive != 0)
+            if (agent.AgentActive != null)
             {
                 this.AgentActive = agent.AgentActive;
             }
-            if (agent.Insurance != 0)
+            if (agent.Insurance != null)
             {
                 this.Insurance = agent.Insurance;
             }

@@ -5,6 +5,8 @@ namespace CORE_WebAPI.Models
 {
     public partial class Employee
     {
+        
+
         public string GetBasicDetails()
         {
             return this.EmployeeName + ' ' + this.EmployeeSurname;
@@ -13,7 +15,6 @@ namespace CORE_WebAPI.Models
 
         public void UpdateChangedFields(Employee employee)
         {
-          
             if (employee.EmployeeName != null)
             {
                 this.EmployeeName = employee.EmployeeName;
@@ -34,15 +35,15 @@ namespace CORE_WebAPI.Models
             {
                 this.EmployeePassportNo = employee.EmployeePassportNo;
             }
-            if (employee.EmployeeActive != 0)
+            if (employee.EmployeeActive != null)
             {
                 this.EmployeeActive = employee.EmployeeActive;
             }
-            if (employee.DateEmployed != null)
+            if (employee.DateEmployed != null && employee.DateEmployed != new DateTime())
             {
                 this.DateEmployed = employee.DateEmployed;
             }
- 
+        }
     }
-    }
+    
 }

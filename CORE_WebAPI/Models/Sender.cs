@@ -17,7 +17,7 @@ namespace CORE_WebAPI.Models
         public string SenderNationalId { get; set; }
         public string SenderPassportNo { get; set; }
         public string SenderEmail { get; set; }
-        public byte SenderActive { get; set; }
+        public byte? SenderActive { get; set; }
         public int LoginId { get; set; }
 
         public Login Login { get; set; }

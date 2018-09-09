@@ -32,7 +32,7 @@ namespace CORE_WebAPI.Models
                 this.SenderEmail = sender.SenderEmail;
             }
 
-            if (sender.SenderActive != 0)
+            if (sender.SenderActive != null)
             {
                 this.SenderActive = sender.SenderActive;
             }

@@ -11,15 +11,15 @@ namespace CORE_WebAPI.Models
             {
                 this.PackagePrice1 = packagePrice.PackagePrice1;
             }
-            if (packagePrice.DateFrom != null)
+            if (packagePrice.DateFrom != null && packagePrice.DateFrom != new DateTime())
             {
                 this.DateFrom = packagePrice.DateFrom;
             }
-            if (packagePrice.DateTo != null)
+            if (packagePrice.DateTo != null && packagePrice.DateTo != new DateTime())
             {
                 this.DateTo = packagePrice.DateTo;
             }
-            if (packagePrice.Active != 0)
+            if (packagePrice.Active != null)
             {
                 this.Active = packagePrice.Active;
             }

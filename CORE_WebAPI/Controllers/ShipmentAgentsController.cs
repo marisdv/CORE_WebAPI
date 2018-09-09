@@ -64,11 +64,11 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var shipmentAgent = await _context.ShipmentAgent.Include(image => image.AgentImage)
+            var shipmentAgent = await _context.ShipmentAgent/*.Include(image => image.AgentImage)
                                                             .Include(loc => loc.ShipmentAgentLocation)
-                                                            .Include(licence => licence.LicenceImage)
+                                                            .Include(licence => licence.LicenceImage)*/
                                                             .Include(login => login.Login)
-                                                            .Include(city => city.City)
+                                                            /*.Include(city => city.City)*/
                                                             .SingleOrDefaultAsync(m => m.AgentId == id);
 
             if (shipmentAgent == null)
@@ -105,39 +105,46 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShipmentAgent([FromRoute] int id, [FromBody] ShipmentAgent shipmentAgent)
         {
-            ShipmentAgent updateAgent = _context.ShipmentAgent.FirstOrDefault(a => a.AgentId == id);
-
-            updateAgent.UpdateChangedFields(shipmentAgent);
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != updateAgent.AgentId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(updateAgent).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                ShipmentAgent updateAgent = _context.ShipmentAgent.FirstOrDefault(a => a.AgentId == id);
+                updateAgent.UpdateChangedFields(shipmentAgent);              
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (id != updateAgent.AgentId)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(updateAgent).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ShipmentAgentExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                // HttpResponse res = new HttpResponse();
+                return Ok(updateAgent.AgentId);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!ShipmentAgentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NoContent();
             }
 
-            return NoContent();
         }
 
         // POST: api/ShipmentAgents

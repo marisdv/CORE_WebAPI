@@ -7,7 +7,7 @@ namespace CORE_WebAPI.Models
     {
         public void UpdateChangedFields(Application application)
         {
-            if (application.ApplicationDate != null)
+            if (application.ApplicationDate != null && application.ApplicationDate != new DateTime())
             {
                 this.ApplicationDate = application.ApplicationDate;
             }
@@ -22,7 +22,7 @@ namespace CORE_WebAPI.Models
                 this.ApplicationStatusId = application.ApplicationStatusId;
             }
 
-            if (application.DateAccepted != null)
+            if (application.DateAccepted != null && application.DateAccepted != new DateTime())
             {
                 this.DateAccepted = application.DateAccepted;
             }

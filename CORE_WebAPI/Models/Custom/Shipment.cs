@@ -23,7 +23,7 @@ namespace CORE_WebAPI.Models
             {
                 this.EndLatitude = shipment.EndLatitude;
             }
-            if (shipment.ShipmentDate != null)
+            if (shipment.ShipmentDate != null && shipment.ShipmentDate != new DateTime())
             {
                 this.ShipmentDate = shipment.ShipmentDate;
             }
@@ -31,7 +31,7 @@ namespace CORE_WebAPI.Models
             {
                 this.SpecialInstruction = shipment.SpecialInstruction;
             }
-            if (shipment.CollectionTime != null)
+            if (shipment.CollectionTime != null && shipment.CollectionTime != new DateTime())
             {
                 this.CollectionTime = shipment.CollectionTime;
             }
@@ -39,7 +39,7 @@ namespace CORE_WebAPI.Models
             {
                 this.ShipmentDistance = shipment.ShipmentDistance;
             }
-            if (shipment.DeliveryTime != null)
+            if (shipment.DeliveryTime != null && shipment.DeliveryTime != new DateTime())
             {
                 this.DeliveryTime = shipment.DeliveryTime;
             }
@@ -47,7 +47,7 @@ namespace CORE_WebAPI.Models
             {
                 this.Terminated = shipment.Terminated;
             }
-            if (shipment.Paid != 0)
+            if (shipment.Paid != null)
             {
                 this.Paid = shipment.Paid;
             }

@@ -78,17 +78,21 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVehicle([FromRoute] int id, [FromBody] Vehicle vehicle)
         {
+            Vehicle updateVehicle = _context.Vehicle.FirstOrDefault(v => v.VehicleId == id);
+
+            updateVehicle.UpdateChangedFields(vehicle);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != vehicle.VehicleId)
+            if (id != updateVehicle.VehicleId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(vehicle).State = EntityState.Modified;
+            _context.Entry(updateVehicle).State = EntityState.Modified;
 
             try
             {
@@ -105,7 +109,6 @@ namespace CORE_WebAPI.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
 

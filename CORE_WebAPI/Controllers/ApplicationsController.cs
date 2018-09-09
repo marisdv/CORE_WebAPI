@@ -30,7 +30,7 @@ namespace CORE_WebAPI.Controllers
             //                i.e. we cannot nest all the related data into the same JSON file
             //                for now the most important things are nested, because we will probably not need ALL the related data when we call an application
             return _context.Application.Include(application => application.ApplicationStatus)
-                                       .Include(employee => employee.Employee)
+                                       //.Include(employee => employee.Employee)
                                        .Include(agent => agent.Agent)
                                             .ThenInclude(login => login.Login)
                                        //.Include(agent => agent.Agent)
@@ -55,12 +55,12 @@ namespace CORE_WebAPI.Controllers
             ApplicationGrid grid = new ApplicationGrid();
 
             grid.totalCount = _context.Application.Include(application => application.ApplicationStatus)
-                                                  .Include(employee => employee.Employee)
+                                                  //.Include(employee => employee.Employee)
                                                   .Include(agent => agent.Agent)
                                                         .ThenInclude(login => login.Login).Count();
 
             grid.applications = _context.Application.Include(application => application.ApplicationStatus)
-                                                    .Include(employee => employee.Employee)
+                                                    //.Include(employee => employee.Employee)
                                                     .Include(agent => agent.Agent)
                                                         .ThenInclude(login => login.Login);
 
@@ -77,7 +77,7 @@ namespace CORE_WebAPI.Controllers
             }
 
             var application = await _context.Application.Include(appl => appl.ApplicationStatus)
-                                                        .Include(employee => employee.Employee)
+                                                        //.Include(employee => employee.Employee)
                                                         .Include(agent => agent.Agent)
                                                              .ThenInclude(login => login.Login)
                                                         .SingleOrDefaultAsync(m => m.ApplicationId == id);  
