@@ -16,13 +16,14 @@ namespace CORE_WebAPI.Models
         public string EmployeeEmail { get; set; }
         public string EmployeeNationalId { get; set; }
         public string EmployeePassportNo { get; set; }
-        public byte? EmployeeActive { get; set; }
+        public byte EmployeeActive { get; set; }
         public DateTime DateEmployed { get; set; }
         public int AccessRoleId { get; set; }
-        public int LoginId { get; set; }
+        public string EmployeeImage { get; set; }
+        public string EmployeePhone { get; set; }
+        public string EmployeePassword { get; set; }
 
         public AccessRole AccessRole { get; set; }
-        public Login Login { get; set; }
         public ICollection<Application> Application { get; set; }
     }
 }

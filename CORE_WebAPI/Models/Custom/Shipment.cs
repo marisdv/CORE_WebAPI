@@ -51,10 +51,6 @@ namespace CORE_WebAPI.Models
             {
                 this.Paid = shipment.Paid;
             }
-            if (shipment.SignatureId != 0)
-            {
-                this.SignatureId = shipment.SignatureId;
-            }
             if (shipment.AgentId != 0)
             {
                 this.AgentId = shipment.AgentId;

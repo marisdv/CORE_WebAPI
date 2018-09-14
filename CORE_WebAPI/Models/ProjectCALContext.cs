@@ -18,7 +18,6 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<AccessArea> AccessArea { get; set; }
         public virtual DbSet<AccessRole> AccessRole { get; set; }
         public virtual DbSet<AccessRoleArea> AccessRoleArea { get; set; }
-        public virtual DbSet<AgentProfileImage> AgentProfileImage { get; set; }
         public virtual DbSet<Application> Application { get; set; }
         public virtual DbSet<ApplicationStatus> ApplicationStatus { get; set; }
         public virtual DbSet<AuditLog> AuditLog { get; set; }
@@ -29,7 +28,6 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<DownloadLocation> DownloadLocation { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
         public virtual DbSet<FixedPrice> FixedPrice { get; set; }
-        public virtual DbSet<LicenceImage> LicenceImage { get; set; }
         public virtual DbSet<Login> Login { get; set; }
         public virtual DbSet<Package> Package { get; set; }
         public virtual DbSet<PackageContent> PackageContent { get; set; }
@@ -44,12 +42,10 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<ShipmentAgent> ShipmentAgent { get; set; }
         public virtual DbSet<ShipmentAgentLocation> ShipmentAgentLocation { get; set; }
         public virtual DbSet<ShipmentStatus> ShipmentStatus { get; set; }
-        public virtual DbSet<SignatureImage> SignatureImage { get; set; }
         public virtual DbSet<UserType> UserType { get; set; }
         public virtual DbSet<Vehicle> Vehicle { get; set; }
         public virtual DbSet<VehicleMake> VehicleMake { get; set; }
         public virtual DbSet<VehiclePacakageLine> VehiclePacakageLine { get; set; }
-        public virtual DbSet<VehicleProofImage> VehicleProofImage { get; set; }
         public virtual DbSet<VehicleStatus> VehicleStatus { get; set; }
         public virtual DbSet<VehicleType> VehicleType { get; set; }
 
@@ -117,21 +113,6 @@ namespace CORE_WebAPI.Models
                     .HasForeignKey(d => d.AccessRoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ACCESS_ROLE_AREA_ACCESS_ROLE");
-            });
-
-            modelBuilder.Entity<AgentProfileImage>(entity =>
-            {
-                entity.HasKey(e => e.AgentImageId);
-
-                entity.ToTable("AGENT_PROFILE_IMAGE");
-
-                entity.Property(e => e.AgentImageId).HasColumnName("Agent_Image_ID");
-
-                entity.Property(e => e.AgentImage)
-                    .IsRequired()
-                    .HasColumnName("Agent_Image")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Application>(entity =>
@@ -397,6 +378,11 @@ namespace CORE_WebAPI.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.EmployeeImage)
+                    .HasColumnName("Employee_Image")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EmployeeName)
                     .IsRequired()
                     .HasColumnName("Employee_Name")
@@ -413,25 +399,27 @@ namespace CORE_WebAPI.Models
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
+                entity.Property(e => e.EmployeePassword)
+                    .HasColumnName("Employee_Password")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EmployeePhone)
+                    .HasColumnName("Employee_Phone")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EmployeeSurname)
                     .IsRequired()
                     .HasColumnName("Employee_Surname")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.LoginId).HasColumnName("Login_ID");
-
                 entity.HasOne(d => d.AccessRole)
                     .WithMany(p => p.Employee)
                     .HasForeignKey(d => d.AccessRoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_EMPLOYEE_ACCESS_ROLE");
-
-                entity.HasOne(d => d.Login)
-                    .WithMany(p => p.Employee)
-                    .HasForeignKey(d => d.LoginId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EMPLOYEE_LOGIN");
             });
 
             modelBuilder.Entity<FixedPrice>(entity =>
@@ -452,19 +440,6 @@ namespace CORE_WebAPI.Models
                     .IsRequired()
                     .HasColumnName("Fixed_Price_Descr")
                     .HasMaxLength(20)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<LicenceImage>(entity =>
-            {
-                entity.ToTable("LICENCE_IMAGE");
-
-                entity.Property(e => e.LicenceImageId).HasColumnName("Licence_Image_ID");
-
-                entity.Property(e => e.LicenceImage1)
-                    .IsRequired()
-                    .HasColumnName("Licence_Image")
-                    .HasMaxLength(255)
                     .IsUnicode(false);
             });
 
@@ -777,7 +752,17 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.ReceiverId).HasColumnName("Receiver_ID");
 
+                entity.Property(e => e.ReceiverSig)
+                    .HasColumnName("Receiver_Sig")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.SenderId).HasColumnName("Sender_ID");
+
+                entity.Property(e => e.SenderSig)
+                    .HasColumnName("Sender_Sig")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ShipmentDate)
                     .HasColumnName("Shipment_Date")
@@ -790,8 +775,6 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ShipmentStatusId).HasColumnName("Shipment_Status_ID");
-
-                entity.Property(e => e.SignatureId).HasColumnName("Signature_ID");
 
                 entity.Property(e => e.SpecialInstruction)
                     .IsRequired()
@@ -834,12 +817,6 @@ namespace CORE_WebAPI.Models
                     .HasForeignKey(d => d.ShipmentStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_SHIPMENT_STATUS");
-
-                entity.HasOne(d => d.Signature)
-                    .WithMany(p => p.Shipment)
-                    .HasForeignKey(d => d.SignatureId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SHIPMENT_SIGNATURE_IMAGE");
             });
 
             modelBuilder.Entity<ShipmentAgent>(entity =>
@@ -866,7 +843,10 @@ namespace CORE_WebAPI.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.AgentImageId).HasColumnName("Agent_Image_ID");
+                entity.Property(e => e.AgentImage)
+                    .HasColumnName("Agent_Image")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.AgentName)
                     .IsRequired()
@@ -924,25 +904,18 @@ namespace CORE_WebAPI.Models
                     .HasColumnName("Date_Employed")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.LicenceImageId).HasColumnName("Licence_Image_ID");
+                entity.Property(e => e.LicenceImage)
+                    .HasColumnName("Licence_Image")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.LoginId).HasColumnName("Login_ID");
-
-                entity.HasOne(d => d.AgentImage)
-                    .WithMany(p => p.ShipmentAgent)
-                    .HasForeignKey(d => d.AgentImageId)
-                    .HasConstraintName("FK_SHIPMENT_AGENT_AGENT_PROFILE_IMAGE");
 
                 entity.HasOne(d => d.City)
                     .WithMany(p => p.ShipmentAgent)
                     .HasForeignKey(d => d.CityId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_AGENT_CITY");
-
-                entity.HasOne(d => d.LicenceImage)
-                    .WithMany(p => p.ShipmentAgent)
-                    .HasForeignKey(d => d.LicenceImageId)
-                    .HasConstraintName("FK_SHIPMENT_AGENT_LICENCE_IMAGE");
 
                 entity.HasOne(d => d.Login)
                     .WithMany(p => p.ShipmentAgent)
@@ -957,9 +930,7 @@ namespace CORE_WebAPI.Models
 
                 entity.ToTable("SHIPMENT_AGENT_LOCATION");
 
-                entity.Property(e => e.CurrentLocId)
-                    .HasColumnName("CurrentLoc_ID")
-                    .ValueGeneratedOnAdd();
+                entity.Property(e => e.CurrentLocId).HasColumnName("CurrentLoc_ID");
 
                 entity.Property(e => e.AgentId).HasColumnName("Agent_ID");
 
@@ -978,12 +949,6 @@ namespace CORE_WebAPI.Models
                     .HasForeignKey(d => d.AgentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_AGENT_LOCATION_SHIPMENT_AGENT");
-
-                entity.HasOne(d => d.CurrentLoc)
-                    .WithOne(p => p.InverseCurrentLoc)
-                    .HasForeignKey<ShipmentAgentLocation>(d => d.CurrentLocId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SHIPMENT_AGENT_LOCATION_SHIPMENT_AGENT_LOCATION");
             });
 
             modelBuilder.Entity<ShipmentStatus>(entity =>
@@ -996,25 +961,6 @@ namespace CORE_WebAPI.Models
                     .IsRequired()
                     .HasColumnName("Shipment_Status_Descr")
                     .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<SignatureImage>(entity =>
-            {
-                entity.HasKey(e => e.SignatureId);
-
-                entity.ToTable("SIGNATURE_IMAGE");
-
-                entity.Property(e => e.SignatureId).HasColumnName("Signature_ID");
-
-                entity.Property(e => e.ReceiverSig)
-                    .HasColumnName("Receiver_Sig")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SenderSig)
-                    .HasColumnName("Sender_Sig")
-                    .HasMaxLength(255)
                     .IsUnicode(false);
             });
 
@@ -1065,9 +1011,12 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.VehicleActive).HasColumnName("Vehicle_Active");
 
-                entity.Property(e => e.VehicleImageId).HasColumnName("Vehicle_Image_ID");
-
                 entity.Property(e => e.VehicleMakeId).HasColumnName("Vehicle_Make_ID");
+
+                entity.Property(e => e.VehicleProofImage)
+                    .HasColumnName("Vehicle_Proof_Image")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.VehicleStatusId).HasColumnName("Vehicle_Status_ID");
 
@@ -1078,11 +1027,6 @@ namespace CORE_WebAPI.Models
                     .HasForeignKey(d => d.AgentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VEHICLE_SHIPMENT_AGENT");
-
-                entity.HasOne(d => d.VehicleImage)
-                    .WithMany(p => p.Vehicle)
-                    .HasForeignKey(d => d.VehicleImageId)
-                    .HasConstraintName("FK_VEHICLE_VEHICLE_PROOF_IMAGE");
 
                 entity.HasOne(d => d.VehicleMake)
                     .WithMany(p => p.Vehicle)
@@ -1137,21 +1081,6 @@ namespace CORE_WebAPI.Models
                     .HasForeignKey(d => d.VehicleTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VEHICLE_PACAKAGE_LINE_VEHICLE_TYPE");
-            });
-
-            modelBuilder.Entity<VehicleProofImage>(entity =>
-            {
-                entity.HasKey(e => e.VehicleImageId);
-
-                entity.ToTable("VEHICLE_PROOF_IMAGE");
-
-                entity.Property(e => e.VehicleImageId).HasColumnName("Vehicle_Image_ID");
-
-                entity.Property(e => e.VehicleImage)
-                    .IsRequired()
-                    .HasColumnName("Vehicle_Image")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VehicleStatus>(entity =>

@@ -75,14 +75,6 @@ namespace CORE_WebAPI.Models
             {
                 this.LoginId = agent.LoginId;
             }
-            if (agent.LicenceImageId != 0)
-            {
-                this.LicenceImageId = agent.LicenceImageId;
-            }
-            if (agent.AgentImageId != 0)
-            {
-                this.AgentImageId = agent.AgentImageId;
-            }
             if (agent.CurrentLocId != 0)
             {
                 this.CurrentLocId = agent.CurrentLocId;

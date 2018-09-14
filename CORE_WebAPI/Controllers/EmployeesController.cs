@@ -26,8 +26,7 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Employee> GetEmployee()
         {
-            return _context.Employee.Include(accessRole => accessRole.AccessRole)
-                                    .Include(login => login.Login);
+            return _context.Employee.Include(accessRole => accessRole.AccessRole);
         }
 
         // GET: /employeegrid
@@ -36,11 +35,9 @@ namespace CORE_WebAPI.Controllers
         {
             EmployeeGrid grid = new EmployeeGrid();
 
-            grid.totalCount = _context.Employee.Include(accessRole => accessRole.AccessRole)
-                                                .Include(login => login.Login).Count();
+            grid.totalCount = _context.Employee.Include(accessRole => accessRole.AccessRole).Count();
 
-            grid.employees = _context.Employee.Include(accessRole => accessRole.AccessRole)
-                                              .Include(login => login.Login);
+            grid.employees = _context.Employee.Include(accessRole => accessRole.AccessRole);
             return grid;
         }
 
@@ -67,7 +64,6 @@ namespace CORE_WebAPI.Controllers
             }
 
             var employee = await _context.Employee.Include(accessRole => accessRole.AccessRole)
-                                                 .Include(login => login.Login)
                                                  .SingleOrDefaultAsync(m => m.EmployeeId == id);
 
             if (employee == null)
@@ -78,25 +74,25 @@ namespace CORE_WebAPI.Controllers
             return Ok(employee);
         }
 
-        // GET: api/Employees/phone/012....
-        [HttpGet("phone/{id}")]
-        public async Task<IActionResult> GetEmployeeByPhone([FromRoute] string id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //// GET: api/Employees/phone/012....
+        //[HttpGet("phone/{id}")]
+        //public async Task<IActionResult> GetEmployeeByPhone([FromRoute] string id)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            var application = await _context.Employee.Include(login => login.Login)
-                                                   .SingleOrDefaultAsync(m => m.Login.PhoneNo == id);
+        //    var application = await _context.Employee
+        //                                           .SingleOrDefaultAsync(m => m.Login.PhoneNo == id);
 
-            if (application == null)
-            {
-                return NotFound();
-            }
+        //    if (application == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(application);
-        }
+        //    return Ok(application);
+        //}
 
         // PUT: api/Employees/5
         [HttpPut("{id}")]

@@ -7,7 +7,6 @@ namespace CORE_WebAPI.Models
     {
         public Login()
         {
-            Employee = new HashSet<Employee>();
             Sender = new HashSet<Sender>();
             ShipmentAgent = new HashSet<ShipmentAgent>();
         }
@@ -18,7 +17,6 @@ namespace CORE_WebAPI.Models
         public int UserTypeId { get; set; }
 
         public UserType UserType { get; set; }
-        public ICollection<Employee> Employee { get; set; }
         public ICollection<Sender> Sender { get; set; }
         public ICollection<ShipmentAgent> ShipmentAgent { get; set; }
     }

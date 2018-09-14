@@ -47,10 +47,6 @@ namespace CORE_WebAPI.Models
             {
                 this.VehicleStatusId = vehicle.VehicleStatusId;
             }
-            if (vehicle.VehicleImageId != 0)
-            {
-                this.VehicleImageId = vehicle.VehicleImageId;
-            }
         }
     }
 }
