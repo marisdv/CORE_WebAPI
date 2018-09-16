@@ -67,6 +67,14 @@ namespace CORE_WebAPI.Models
             {
                 this.SenderId = shipment.SenderId;
             }
+            if (shipment.SenderSig != null)
+            {
+                this.SenderSig = shipment.SenderSig;
+            }
+            if (shipment.ReceiverSig != null)
+            {
+                this.ReceiverSig = shipment.ReceiverSig;
+            }
         }
     }
 }

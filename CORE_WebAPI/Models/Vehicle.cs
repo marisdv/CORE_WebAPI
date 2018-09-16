@@ -9,7 +9,7 @@ namespace CORE_WebAPI.Models
         public string LicencePlateNo { get; set; }
         public string Colour { get; set; }
         public string Model { get; set; }
-        public byte VehicleActive { get; set; }
+        public byte? VehicleActive { get; set; }
         public DateTime? DateVerified { get; set; }
         public DateTime? DateDeactivated { get; set; }
         public int AgentId { get; set; }

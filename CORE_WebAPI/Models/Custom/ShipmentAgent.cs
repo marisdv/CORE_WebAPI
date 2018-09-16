@@ -79,6 +79,14 @@ namespace CORE_WebAPI.Models
             {
                 this.CurrentLocId = agent.CurrentLocId;
             }
+            if (agent.LicenceImage != null)
+            {
+                this.LicenceImage = agent.LicenceImage;
+            }
+            if (agent.AgentImage != null)
+            {
+                this.AgentImage = agent.AgentImage;
+            }
         }
     }
 }

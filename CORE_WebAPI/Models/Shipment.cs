@@ -23,7 +23,7 @@ namespace CORE_WebAPI.Models
         public string ShipmentDistance { get; set; }
         public DateTime? DeliveryTime { get; set; }
         public byte? Terminated { get; set; }
-        public byte Paid { get; set; }
+        public byte? Paid { get; set; }
         public int AgentId { get; set; }
         public int ShipmentStatusId { get; set; }
         public int ReceiverId { get; set; }

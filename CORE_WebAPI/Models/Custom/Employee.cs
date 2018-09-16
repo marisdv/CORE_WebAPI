@@ -5,14 +5,6 @@ namespace CORE_WebAPI.Models
 {
     public partial class Employee
     {
-        
-
-        public string GetBasicDetails()
-        {
-            return this.EmployeeName + ' ' + this.EmployeeSurname;
-
-        }
-
         public void UpdateChangedFields(Employee employee)
         {
             if (employee.EmployeeName != null)
@@ -42,6 +34,22 @@ namespace CORE_WebAPI.Models
             if (employee.DateEmployed != null && employee.DateEmployed != new DateTime())
             {
                 this.DateEmployed = employee.DateEmployed;
+            }
+            if (employee.AccessRoleId != 0)
+            {
+                this.AccessRoleId = employee.AccessRoleId;
+            }
+            if (employee.EmployeeImage != null)
+            {
+                this.EmployeeImage = employee.EmployeeImage;
+            }
+            if (employee.EmployeePhone != null)
+            {
+                this.EmployeePhone = employee.EmployeePhone;
+            }
+            if (employee.EmployeePassword != null)
+            {
+                this.EmployeePassword = employee.EmployeePassword;
             }
         }
     }

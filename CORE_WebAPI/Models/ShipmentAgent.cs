@@ -25,10 +25,10 @@ namespace CORE_WebAPI.Models
         public string BankName { get; set; }
         public string BankAccType { get; set; }
         public string BankBranchCode { get; set; }
-        public byte ApplicationAccepted { get; set; }
-        public byte AgentAvailability { get; set; }
-        public byte AgentActive { get; set; }
-        public byte Insurance { get; set; }
+        public byte? ApplicationAccepted { get; set; }
+        public byte? AgentAvailability { get; set; }
+        public byte? AgentActive { get; set; }
+        public byte? Insurance { get; set; }
         public int CityId { get; set; }
         public int LoginId { get; set; }
         public int? CurrentLocId { get; set; }

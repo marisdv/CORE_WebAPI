@@ -41,19 +41,6 @@ namespace CORE_WebAPI.Controllers
             return grid;
         }
 
-        /*
-        // GET: api/Employees/BasicDetails
-        // *** find a way to route this method
-        [HttpGet]
-        public IEnumerable<string> GetEmployeeBD()
-        {
-            List<string> employeeDetails = new List<string>();
-
-            _context.Employee.ForEachAsync(x => employeeDetails.Add(x.GetBasicDetails()));
-
-            return employeeDetails;
-        }*/
-
         // GET: api/Employees/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployee([FromRoute] int id)
@@ -74,25 +61,25 @@ namespace CORE_WebAPI.Controllers
             return Ok(employee);
         }
 
-        //// GET: api/Employees/phone/012....
-        //[HttpGet("phone/{id}")]
-        //public async Task<IActionResult> GetEmployeeByPhone([FromRoute] string id)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        // GET: api/Employees/phone/012....
+        [HttpGet("phone/{id}")]
+        public async Task<IActionResult> GetEmployeeByPhone([FromRoute] string id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    var application = await _context.Employee
-        //                                           .SingleOrDefaultAsync(m => m.Login.PhoneNo == id);
+            var application = await _context.Employee
+                                                   .SingleOrDefaultAsync(m => m.EmployeePhone == id);
 
-        //    if (application == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (application == null)
+            {
+                return NotFound();
+            }
 
-        //    return Ok(application);
-        //}
+            return Ok(application);
+        }
 
         // PUT: api/Employees/5
         [HttpPut("{id}")]
