@@ -27,8 +27,16 @@ namespace CORE_WebAPI.Controllers
         public IEnumerable<AccessRole> GetAccessRole()
         {
             return _context.AccessRole/*.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
-                                      .Include(AccessArea => AccessArea.AccessArea)*/;
+                                        .Include(AccessArea => AccessArea.AccessArea)*/;
         }
+
+        //// GET: api/AccessRoles
+        //[HttpGet]
+        //public IEnumerable<AccessRole> GetAccessRole()
+        //{
+        //    return _context.AccessRole.Include(AccessRoleArea => AccessRoleArea.AccessRoleArea)
+        //                              .ThenInclude(AccessArea => AccessArea.AccessArea);
+        //}
 
         // GET: /accessrolegrid
         [HttpGet("/accessrolegrid")]
@@ -114,10 +122,38 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.AccessRole.Add(accessRole);
-            await _context.SaveChangesAsync();
+            List<int> areas = new List<int>();
+            foreach (var area in accessRole.AccessRoleArea)
+            {
+                areas.Add(area.AccessAreaId);
+            }
 
-            return CreatedAtAction("GetAccessRole", new { id = accessRole.AccessRoleId }, accessRole);
+            AccessRole role = new AccessRole();
+
+            role = accessRole;
+            role.AccessRoleArea.Clear();
+            if (_context.AccessRole.FirstOrDefault(dbRole => dbRole.AccessRoleName == role.AccessRoleName) == null)
+            {
+                _context.AccessRole.Add(role);
+                await _context.SaveChangesAsync();
+
+                role = _context.AccessRole.Last();
+
+                foreach (var id in areas)
+                {
+                    AccessRoleArea addRoleArea = new AccessRoleArea();
+                    addRoleArea.AccessAreaId = id;
+                    addRoleArea.AccessRoleId = role.AccessRoleId;
+
+                    role.AccessRoleArea.Add(addRoleArea);
+                }
+
+                _context.Entry(role).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetAccessRole", new { id = accessRole.AccessRoleId }, accessRole);
+            }
+            else return BadRequest("A role with this Name already exists.");
+
         }
 
         // DELETE: api/AccessRoles/5

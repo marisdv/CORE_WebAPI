@@ -16,6 +16,7 @@ namespace CORE_WebAPI.Controllers
     public class ShipmentAgentsController : Controller
     {
         private readonly ProjectCALContext _context;
+        private string baseURL = "C:\\img\\agents\\";
 
         public ShipmentAgentsController(ProjectCALContext context)
         {
@@ -31,6 +32,14 @@ namespace CORE_WebAPI.Controllers
                                          .Include(licence => licence.LicenceImage)*/
                                          .Include(login => login.Login)
                                          /*.Include(city => city.City)*/;
+        }
+
+        // GET: /api/shipmentagents/image/13
+        [HttpGet("image/{id}")]
+        public IActionResult GetAgentImage(int id)
+        {
+            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + id +".jpg");
+            return File(imageByte, "image/jpeg");
         }
 
         // GET: /shipmentagentgrid
