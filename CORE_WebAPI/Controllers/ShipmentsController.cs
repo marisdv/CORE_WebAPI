@@ -57,14 +57,14 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var application = await _context.Shipment.SingleOrDefaultAsync(m => m.SenderId == id);
+            var sender = await _context.Shipment.SingleOrDefaultAsync(m => m.SenderId == id);
 
-            if (application == null)
+            if (sender == null)
             {
                 return NotFound();
             }
 
-            return Ok(application);
+            return Ok(sender);
         }
 
         // GET: api/Shipments/Agent/13
@@ -76,14 +76,14 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var application = await _context.Shipment.SingleOrDefaultAsync(m => m.AgentId == id);
+            var shipmentAgent= await _context.Shipment.SingleOrDefaultAsync(m => m.AgentId == id);
 
-            if (application == null)
+            if (shipmentAgent == null)
             {
                 return NotFound();
             }
 
-            return Ok(application);
+            return Ok(shipmentAgent);
         }
 
         // PUT: api/Shipments/5

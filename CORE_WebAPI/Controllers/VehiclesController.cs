@@ -74,6 +74,25 @@ namespace CORE_WebAPI.Controllers
             return Ok(vehicle);
         }
 
+        // GET: api/Vehicles/agent/012....
+        [HttpGet("agent/{id}")]
+        public async Task<IActionResult> GetVehicleByAgent([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var shipmentAgent = await _context.Vehicle.SingleOrDefaultAsync(m => m.AgentId == id);
+
+            if (shipmentAgent == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(shipmentAgent);
+        }
+
         // PUT: api/Vehicles/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVehicle([FromRoute] int id, [FromBody] Vehicle vehicle)

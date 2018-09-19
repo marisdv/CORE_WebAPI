@@ -282,6 +282,12 @@ namespace CORE_WebAPI.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.CompanyLogo)
+                    .IsRequired()
+                    .HasColumnName("Company_Logo")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.CompanyName)
                     .IsRequired()
                     .HasColumnName("Company_Name")
@@ -379,6 +385,7 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.EmployeeImage)
+                    .IsRequired()
                     .HasColumnName("Employee_Image")
                     .HasMaxLength(255)
                     .IsUnicode(false);
@@ -400,11 +407,13 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.EmployeePassword)
+                    .IsRequired()
                     .HasColumnName("Employee_Password")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EmployeePhone)
+                    .IsRequired()
                     .HasColumnName("Employee_Phone")
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -478,6 +487,12 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.PackageTypeId).HasColumnName("Package_Type_ID");
 
+                entity.Property(e => e.PackageTypeImage)
+                    .IsRequired()
+                    .HasColumnName("Package_Type_Image")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.PackageTypeQty).HasColumnName("Package_Type_Qty");
 
                 entity.Property(e => e.ShipmentId).HasColumnName("Shipment_ID");
@@ -492,7 +507,7 @@ namespace CORE_WebAPI.Models
                     .WithMany(p => p.Package)
                     .HasForeignKey(d => d.PackageTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PACKAGE_PACKAGE_TYPE1");
+                    .HasConstraintName("FK_PACKAGE_PACKAGE_TYPE");
 
                 entity.HasOne(d => d.Shipment)
                     .WithMany(p => p.Package)
@@ -844,6 +859,7 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.AgentImage)
+                    .IsRequired()
                     .HasColumnName("Agent_Image")
                     .HasMaxLength(255)
                     .IsUnicode(false);
@@ -905,6 +921,7 @@ namespace CORE_WebAPI.Models
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.LicenceImage)
+                    .IsRequired()
                     .HasColumnName("Licence_Image")
                     .HasMaxLength(255)
                     .IsUnicode(false);
@@ -1014,6 +1031,7 @@ namespace CORE_WebAPI.Models
                 entity.Property(e => e.VehicleMakeId).HasColumnName("Vehicle_Make_ID");
 
                 entity.Property(e => e.VehicleProofImage)
+                    .IsRequired()
                     .HasColumnName("Vehicle_Proof_Image")
                     .HasMaxLength(255)
                     .IsUnicode(false);

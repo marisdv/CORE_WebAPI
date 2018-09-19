@@ -71,15 +71,15 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var application = await _context.Sender.Include(login => login.Login)
+            var sender = await _context.Sender.Include(login => login.Login)
                                                    .SingleOrDefaultAsync(m => m.Login.PhoneNo == id);
 
-            if (application == null)
+            if (sender == null)
             {
                 return NotFound();
             }
 
-            return Ok(application);
+            return Ok(sender);
         }
 
         // PUT: api/Senders/5
