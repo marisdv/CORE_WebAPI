@@ -16,6 +16,7 @@ namespace CORE_WebAPI.Controllers
     public class CompaniesController : Controller
     {
         private readonly ProjectCALContext _context;
+        private string baseURL = "C:\\img\\companies\\";
 
         public CompaniesController(ProjectCALContext context)
         {
@@ -27,6 +28,14 @@ namespace CORE_WebAPI.Controllers
         public IEnumerable<Company> GetCompany()
         {
             return _context.Company;
+        }
+
+        // GET: /api/companies/image/13
+        [HttpGet("image/{id}")]
+        public IActionResult GetACompanyImage(int id)
+        {
+            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + id + ".jpg");
+            return File(imageByte, "image/jpeg");
         }
 
         // GET: api/Companies/5

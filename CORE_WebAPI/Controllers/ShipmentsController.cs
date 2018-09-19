@@ -16,6 +16,8 @@ namespace CORE_WebAPI.Controllers
     public class ShipmentsController : Controller
     {
         private readonly ProjectCALContext _context;
+        private string baseURL1 = "C:\\img\\signatures\\sender\\";
+        private string baseURL2 = "C:\\img\\signatures\\receiver\\";
 
         public ShipmentsController(ProjectCALContext context)
         {
@@ -27,6 +29,21 @@ namespace CORE_WebAPI.Controllers
         public IEnumerable<Shipment> GetShipment()
         {
             return _context.Shipment;
+        }
+
+        // GET: /api/shipments/sendersign/4
+        [HttpGet("sendersign/{id}")]
+        public IActionResult GetSenderSig(int id)
+        {
+            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL1 + id + ".jpg");
+            return File(imageByte, "image/jpeg");
+        }
+        // GET: /api/shipments/receiversign/4
+        [HttpGet("receiversign/{id}")]
+        public IActionResult GetReceiverSig(int id)
+        {
+            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL2 + id + ".jpg");
+            return File(imageByte, "image/jpeg");
         }
 
         // GET: api/Shipments/5

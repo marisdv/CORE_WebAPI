@@ -18,6 +18,8 @@ namespace CORE_WebAPI.Controllers
     public class VehiclesController : Controller
     {
         private readonly ProjectCALContext _context;
+        
+        private string baseURL = "C:\\img\\vehproof\\";
 
         public VehiclesController(ProjectCALContext context)
         {
@@ -33,7 +35,14 @@ namespace CORE_WebAPI.Controllers
                                    .Include(vehicle => vehicle.VehicleType)
                                    .Include(vehicle => vehicle.VehicleStatus);
         }
-        
+        // GET: /api/vehicles/proofimage/4
+        [HttpGet("proofimage/{id}")]
+        public IActionResult GetVehicleProofImage(int id)
+        {
+            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + id + ".jpg");
+            return File(imageByte, "image/jpeg");
+        }
+
         // GET: /vehiclegrid
         [HttpGet("/vehiclegrid")]
         public VehicleGrid VehicleGrid()

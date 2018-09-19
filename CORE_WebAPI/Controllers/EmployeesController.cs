@@ -16,6 +16,7 @@ namespace CORE_WebAPI.Controllers
     public class EmployeesController : Controller
     {
         private readonly ProjectCALContext _context;
+        private string baseURL = "C:\\img\\employees\\";
 
         public EmployeesController(ProjectCALContext context)
         {
@@ -27,6 +28,14 @@ namespace CORE_WebAPI.Controllers
         public IEnumerable<Employee> GetEmployee()
         {
             return _context.Employee.Include(accessRole => accessRole.AccessRole);
+        }
+
+        // GET: /api/employees/image/13
+        [HttpGet("image/{id}")]
+        public IActionResult GetEmployeeImage(int id)
+        {
+            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + id + ".jpg");
+            return File(imageByte, "image/jpeg");
         }
 
         // GET: /employeegrid

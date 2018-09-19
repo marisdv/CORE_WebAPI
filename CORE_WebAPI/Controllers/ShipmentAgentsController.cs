@@ -16,7 +16,8 @@ namespace CORE_WebAPI.Controllers
     public class ShipmentAgentsController : Controller
     {
         private readonly ProjectCALContext _context;
-        private string baseURL = "C:\\img\\agents\\";
+        private string baseURL1 = "C:\\img\\agents\\";
+        private string baseURL2 = "C:\\img\\licences\\";
 
         public ShipmentAgentsController(ProjectCALContext context)
         {
@@ -27,18 +28,22 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<ShipmentAgent> GetShipmentAgent()
         {
-            return _context.ShipmentAgent/*.Include(image => image.AgentImage)
-                                         .Include(loc => loc.ShipmentAgentLocation)
-                                         .Include(licence => licence.LicenceImage)*/
-                                         .Include(login => login.Login)
-                                         /*.Include(city => city.City)*/;
+            return _context.ShipmentAgent.Include(login => login.Login);
         }
 
-        // GET: /api/shipmentagents/image/13
-        [HttpGet("image/{id}")]
+        // GET: /api/shipmentagents/agentimage/13
+        [HttpGet("agentimage/{id}")]
         public IActionResult GetAgentImage(int id)
         {
-            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + id +".jpg");
+            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL1 + id +".jpg");
+            return File(imageByte, "image/jpeg");
+        }
+
+        // GET: /api/shipmentagents/licenceimage/13
+        [HttpGet("licenceimage/{id}")]
+        public IActionResult GetAgentLicenceImage(int id)
+        {
+            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL2 + id + ".jpg");
             return File(imageByte, "image/jpeg");
         }
 
@@ -48,18 +53,10 @@ namespace CORE_WebAPI.Controllers
         {
             ShipmentAgentGrid grid = new ShipmentAgentGrid();
 
-            grid.totalCount = _context.ShipmentAgent/*.Include(image => image.AgentImage)
-                                                    .Include(loc => loc.ShipmentAgentLocation)
-                                                    .Include(licence => licence.LicenceImage)*/
-                                                    .Include(login => login.Login)
-                                                    /*.Include(city => city.City)*/
-                                                     .Count();
+            grid.totalCount = _context.ShipmentAgent.Include(login => login.Login)
+                                                    .Count();
 
-            grid.shipmentAgents = _context.ShipmentAgent/*.Include(image => image.AgentImage)
-                                                        .Include(loc => loc.ShipmentAgentLocation)
-                                                        .Include(licence => licence.LicenceImage)*/
-                                                        .Include(login => login.Login)
-                                                        /*.Include(city => city.City)*/;
+            grid.shipmentAgents = _context.ShipmentAgent.Include(login => login.Login);
 
             return grid;
         }
@@ -73,11 +70,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var shipmentAgent = await _context.ShipmentAgent/*.Include(image => image.AgentImage)
-                                                            .Include(loc => loc.ShipmentAgentLocation)
-                                                            .Include(licence => licence.LicenceImage)*/
-                                                            .Include(login => login.Login)
-                                                            /*.Include(city => city.City)*/
+            var shipmentAgent = await _context.ShipmentAgent.Include(login => login.Login)
                                                             .SingleOrDefaultAsync(m => m.AgentId == id);
 
             if (shipmentAgent == null)

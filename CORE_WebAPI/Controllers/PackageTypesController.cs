@@ -16,6 +16,7 @@ namespace CORE_WebAPI.Controllers
     public class PackageTypesController : Controller
     {
         private readonly ProjectCALContext _context;
+        private string baseURL = "C:\\img\\packages\\";
 
         public PackageTypesController(ProjectCALContext context)
         {
@@ -27,6 +28,14 @@ namespace CORE_WebAPI.Controllers
         public IEnumerable<PackageType> GetPackageType()
         {
             return _context.PackageType.Include(price => price.PackagePrice);
+        }
+
+        // GET: /api/package/image/4
+        [HttpGet("image/{id}")]
+        public IActionResult GetPackageImage(int id)
+        {
+            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + id + ".jpg");
+            return File(imageByte, "image/jpeg");
         }
 
         // GET: /packagetypesgrid
