@@ -36,7 +36,7 @@ namespace CORE_WebAPI.Controllers
         public IActionResult GetAgentImage(int id)
         {
             byte[] imageByte = System.IO.File.ReadAllBytes(baseURL1 + id +".jpg");
-            return File(imageByte, "image/jpeg");
+            return File(imageByte, "image/jpg");
         }
 
         // GET: /api/shipmentagents/licenceimage/13
