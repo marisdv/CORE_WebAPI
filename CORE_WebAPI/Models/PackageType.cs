@@ -8,15 +8,15 @@ namespace CORE_WebAPI.Models
         public PackageType()
         {
             Package = new HashSet<Package>();
-            PackagePrice = new HashSet<PackagePrice>();
             VehiclePacakageLine = new HashSet<VehiclePacakageLine>();
         }
 
         public int PackageTypeId { get; set; }
         public string PackageTypeDescr { get; set; }
+        public decimal PackageTypePrice { get; set; }
+        public string PackageTypeImage { get; set; }
 
         public ICollection<Package> Package { get; set; }
-        public ICollection<PackagePrice> PackagePrice { get; set; }
         public ICollection<VehiclePacakageLine> VehiclePacakageLine { get; set; }
     }
 }

@@ -31,7 +31,6 @@ namespace CORE_WebAPI.Models
         public virtual DbSet<Login> Login { get; set; }
         public virtual DbSet<Package> Package { get; set; }
         public virtual DbSet<PackageContent> PackageContent { get; set; }
-        public virtual DbSet<PackagePrice> PackagePrice { get; set; }
         public virtual DbSet<PackageType> PackageType { get; set; }
         public virtual DbSet<PaymentReference> PaymentReference { get; set; }
         public virtual DbSet<Penalty> Penalty { get; set; }
@@ -533,29 +532,6 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<PackagePrice>(entity =>
-            {
-                entity.ToTable("PACKAGE_PRICE");
-
-                entity.Property(e => e.PackagePriceId).HasColumnName("Package_Price_ID");
-
-                entity.Property(e => e.DateFrom).HasColumnType("datetime");
-
-                entity.Property(e => e.DateTo).HasColumnType("datetime");
-
-                entity.Property(e => e.PackagePrice1)
-                    .HasColumnName("Package_Price")
-                    .HasColumnType("decimal(5, 2)");
-
-                entity.Property(e => e.PackageTypeId).HasColumnName("Package_Type_ID");
-
-                entity.HasOne(d => d.PackageType)
-                    .WithMany(p => p.PackagePrice)
-                    .HasForeignKey(d => d.PackageTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PACKAGE_TYPE_PRICE_PACKAGE_TYPE");
-            });
-
             modelBuilder.Entity<PackageType>(entity =>
             {
                 entity.ToTable("PACKAGE_TYPE");
@@ -567,6 +543,16 @@ namespace CORE_WebAPI.Models
                     .HasColumnName("Package_Type_Descr")
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.PackageTypeImage)
+                    .IsRequired()
+                    .HasColumnName("Package_Type_Image")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PackageTypePrice)
+                    .HasColumnName("Package_Type_Price")
+                    .HasColumnType("decimal(5, 2)");
             });
 
             modelBuilder.Entity<PaymentReference>(entity =>
@@ -809,6 +795,8 @@ namespace CORE_WebAPI.Models
                     .HasMaxLength(35)
                     .IsUnicode(false);
 
+                entity.Property(e => e.TotalCost).HasColumnType("decimal(5, 2)");
+
                 entity.HasOne(d => d.Agent)
                     .WithMany(p => p.Shipment)
                     .HasForeignKey(d => d.AgentId)
@@ -913,8 +901,6 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.CityId).HasColumnName("City_ID");
-
-                entity.Property(e => e.CurrentLocId).HasColumnName("CurrentLoc_ID");
 
                 entity.Property(e => e.DateEmployed)
                     .HasColumnName("Date_Employed")

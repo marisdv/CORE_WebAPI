@@ -30,6 +30,7 @@ namespace CORE_WebAPI.Models
         public int SenderId { get; set; }
         public string SenderSig { get; set; }
         public string ReceiverSig { get; set; }
+        public decimal TotalCost { get; set; }
 
         public ShipmentAgent Agent { get; set; }
         public Receiver Receiver { get; set; }

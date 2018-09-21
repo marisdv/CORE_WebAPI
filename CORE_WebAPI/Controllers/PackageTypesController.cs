@@ -27,7 +27,7 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<PackageType> GetPackageType()
         {
-            return _context.PackageType.Include(price => price.PackagePrice);
+            return _context.PackageType;
         }
 
         // GET: /api/package/image/4
@@ -44,9 +44,9 @@ namespace CORE_WebAPI.Controllers
         {
             PackageTypeGrid grid = new PackageTypeGrid();
 
-            grid.totalCount = _context.PackageType.Include(price => price.PackagePrice).Count();
+            grid.totalCount = _context.PackageType.Count();
 
-            grid.packageTypes = _context.PackageType.Include(price => price.PackagePrice);
+            grid.packageTypes = _context.PackageType;
 
             return grid;
         }
@@ -60,8 +60,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var packageType = await _context.PackageType.Include(price => price.PackagePrice)
-                                                        .SingleOrDefaultAsync(m => m.PackageTypeId == id);
+            var packageType = await _context.PackageType.SingleOrDefaultAsync(m => m.PackageTypeId == id);
 
             if (packageType == null)
             {
