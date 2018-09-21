@@ -46,6 +46,25 @@ namespace CORE_WebAPI.Controllers
             return Ok(vehicleMake);
         }
 
+        // GET: api/Vehicles/descr/{descr}....
+        [HttpGet("descr/{id}")]
+        public async Task<IActionResult> GetMakeByDescr([FromRoute] string id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var make = await _context.VehicleMake.SingleOrDefaultAsync(m => m.VehicleMakeDescr == id);
+
+            if (make == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(make);
+        }
+
         // PUT: api/VehicleMakes/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVehicleMake([FromRoute] int id, [FromBody] VehicleMake vehicleMake)

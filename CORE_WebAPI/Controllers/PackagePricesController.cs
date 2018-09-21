@@ -61,6 +61,25 @@ namespace CORE_WebAPI.Controllers
             return Ok(packagePrice);
         }
 
+        // GET: api/PackagePrices/type/1
+        [HttpGet("type/{id}")]
+        public async Task<IActionResult> GetPriceByType([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var price = await _context.PackagePrice.SingleOrDefaultAsync(m => m.PackageTypeId == id);
+
+            if (price == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(price);
+        }
+
         // PUT: api/PackagePrices/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPackagePrice([FromRoute] int id, [FromBody] PackagePrice packagePrice)

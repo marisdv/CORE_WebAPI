@@ -61,6 +61,25 @@ namespace CORE_WebAPI.Controllers
             return Ok(vehicleType);
         }
 
+        // GET: api/VehicleTypes/descr/{descr}....
+        [HttpGet("descr/{id}")]
+        public async Task<IActionResult> GetTypeByDescr([FromRoute] string id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var type = await _context.VehicleType.SingleOrDefaultAsync(m => m.VehicleTypeDescr == id);
+
+            if (type == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(type);
+        }
+
         // PUT: api/VehicleTypes/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVehicleType([FromRoute] int id, [FromBody] VehicleType vehicleType)
