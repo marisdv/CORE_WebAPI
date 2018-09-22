@@ -2,24 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CORE_WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [Produces("application/json")]
+    //[ApiController]
+    [EnableCors("MyPolicy")]
     public class LogoController : ControllerBase
     {
 
         private string baseURL = "C:\\img\\";
-
-        //// GET: api/Logo
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
 
         // GET: /api/Logo
         [HttpGet]
@@ -28,6 +24,14 @@ namespace CORE_WebAPI.Controllers
             byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + "projectcal" + ".png");
             return File(imageByte, "image/png");
         }
+
+        //// GET: api/Logo
+        //[HttpGet]
+        //public IEnumerable<string> Get()
+        //{
+        //    return new string[] { "value1", "value2" };
+        //}
+
 
         //// GET: api/Logo/5
         //[HttpGet("{id}", Name = "Get")]

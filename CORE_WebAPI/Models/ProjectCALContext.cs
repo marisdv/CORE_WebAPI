@@ -486,12 +486,6 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.PackageTypeId).HasColumnName("Package_Type_ID");
 
-                entity.Property(e => e.PackageTypeImage)
-                    .IsRequired()
-                    .HasColumnName("Package_Type_Image")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.PackageTypeQty).HasColumnName("Package_Type_Qty");
 
                 entity.Property(e => e.ShipmentId).HasColumnName("Shipment_ID");
