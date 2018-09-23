@@ -38,7 +38,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var basketLine = await _context.BasketLine.FindAsync(id);
+            var basketLine = _context.BasketLine.Where(line => line.SenderId == id);
 
             if (basketLine == null)
             {

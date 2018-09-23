@@ -27,7 +27,9 @@ namespace CORE_WebAPI.Controllers
         [HttpGet]
         public IEnumerable<PackageType> GetPackageType()
         {
-            return _context.PackageType;
+            List<PackageType> packageType = _context.PackageType.ToList();
+            packageType.ForEach(x=> x.PackageTypeImage = null);
+            return packageType;
         }
 
         // GET: /api/package/image/4
@@ -61,7 +63,7 @@ namespace CORE_WebAPI.Controllers
             }
 
             var packageType = await _context.PackageType.SingleOrDefaultAsync(m => m.PackageTypeId == id);
-
+            packageType.PackageTypeImage = null;
             if (packageType == null)
             {
                 return NotFound();

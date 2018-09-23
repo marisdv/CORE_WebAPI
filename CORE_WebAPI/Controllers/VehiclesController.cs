@@ -31,10 +31,13 @@ namespace CORE_WebAPI.Controllers
         //[JsonIgnore]
         public IEnumerable<Vehicle> GetVehicle()
         {
-            return _context.Vehicle.Include(vehicle => vehicle.VehicleMake)
+            List<Vehicle> vehicles = _context.Vehicle.Include(vehicle => vehicle.VehicleMake)
                                    .Include(vehicle => vehicle.VehicleType)
-                                   .Include(vehicle => vehicle.VehicleStatus);
+                                   .Include(vehicle => vehicle.VehicleStatus).ToList();
+            vehicles.ForEach(x => x.VehicleProofImage = null);
+            return vehicles;
         }
+
         // GET: /api/vehicles/proofimage/4
         [HttpGet("proofimage/{id}")]
         public IActionResult GetVehicleProofImage(int id)
@@ -70,10 +73,13 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
+
             var vehicle = await _context.Vehicle.Include(veh => veh.VehicleMake)
                                                 .Include(veh => veh.VehicleType)
                                                 .Include(veh => veh.VehicleStatus)
                                                 .SingleOrDefaultAsync(m => m.VehicleId == id);
+
+            vehicle.VehicleProofImage = null;
 
             if (vehicle == null)
             {
@@ -83,7 +89,7 @@ namespace CORE_WebAPI.Controllers
             return Ok(vehicle);
         }
 
-        // GET: api/Vehicles/agent/012....
+        // GET: api/Vehicles/agent/13
         [HttpGet("agent/{id}")]
         public async Task<IActionResult> GetVehicleByAgent([FromRoute] int id)
         {
@@ -92,7 +98,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var shipmentAgent = await _context.Vehicle.SingleOrDefaultAsync(m => m.AgentId == id);
+            var shipmentAgent =  _context.Vehicle.Where(m => m.AgentId == id);
 
             if (shipmentAgent == null)
             {

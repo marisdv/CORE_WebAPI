@@ -76,6 +76,11 @@ namespace CORE_WebAPI.Controllers
 
             Login updateLogin = _context.Login.FirstOrDefault(l => l.LoginId == id);
 
+            if (login.Password != null)
+            {
+                login.hashPassword();
+            }
+            
             updateLogin.UpdateChangedFields(login);
 
             if (!ModelState.IsValid)
@@ -117,7 +122,7 @@ namespace CORE_WebAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            login.hashPassword();
             _context.Login.Add(login);
             await _context.SaveChangesAsync();
 
