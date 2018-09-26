@@ -15,9 +15,9 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class AuditLogsController : Controller
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
 
-        public AuditLogsController(ProjectCALContext context)
+        public AuditLogsController(ProjectCALServerContext context)
         {
             _context = context;
         }

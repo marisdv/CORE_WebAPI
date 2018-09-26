@@ -16,9 +16,9 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class FixedPricesController : ControllerBase
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
 
-        public FixedPricesController(ProjectCALContext context)
+        public FixedPricesController(ProjectCALServerContext context)
         {
             _context = context;
         }

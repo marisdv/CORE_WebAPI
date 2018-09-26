@@ -17,11 +17,11 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class VehiclesController : Controller
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
         
         private string baseURL = "C:\\img\\vehproof\\";
 
-        public VehiclesController(ProjectCALContext context)
+        public VehiclesController(ProjectCALServerContext context)
         {
             _context = context;
         }

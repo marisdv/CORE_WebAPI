@@ -13,9 +13,9 @@ namespace CORE_WebAPI.Controllers
     [ApiController]
     public class VehicleMakesController : ControllerBase
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
 
-        public VehicleMakesController(ProjectCALContext context)
+        public VehicleMakesController(ProjectCALServerContext context)
         {
             _context = context;
         }

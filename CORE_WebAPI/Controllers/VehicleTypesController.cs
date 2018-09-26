@@ -15,9 +15,9 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class VehicleTypesController : Controller
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
 
-        public VehicleTypesController(ProjectCALContext context)
+        public VehicleTypesController(ProjectCALServerContext context)
         {
             _context = context;
         }

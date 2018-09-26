@@ -15,11 +15,11 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class ShipmentsController : Controller
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
         private string baseURL1 = "C:\\img\\signatures\\sender\\";
         private string baseURL2 = "C:\\img\\signatures\\receiver\\";
 
-        public ShipmentsController(ProjectCALContext context)
+        public ShipmentsController(ProjectCALServerContext context)
         {
             _context = context;
         }

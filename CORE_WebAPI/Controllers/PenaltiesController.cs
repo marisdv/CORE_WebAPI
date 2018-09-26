@@ -15,9 +15,9 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class PenaltiesController : Controller
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
 
-        public PenaltiesController(ProjectCALContext context)
+        public PenaltiesController(ProjectCALServerContext context)
         {
             _context = context;
         }

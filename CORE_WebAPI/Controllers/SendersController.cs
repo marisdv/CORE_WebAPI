@@ -15,9 +15,9 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class SendersController : Controller
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
 
-        public SendersController(ProjectCALContext context)
+        public SendersController(ProjectCALServerContext context)
         {
             _context = context;
         }

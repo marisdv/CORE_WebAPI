@@ -16,11 +16,11 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class ShipmentAgentsController : Controller
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
         private string baseURL1 = "C:\\img\\agents\\";
         private string baseURL2 = "C:\\img\\licences\\";
 
-        public ShipmentAgentsController(ProjectCALContext context)
+        public ShipmentAgentsController(ProjectCALServerContext context)
         {
             _context = context;
         }

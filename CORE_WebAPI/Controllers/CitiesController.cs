@@ -16,9 +16,9 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class CitiesController : ControllerBase
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
 
-        public CitiesController(ProjectCALContext context)
+        public CitiesController(ProjectCALServerContext context)
         {
             _context = context;
         }

@@ -15,9 +15,9 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class LoginsController : Controller
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
 
-        public LoginsController(ProjectCALContext context)
+        public LoginsController(ProjectCALServerContext context)
         {
             _context = context;
         }

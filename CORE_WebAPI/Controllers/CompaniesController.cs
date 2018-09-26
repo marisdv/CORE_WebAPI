@@ -15,10 +15,10 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class CompaniesController : Controller
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
         private string baseURL = "C:\\img\\companies\\";
 
-        public CompaniesController(ProjectCALContext context)
+        public CompaniesController(ProjectCALServerContext context)
         {
             _context = context;
         }

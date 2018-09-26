@@ -17,9 +17,9 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class PackageContentsController : ControllerBase
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
 
-        public PackageContentsController(ProjectCALContext context)
+        public PackageContentsController(ProjectCALServerContext context)
         {
             _context = context;
         }

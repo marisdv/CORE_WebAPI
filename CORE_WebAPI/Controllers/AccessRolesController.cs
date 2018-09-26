@@ -15,9 +15,9 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class AccessRolesController : Controller
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
 
-        public AccessRolesController(ProjectCALContext context)
+        public AccessRolesController(ProjectCALServerContext context)
         {
             _context = context;
         }

@@ -15,9 +15,9 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class DownloadLocationsController : ControllerBase
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
 
-        public DownloadLocationsController(ProjectCALContext context)
+        public DownloadLocationsController(ProjectCALServerContext context)
         {
             _context = context;
         }

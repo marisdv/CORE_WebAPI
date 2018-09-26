@@ -15,9 +15,9 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class BasketLinesController : ControllerBase
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
 
-        public BasketLinesController(ProjectCALContext context)
+        public BasketLinesController(ProjectCALServerContext context)
         {
             _context = context;
         }

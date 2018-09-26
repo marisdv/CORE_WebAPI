@@ -15,10 +15,10 @@ namespace CORE_WebAPI.Controllers
     [EnableCors("MyPolicy")]
     public class PackageTypesController : Controller
     {
-        private readonly ProjectCALContext _context;
+        private readonly ProjectCALServerContext _context;
         private string baseURL = "C:\\img\\packages\\";
 
-        public PackageTypesController(ProjectCALContext context)
+        public PackageTypesController(ProjectCALServerContext context)
         {
             _context = context;
         }

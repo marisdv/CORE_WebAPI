@@ -30,7 +30,8 @@ namespace CORE_WebAPI
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
-            services.AddDbContext<ProjectCALContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:ProjectCALDB"]));
+            services.AddDbContext<ProjectCALServerContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:ProjectCALDB"]));
+            
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
