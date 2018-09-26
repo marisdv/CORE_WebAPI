@@ -10,6 +10,7 @@ namespace CORE_WebAPI.Models
             Application = new HashSet<Application>();
             Shipment = new HashSet<Shipment>();
             ShipmentAgentLocation = new HashSet<ShipmentAgentLocation>();
+            ShipmentAgentNotification = new HashSet<ShipmentAgentNotification>();
             Vehicle = new HashSet<Vehicle>();
         }
 
@@ -39,6 +40,7 @@ namespace CORE_WebAPI.Models
         public ICollection<Application> Application { get; set; }
         public ICollection<Shipment> Shipment { get; set; }
         public ICollection<ShipmentAgentLocation> ShipmentAgentLocation { get; set; }
+        public ICollection<ShipmentAgentNotification> ShipmentAgentNotification { get; set; }
         public ICollection<Vehicle> Vehicle { get; set; }
     }
 }

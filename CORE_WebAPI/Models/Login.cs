@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Security;
-
 
 namespace CORE_WebAPI.Models
 {
@@ -22,11 +19,5 @@ namespace CORE_WebAPI.Models
         public UserType UserType { get; set; }
         public ICollection<Sender> Sender { get; set; }
         public ICollection<ShipmentAgent> ShipmentAgent { get; set; }
-
-        public void hashPassword()
-        {
-            PasswordHasher hasher = new PasswordHasher();
-            this.Password = hasher.HashPassword(Password);
-        }
     }
 }

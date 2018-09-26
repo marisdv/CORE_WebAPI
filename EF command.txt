@@ -1,3 +1,5 @@
 Scaffold-DbContext “Server=.;Database=ProjectCAL;Trusted_Connection=True;” Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
 
 Scaffold-DbContext “Server=.;Database=ProjectCAL;Trusted_Connection=True;” Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -f
+
+Scaffold-DbContext “Server=.;Database=ProjectCALServer;Trusted_Connection=True;” Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -f

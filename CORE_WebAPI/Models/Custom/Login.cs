@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security;
+using System.Security;
+using Microsoft.AspNet.Identity;
 
 namespace CORE_WebAPI.Models
 {
     public partial class Login
     {
+
         public void UpdateChangedFields(Login login)
         {
             if (login.PhoneNo != null)
@@ -21,7 +25,13 @@ namespace CORE_WebAPI.Models
             }
          
         }
-     
+
+
+        public void hashPassword()
+        {
+            PasswordHasher hasher = new PasswordHasher();
+            this.Password = hasher.HashPassword(Password);
+        }
 
     }
 }
