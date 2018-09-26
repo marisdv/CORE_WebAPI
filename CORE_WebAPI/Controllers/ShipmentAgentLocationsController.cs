@@ -48,6 +48,27 @@ namespace CORE_WebAPI.Controllers
             return Ok(shipmentAgentLocation);
         }
 
+        // GET: api/ShipmentAgentLocations/agent/17
+        [HttpGet("agent/{id}")]
+        public async Task<IActionResult> GetLocationByAgent([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var shipmentAgent = await _context.ShipmentAgentLocation
+                                                .SingleOrDefaultAsync(m => m.AgentId == id);
+
+
+            if (shipmentAgent == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(shipmentAgent);
+        }
+
         // PUT: api/ShipmentAgentLocations/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShipmentAgentLocation([FromRoute] int id, [FromBody] ShipmentAgentLocation shipmentAgentLocation)
