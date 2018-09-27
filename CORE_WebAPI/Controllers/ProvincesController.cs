@@ -49,6 +49,26 @@ namespace CORE_WebAPI.Controllers
             return Ok(province);
         }
 
+        // GET: api/Provinces/name/Gauteng
+        [HttpGet("name/{id}")]
+        public async Task<IActionResult> GetProvinceByName([FromRoute] string id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var province = await _context.Province
+                                                   .SingleOrDefaultAsync(m => m.ProvinceName == id);
+
+            if (province == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(province);
+        }
+
         // PUT: api/Provinces/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProvince([FromRoute] int id, [FromBody] Province province)

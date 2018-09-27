@@ -7,12 +7,14 @@ namespace CORE_WebAPI.Models
     {
         public UserType()
         {
+            AuditLog = new HashSet<AuditLog>();
             Login = new HashSet<Login>();
         }
 
         public int UserTypeId { get; set; }
         public string UserTypeDescr { get; set; }
 
+        public ICollection<AuditLog> AuditLog { get; set; }
         public ICollection<Login> Login { get; set; }
     }
 }

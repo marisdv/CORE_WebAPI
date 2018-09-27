@@ -173,11 +173,11 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.AuditId).HasColumnName("Audit_ID");
 
-                entity.Property(e => e.AttributeAffected)
-                    .IsRequired()
-                    .HasColumnName("Attribute_Affected")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+                //entity.Property(e => e.AttributeAffected)
+                //    .IsRequired()
+                //    .HasColumnName("Attribute_Affected")
+                //    .HasMaxLength(255)
+                //    .IsUnicode(false);
 
                 entity.Property(e => e.AuditDateTime)
                     .HasColumnName("Audit_DateTime")
@@ -185,17 +185,17 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.AuditTypeId).HasColumnName("Audit_Type_ID");
 
-                entity.Property(e => e.AuditUser)
-                    .IsRequired()
-                    .HasColumnName("Audit_User")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
+                //entity.Property(e => e.AuditUser)
+                //    .IsRequired()
+                //    .HasColumnName("Audit_User")
+                //    .HasMaxLength(10)
+                //    .IsUnicode(false);
 
-                entity.Property(e => e.TableAffected)
-                    .IsRequired()
-                    .HasColumnName("Table_Affected")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+                //entity.Property(e => e.TableAffected)
+                //    .IsRequired()
+                //    .HasColumnName("Table_Affected")
+                //    .HasMaxLength(255)
+                //    .IsUnicode(false);
 
                 entity.HasOne(d => d.AuditType)
                     .WithMany(p => p.AuditLog)

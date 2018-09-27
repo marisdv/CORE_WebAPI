@@ -49,6 +49,27 @@ namespace CORE_WebAPI.Controllers
             return Ok(city);
         }
 
+
+        // GET: api/Cities/name/Pretoria
+        [HttpGet("name/{id}")]
+        public async Task<IActionResult> GetCityByName([FromRoute] string id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var city = await _context.City
+                                                   .SingleOrDefaultAsync(m => m.CityName == id);
+
+            if (city == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(city);
+        }
+
         // PUT: api/Cities/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCity([FromRoute] int id, [FromBody] City city)

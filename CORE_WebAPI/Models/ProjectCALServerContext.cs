@@ -175,35 +175,40 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.AuditId).HasColumnName("Audit_ID");
 
-                entity.Property(e => e.AttributeAffected)
-                    .IsRequired()
-                    .HasColumnName("Attribute_Affected")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.AuditDateTime)
                     .HasColumnName("Audit_DateTime")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.AuditTypeId).HasColumnName("Audit_Type_ID");
 
-                entity.Property(e => e.AuditUser)
-                    .IsRequired()
-                    .HasColumnName("Audit_User")
-                    .HasMaxLength(10)
+                entity.Property(e => e.AuditUserName)
+                    .HasColumnName("Audit_User_Name")
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TableAffected)
+                entity.Property(e => e.ItemAffected)
                     .IsRequired()
-                    .HasColumnName("Table_Affected")
-                    .HasMaxLength(255)
+                    .HasColumnName("Item_Affected")
+                    .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.TxAmount)
+                    .HasColumnName("Tx_Amount")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.UserTypeId).HasColumnName("User_Type_ID");
 
                 entity.HasOne(d => d.AuditType)
                     .WithMany(p => p.AuditLog)
                     .HasForeignKey(d => d.AuditTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AUDIT_LOG_AUDIT_TYPE");
+
+                entity.HasOne(d => d.UserType)
+                    .WithMany(p => p.AuditLog)
+                    .HasForeignKey(d => d.UserTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AUDIT_LOG_USER_TYPE");
             });
 
             modelBuilder.Entity<AuditType>(entity =>
