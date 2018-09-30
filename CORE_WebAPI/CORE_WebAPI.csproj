@@ -40,5 +40,14 @@
     <WCFMetadata Include="Connected Services" />
   </ItemGroup>
   
+  <ItemGroup>
+    <None Update="System.Private.ServiceModel.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Target Name="CopySPSM" BeforeTargets="Build">
+    <Copy SourceFiles="System.Private.ServiceModel.dll" DestinationFolder="$(OutputPath)\bin" />
+  </Target>
+
 
 </Project>

@@ -70,5 +70,11 @@ namespace CORE_WebAPI.Models
             }
             else return false;
         }
+
+        public string getFullName()
+        {
+            System.Diagnostics.Debugger.Break();
+            return this.EmployeeName + " " + this.EmployeeSurname;
+        }
     }
 }
