@@ -30,8 +30,18 @@ namespace CORE_WebAPI.Models
         public void hashPassword()
         {
             PasswordHasher hasher = new PasswordHasher();
-            this.Password = hasher.HashPassword(Password);
+            this.Password = hasher.HashPassword(this.Password);
         }
 
+        public bool verifyPassword(string password)
+        {
+            PasswordHasher hasher = new PasswordHasher();
+            var result = hasher.VerifyHashedPassword(this.Password,password);
+            if (result == PasswordVerificationResult.Success)
+            {
+                return true;
+            }
+            else return false;
+        }
     }
 }

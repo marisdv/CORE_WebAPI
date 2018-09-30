@@ -69,19 +69,26 @@ namespace CORE_WebAPI.Controllers
         [HttpGet("sender/{id}")]
         public async Task<IActionResult> GetShipmentBySender([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var sender = _context.Shipment.Where(m => m.SenderId == id);
+
+                if (sender == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(sender);
             }
-
-            var sender = await _context.Shipment.SingleOrDefaultAsync(m => m.SenderId == id);
-
-            if (sender == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
-
-            return Ok(sender);
         }
 
         // GET: api/Shipments/Agent/13
@@ -93,7 +100,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var shipmentAgent= await _context.Shipment.SingleOrDefaultAsync(m => m.AgentId == id);
+            var shipmentAgent=  _context.Shipment.Where(m => m.AgentId == id);
 
             if (shipmentAgent == null)
             {

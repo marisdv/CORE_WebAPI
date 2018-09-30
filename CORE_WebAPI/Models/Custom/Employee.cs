@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace CORE_WebAPI.Models
@@ -51,6 +52,23 @@ namespace CORE_WebAPI.Models
             {
                 this.EmployeePassword = employee.EmployeePassword;
             }
+        }
+
+        public void hashPassword()
+        {
+            PasswordHasher hasher = new PasswordHasher();
+            this.EmployeePassword = hasher.HashPassword(this.EmployeePassword);
+        }
+
+        public bool verifyPassword(string password)
+        {
+            PasswordHasher hasher = new PasswordHasher();
+            var result = hasher.VerifyHashedPassword(this.EmployeePassword, password);
+            if (result == PasswordVerificationResult.Success)
+            {
+                return true;
+            }
+            else return false;
         }
     }
 }

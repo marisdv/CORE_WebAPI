@@ -90,6 +90,35 @@ namespace CORE_WebAPI.Controllers
             return Ok(application);
         }
 
+        //Verify Employee Password
+        [HttpPost("verify/{id}")]
+        public async Task<IActionResult> VerifyPassword([FromRoute] string id, [FromBody] Employee employee)
+        {
+            bool valid = false;
+            try
+            {
+
+                var log = await _context.Employee
+                                            .SingleOrDefaultAsync(m => m.EmployeePhone == id);
+
+                if (log == null)
+                {
+                    return NotFound("No Login linked to this cell number.");
+                }
+                if (log.verifyPassword(employee.EmployeePassword))
+                {
+                    valid = true;
+                    return Ok(valid);
+                }
+                else return BadRequest(valid);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
         // PUT: api/Employees/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee([FromRoute] int id, [FromBody] Employee employee)
@@ -97,6 +126,8 @@ namespace CORE_WebAPI.Controllers
             Employee updateEmployee = _context.Employee.FirstOrDefault(e => e.EmployeeId == id);
 
             updateEmployee.UpdateChangedFields(employee);
+
+            updateEmployee.hashPassword();
 
             if (!ModelState.IsValid)
             {
@@ -137,7 +168,7 @@ namespace CORE_WebAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            employee.hashPassword();
             _context.Employee.Add(employee);
             await _context.SaveChangesAsync();
 

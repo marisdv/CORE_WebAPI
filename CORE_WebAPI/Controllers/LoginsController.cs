@@ -69,6 +69,35 @@ namespace CORE_WebAPI.Controllers
             return Ok(login);
         }
 
+        // POST: api/Logins/verify/082...
+        [HttpPost("verify/{id}")]
+        public async Task<IActionResult> VerifyPassword([FromRoute] string id,[FromBody] Login login)
+        {
+            bool valid = false;
+            try
+            {
+                
+                var log = await _context.Login/*.Include(login => login.UserType)*/
+                                                            .SingleOrDefaultAsync(m => m.PhoneNo == id);
+
+                if (log == null)
+                {
+                    return NotFound("No Login linked to this cell number.");
+                }
+                if (log.verifyPassword(login.Password))
+                {
+                    valid = true;
+                    return Ok(valid);
+                }
+                else return BadRequest(valid);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+           
+        }
+
         // PUT: api/Logins/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLogin([FromRoute] int id, [FromBody] Login login)
@@ -118,17 +147,26 @@ namespace CORE_WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> PostLogin([FromBody] Login login)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("No idea what went wrong"/*ModelState*/);
+                }
+
+                login.hashPassword();
+
+                _context.Login.Add(login);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetLogin", new { id = login.LoginId }, login);
             }
-
-            login.hashPassword();
-
-            _context.Login.Add(login);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetLogin", new { id = login.LoginId }, login);
+            catch (Exception ex)
+            {
+                return BadRequest();
+                throw;
+            }
+           
         }
 
         // DELETE: api/Logins/5
