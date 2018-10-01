@@ -10,6 +10,7 @@ namespace CORE_WebAPI.Models
             Package = new HashSet<Package>();
             PaymentReference = new HashSet<PaymentReference>();
             Penalty = new HashSet<Penalty>();
+            ShipmentAgentNotification = new HashSet<ShipmentAgentNotification>();
         }
 
         public int ShipmentId { get; set; }
@@ -39,5 +40,6 @@ namespace CORE_WebAPI.Models
         public ICollection<Package> Package { get; set; }
         public ICollection<PaymentReference> PaymentReference { get; set; }
         public ICollection<Penalty> Penalty { get; set; }
+        public ICollection<ShipmentAgentNotification> ShipmentAgentNotification { get; set; }
     }
 }

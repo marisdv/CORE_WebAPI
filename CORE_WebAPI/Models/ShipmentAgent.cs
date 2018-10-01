@@ -21,7 +21,6 @@ namespace CORE_WebAPI.Models
         public string AgentNationalId { get; set; }
         public string AgentPassportNo { get; set; }
         public DateTime DateEmployed { get; set; }
-        public string AgentCompany { get; set; }
         public string BankAccNo { get; set; }
         public string BankName { get; set; }
         public string BankAccType { get; set; }

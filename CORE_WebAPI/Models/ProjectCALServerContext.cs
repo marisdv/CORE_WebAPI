@@ -415,7 +415,7 @@ namespace CORE_WebAPI.Models
                 entity.Property(e => e.EmployeePassword)
                     .IsRequired()
                     .HasColumnName("Employee_Password")
-                    .HasMaxLength(50)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EmployeePhone)
@@ -454,7 +454,7 @@ namespace CORE_WebAPI.Models
                 entity.Property(e => e.FixedPriceDescr)
                     .IsRequired()
                     .HasColumnName("Fixed_Price_Descr")
-                    .HasMaxLength(20)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
 
@@ -466,7 +466,7 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasMaxLength(50)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.PhoneNo)
@@ -852,12 +852,6 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.AgentAvailability).HasColumnName("Agent_Availability");
 
-                entity.Property(e => e.AgentCompany)
-                    .IsRequired()
-                    .HasColumnName("Agent_Company")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.AgentEmail)
                     .IsRequired()
                     .HasColumnName("Agent_Email")
@@ -990,6 +984,8 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.RequestAccepted).HasColumnName("Request_Accepted");
 
+                entity.Property(e => e.ShipmentId).HasColumnName("Shipment_ID");
+
                 entity.HasOne(d => d.Agent)
                     .WithMany(p => p.ShipmentAgentNotification)
                     .HasForeignKey(d => d.AgentId)
@@ -1001,6 +997,11 @@ namespace CORE_WebAPI.Models
                     .HasForeignKey(d => d.NotificationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_AGENT_NOTIFICATION_NOTIFICATION");
+
+                entity.HasOne(d => d.Shipment)
+                    .WithMany(p => p.ShipmentAgentNotification)
+                    .HasForeignKey(d => d.ShipmentId)
+                    .HasConstraintName("FK_SHIPMENT_AGENT_NOTIFICATION_SHIPMENT_AGENT_NOTIFICATION");
             });
 
             modelBuilder.Entity<ShipmentStatus>(entity =>
