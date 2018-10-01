@@ -16,10 +16,5 @@ namespace CORE_WebAPI.Models.Reports
         public double ProfitLoss;
         public bool isProfit;
         public string EmpFullName;
-
-        public void GenerateIncomeReport()
-        {
-
-        }
     }
 }

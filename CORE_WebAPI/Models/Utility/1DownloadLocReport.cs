@@ -12,13 +12,6 @@ namespace CORE_WebAPI.Models.Reports
         public List<ReportLine> Lines { get; set; }
         public int TotalDownloads { get; set; }
         public string EmpFullName { get; set; }
-
-        public void GenerateIncomeReport()
-        {
-
-        }
-
-        
     }
     public class ReportLine
     {

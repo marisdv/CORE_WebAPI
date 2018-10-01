@@ -11,10 +11,6 @@ namespace CORE_WebAPI.Models.Reports
         public DateTime EndDate;
         public double TotalSalary;
         public string EmpFullName;
-
-        public void GenerateAgentSalaryReport()
-        {
-
-        }
+        
     }
 }

@@ -7,12 +7,7 @@ namespace CORE_WebAPI.Models.Reports
 {
     public class ShipmentDurationReport
     {
-        
         public string EmpFullName;
 
-        public void GenerateShipmentDurationReport()
-        {
-            
-        }
     }
 }
