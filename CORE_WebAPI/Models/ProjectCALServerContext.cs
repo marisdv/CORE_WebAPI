@@ -1001,6 +1001,7 @@ namespace CORE_WebAPI.Models
                 entity.HasOne(d => d.Shipment)
                     .WithMany(p => p.ShipmentAgentNotification)
                     .HasForeignKey(d => d.ShipmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SHIPMENT_AGENT_NOTIFICATION_SHIPMENT_AGENT_NOTIFICATION");
             });
 

@@ -828,11 +828,7 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.AgentAvailability).HasColumnName("Agent_Availability");
 
-                entity.Property(e => e.AgentCompany)
-                    .IsRequired()
-                    .HasColumnName("Agent_Company")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+
 
                 entity.Property(e => e.AgentEmail)
                     .IsRequired()

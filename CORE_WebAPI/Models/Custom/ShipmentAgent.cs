@@ -31,10 +31,6 @@ namespace CORE_WebAPI.Models
             {
                 this.DateEmployed = agent.DateEmployed;
             }
-            if (agent.AgentCompany != null)
-            {
-                this.AgentCompany = agent.AgentCompany;
-            }
             if (agent.BankAccNo != null)
             {
                 this.BankAccNo = agent.BankAccNo;
