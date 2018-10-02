@@ -140,7 +140,7 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var basketLine = await _context.BasketLine.FindAsync(id);
+            var basketLine = _context.BasketLine.FirstOrDefault(p => p.PackageId == id);
             if (basketLine == null)
             {
                 return NotFound();

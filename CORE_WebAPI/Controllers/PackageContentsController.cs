@@ -108,21 +108,30 @@ namespace CORE_WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePackageContent([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                System.Diagnostics.Debugger.Break();
 
-            var packageContent = await _context.PackageContent.FindAsync(id);
-            if (packageContent == null)
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var packageContent = await _context.PackageContent.FindAsync(id);
+                if (packageContent == null)
+                {
+                    return NotFound();
+                }
+
+                _context.PackageContent.Remove(packageContent);
+                await _context.SaveChangesAsync();
+
+                return Ok(packageContent);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(ex.InnerException.Message);
             }
-
-            _context.PackageContent.Remove(packageContent);
-            await _context.SaveChangesAsync();
-
-            return Ok(packageContent);
         }
 
         private bool PackageContentExists(int id)

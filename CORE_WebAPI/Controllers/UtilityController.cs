@@ -103,7 +103,7 @@ namespace CORE_WebAPI.Controllers
         {
         try
             {
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
 
                 Payhost.SinglePaymentRequest1 payment = new Payhost.SinglePaymentRequest1();
                 Payhost.CardPaymentRequestType request = new Payhost.CardPaymentRequestType();
@@ -123,7 +123,7 @@ namespace CORE_WebAPI.Controllers
                 request.Customer.Mobile = new string[] { sender.Login.PhoneNo };
                 request.Customer.Email = new string[] { sender.SenderEmail };
 
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
                 request.ItemsElementName = new Payhost.ItemsChoiceType[]
                 {
                         Payhost.ItemsChoiceType.CardNumber,
@@ -137,7 +137,7 @@ namespace CORE_WebAPI.Controllers
 
                 //if-statement for penalty or shipment
 
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
                 Penalty penalty = new Penalty();
                 penalty = _context.Penalty
                                         .FirstOrDefault(m => m.PentaltyId == details.penaltyId);
@@ -156,7 +156,7 @@ namespace CORE_WebAPI.Controllers
 
                 var r = response.SinglePaymentResponse.Item as Payhost.CardPaymentResponseType;
 
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
                 
                 //error handling
                 if (r.Status.StatusName.ToString() == "ValidationError")
@@ -181,12 +181,14 @@ namespace CORE_WebAPI.Controllers
                 payRef.PaymentTypeDetail = r.Status.PaymentType.Detail.ToString();
                 payRef.ShipmentId = penalty.ShipmentId;
 
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
 
                 _context.PaymentReference.Add(payRef);
+                
+                penalty.DatePaid = DateTime.Now;
+                _context.Entry(penalty).State = EntityState.Modified;
 
-                //update penalty date paid
-
+                _context.SaveChangesAsync();
                 return status.TransactionStatusDescription.ToString();
             }
             catch (Exception ex)
