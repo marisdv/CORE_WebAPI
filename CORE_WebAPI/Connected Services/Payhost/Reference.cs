@@ -20,10 +20,23 @@ namespace Payhost
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<Payhost.SinglePayoutResponse1> SinglePayoutAsync(Payhost.SinglePayoutRequest1 request);
         
+        //old
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<Payhost.SinglePaymentResponse1> SinglePaymentAsync(Payhost.SinglePaymentRequest1 request);
-        
+
+
+        [System.ServiceModel.OperationContractAttribute(Action = "", ReplyAction = "*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults = true)]
+        Payhost.SinglePaymentResponse1 SinglePayment(Payhost.SinglePaymentRequest1 request);
+        //System.Threading.Tasks.Task<Payhost.SinglePaymentResponse1> SinglePayment(Payhost.SinglePaymentRequest1 request);
+
+        //new
+        //// CODEGEN: Generating message contract since the operation SinglePayment is neither RPC nor document wrapped.
+
+        //[System.ServiceModel.OperationContractAttribute(Action = "", ReplyAction = "*")]
+        //System.Threading.Tasks.Task<WebApplication2.myWSDL.SinglePaymentResponse1> SinglePaymentAsync(WebApplication2.myWSDL.SinglePaymentRequest1 request);
+
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<Payhost.SingleFollowUpResponse1> SingleFollowUpAsync(Payhost.SingleFollowUpRequest1 request);
@@ -2896,6 +2909,8 @@ namespace Payhost
         }
     }
     
+    //old
+    /*
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -2950,8 +2965,81 @@ namespace Payhost
                 this.userDefinedFieldsField = value;
             }
         }
+    }*/
+    //new
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3056.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.paygate.co.za/PayHOST")]
+    public partial class CardPaymentResponseType : object, System.ComponentModel.INotifyPropertyChanged
+    {
+
+        private StatusType statusField;
+
+        private RedirectResponseType redirectField;
+
+        private KeyValueType[] userDefinedFieldsField;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
+        public StatusType Status
+        {
+            get
+            {
+                return this.statusField;
+            }
+            set
+            {
+                this.statusField = value;
+                this.RaisePropertyChanged("Status");
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
+        public RedirectResponseType Redirect
+        {
+            get
+            {
+                return this.redirectField;
+            }
+            set
+            {
+                this.redirectField = value;
+                this.RaisePropertyChanged("Redirect");
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("UserDefinedFields", Order = 2)]
+        public KeyValueType[] UserDefinedFields
+        {
+            get
+            {
+                return this.userDefinedFieldsField;
+            }
+            set
+            {
+                this.userDefinedFieldsField = value;
+                this.RaisePropertyChanged("UserDefinedFields");
+            }
+        }
+
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null))
+            {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
-    
+
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -6938,27 +7026,30 @@ namespace Payhost
             this.SinglePayoutRequest = SinglePayoutRequest;
         }
     }
-    
+
+
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.1")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped = false)]
     public partial class SinglePayoutResponse1
     {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://www.paygate.co.za/PayHOST", Order=0)]
+
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "http://www.paygate.co.za/PayHOST", Order = 0)]
         public Payhost.SinglePayoutResponse SinglePayoutResponse;
-        
+
         public SinglePayoutResponse1()
         {
         }
-        
+
         public SinglePayoutResponse1(Payhost.SinglePayoutResponse SinglePayoutResponse)
         {
             this.SinglePayoutResponse = SinglePayoutResponse;
         }
     }
-    
+
+
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -7032,27 +7123,50 @@ namespace Payhost
             this.SinglePaymentRequest = SinglePaymentRequest;
         }
     }
-    
+
+    //old
+    //[System.Diagnostics.DebuggerStepThroughAttribute()]
+    //[System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.1")]
+    //[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    //[System.ServiceModel.MessageContractAttribute(IsWrapped = false)]
+    //public partial class SinglePaymentResponse1
+    //{
+
+    //    [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "http://www.paygate.co.za/PayHOST", Order = 0)]
+    //    public Payhost.SinglePaymentResponse SinglePaymentResponse;
+
+    //    public SinglePaymentResponse1()
+    //    {
+    //    }
+
+    //    public SinglePaymentResponse1(Payhost.SinglePaymentResponse SinglePaymentResponse)
+    //    {
+    //        this.SinglePaymentResponse = SinglePaymentResponse;
+    //    }
+    //}
+
+    //new
     [System.Diagnostics.DebuggerStepThroughAttribute()]
+    //[System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.1")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped = false)]
     public partial class SinglePaymentResponse1
     {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://www.paygate.co.za/PayHOST", Order=0)]
+
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "http://www.paygate.co.za/PayHOST", Order = 0)]
         public Payhost.SinglePaymentResponse SinglePaymentResponse;
-        
+
         public SinglePaymentResponse1()
         {
         }
-        
+
         public SinglePaymentResponse1(Payhost.SinglePaymentResponse SinglePaymentResponse)
         {
             this.SinglePaymentResponse = SinglePaymentResponse;
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -7439,7 +7553,14 @@ namespace Payhost
             inValue.SinglePayoutRequest = SinglePayoutRequest;
             return ((Payhost.PayHOST)(this)).SinglePayoutAsync(inValue);
         }
-        
+
+        //new
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        Payhost.SinglePaymentResponse1 Payhost.PayHOST.SinglePayment(Payhost.SinglePaymentRequest1 request)
+        {
+            return base.Channel.SinglePayment(request);
+        }
+
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         System.Threading.Tasks.Task<Payhost.SinglePaymentResponse1> Payhost.PayHOST.SinglePaymentAsync(Payhost.SinglePaymentRequest1 request)
         {

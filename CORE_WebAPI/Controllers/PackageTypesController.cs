@@ -76,10 +76,7 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPackageType([FromRoute] int id, [FromBody] PackageType packageType)
         {
-            PackageType updatePackageType = _context.PackageType.FirstOrDefault(p => p.PackageTypeId == id);
-
-            updatePackageType.UpdateChangedFields(packageType);
-
+            System.Diagnostics.Debugger.Break();
 
             if (!ModelState.IsValid)
             {
@@ -91,7 +88,11 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(packageType).State = EntityState.Modified;
+            PackageType updatePackageType = _context.PackageType.FirstOrDefault(p => p.PackageTypeId == id);
+
+            updatePackageType.UpdateChangedFields(packageType);
+
+            _context.Entry(updatePackageType).State = EntityState.Modified;
 
             try
             {
@@ -116,15 +117,24 @@ namespace CORE_WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> PostPackageType([FromBody] PackageType packageType)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                //System.Diagnostics.Debugger.Break();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                _context.PackageType.Add(packageType);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetPackageType", new { id = packageType.PackageTypeId }, packageType);
             }
-
-            _context.PackageType.Add(packageType);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPackageType", new { id = packageType.PackageTypeId }, packageType);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.Message);
+            }
+            
         }
 
         // DELETE: api/PackageTypes/5

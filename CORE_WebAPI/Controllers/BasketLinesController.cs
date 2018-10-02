@@ -48,6 +48,25 @@ namespace CORE_WebAPI.Controllers
             return Ok(basketLine);
         }
 
+        // GET: api/BasketLines/package/1
+        [HttpGet("package/{id}")]
+        public async Task<IActionResult> GetBasketLineByPackageID([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var basket = await _context.BasketLine.SingleOrDefaultAsync(m => m.PackageId == id);
+
+            if (basket == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(basket);
+        }
+
         // PUT: api/BasketLines/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBasketLine([FromRoute] int id, [FromBody] BasketLine basketLine)

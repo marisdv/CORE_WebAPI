@@ -66,11 +66,7 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutFixedPrice([FromRoute] int id, [FromBody] FixedPrice fixedPrice)
         {
-
-            FixedPrice updateFixedPrice = _context.FixedPrice.FirstOrDefault(f => f.FixedPriceId == id);
-
-            updateFixedPrice.UpdateChangedFields(fixedPrice);
-
+            //System.Diagnostics.Debugger.Break();
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -80,8 +76,12 @@ namespace CORE_WebAPI.Controllers
             {
                 return BadRequest();
             }
+            FixedPrice updateFixedPrice = _context.FixedPrice.FirstOrDefault(f => f.FixedPriceId == id);
 
-            _context.Entry(fixedPrice).State = EntityState.Modified;
+            updateFixedPrice.UpdateChangedFields(updateFixedPrice);
+
+            //System.Diagnostics.Debugger.Break();
+            _context.Entry(updateFixedPrice).State = EntityState.Modified;
 
             try
             {

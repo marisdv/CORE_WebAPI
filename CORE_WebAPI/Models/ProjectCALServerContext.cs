@@ -289,7 +289,6 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.CompanyLogo)
-                    .IsRequired()
                     .HasColumnName("Company_Logo")
                     .HasMaxLength(255)
                     .IsUnicode(false);
@@ -391,7 +390,6 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.EmployeeImage)
-                    .IsRequired()
                     .HasColumnName("Employee_Image")
                     .HasMaxLength(255)
                     .IsUnicode(false);
@@ -563,7 +561,6 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.PackageTypeImage)
-                    .IsRequired()
                     .HasColumnName("Package_Type_Image")
                     .HasMaxLength(255)
                     .IsUnicode(false);
@@ -581,7 +578,7 @@ namespace CORE_WebAPI.Models
 
                 entity.Property(e => e.TransactionId)
                     .HasColumnName("Transaction_ID")
-                    .HasColumnType("numeric(11, 0)");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Amount).HasColumnType("decimal(5, 2)");
 
@@ -616,8 +613,6 @@ namespace CORE_WebAPI.Models
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.Property(e => e.TxStatusCode).HasColumnType("numeric(1, 0)");
 
                 entity.Property(e => e.TxStatusDescr)
                     .IsRequired()
@@ -859,7 +854,6 @@ namespace CORE_WebAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.AgentImage)
-                    .IsRequired()
                     .HasColumnName("Agent_Image")
                     .HasMaxLength(255)
                     .IsUnicode(false);
@@ -919,7 +913,6 @@ namespace CORE_WebAPI.Models
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.LicenceImage)
-                    .IsRequired()
                     .HasColumnName("Licence_Image")
                     .HasMaxLength(255)
                     .IsUnicode(false);
@@ -1068,7 +1061,6 @@ namespace CORE_WebAPI.Models
                 entity.Property(e => e.VehicleMakeId).HasColumnName("Vehicle_Make_ID");
 
                 entity.Property(e => e.VehicleProofImage)
-                    .IsRequired()
                     .HasColumnName("Vehicle_Proof_Image")
                     .HasMaxLength(255)
                     .IsUnicode(false);

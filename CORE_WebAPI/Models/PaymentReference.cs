@@ -5,9 +5,9 @@ namespace CORE_WebAPI.Models
 {
     public partial class PaymentReference
     {
-        public decimal TransactionId { get; set; }
+        public int TransactionId { get; set; }
         public string StatusName { get; set; }
-        public decimal TxStatusCode { get; set; }
+        public int TxStatusCode { get; set; }
         public string TxStatusDescr { get; set; }
         public string ResultCode { get; set; }
         public string ResultDescr { get; set; }

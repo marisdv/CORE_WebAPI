@@ -85,23 +85,26 @@ namespace CORE_WebAPI.Controllers
 
         }
         #endregion
-        
+
         #region PAYMENT
-        //struct CardDetailsModel
-        //{
-        //    //card no
-              ////cvv
-              ////expiry
-              ////penaltyID
-        //}
-        
+        public struct CardDetailsModel
+        {
+            public int senderId { get; set; }
+            public int penaltyId { get; set; } //or just transactionId -> penalty or payment
+            //boolean value for whether it is a penalty or a payment
+            public string cardNo { get; set; } //check format for this
+            public string expDate { get; set; } //check format for this
+            public string cvv { get; set; }
+        }
+
         //POST: api/Utility/payment
         [HttpPost("Payment")]
-        public string Payment()//([FromBody] Transaction tx)
+        public string Payment([FromBody] CardDetailsModel details)
         {
-            //accept cardNo, CVV, expDate and penaltyID) from app
         try
             {
+                System.Diagnostics.Debugger.Break();
+
                 Payhost.SinglePaymentRequest1 payment = new Payhost.SinglePaymentRequest1();
                 Payhost.CardPaymentRequestType request = new Payhost.CardPaymentRequestType();
 
@@ -109,63 +112,80 @@ namespace CORE_WebAPI.Controllers
                 request.Account.PayGateId = "10011064270";
                 request.Account.Password = "test";
 
-                //get this from the post content
-                string name = "Marissa";
-                string surname = "de Villiers";
-                string phone = "0796861912";
-                string email = "marissadev@gmail.com";
+                //get Sender details
+                Sender sender = new Sender();
+                sender = _context.Sender.Include(l => l.Login)
+                                        .FirstOrDefault(m => m.SenderId == details.senderId);
 
                 request.Customer = new Payhost.PersonType();
-                request.Customer.FirstName = name;
-                request.Customer.LastName = surname;
-                request.Customer.Mobile = new string[] { phone };
-                request.Customer.Email = new string[] { email };
+                request.Customer.FirstName = sender.SenderName;
+                request.Customer.LastName = sender.SenderSurname;
+                request.Customer.Mobile = new string[] { sender.Login.PhoneNo };
+                request.Customer.Email = new string[] { sender.SenderEmail };
 
+                System.Diagnostics.Debugger.Break();
                 request.ItemsElementName = new Payhost.ItemsChoiceType[]
                 {
                         Payhost.ItemsChoiceType.CardNumber,
                         Payhost.ItemsChoiceType.CardExpiryDate
                 };
+                
+                request.Items = new string[] { details.cardNo, details.expDate };
 
-                string cardNo = "4000000000000002";
-                string date = "012020";
-                string cvv = "001";
-                string budget = "0";
+                request.CVV = details.cvv;
+                request.BudgetPeriod = "0";
 
-                int id = 3; //shipment ID or Penalty ID - differenciate between the two
-                int amt = 4000; //R40 //remove comma - payhost format
+                //if-statement for penalty or shipment
 
-                request.Items = new string[] { cardNo, date };
-
-                request.CVV = cvv;
-                request.BudgetPeriod = budget;
-
+                System.Diagnostics.Debugger.Break();
+                Penalty penalty = new Penalty();
+                penalty = _context.Penalty
+                                        .FirstOrDefault(m => m.PentaltyId == details.penaltyId);
+                
                 request.Order = new Payhost.OrderType();
-                request.Order.MerchantOrderId = id.ToString(); ;//shipmentID (indicate that it's a penalty?)
+                request.Order.MerchantOrderId = penalty.PentaltyId.ToString(); //shipmentId or penaltyId
                 request.Order.Currency = Payhost.CurrencyType.ZAR;
-                request.Order.Amount = amt;
+                request.Order.Amount = Convert.ToInt32((penalty.PenaltyAmount*100));
 
                 payment.SinglePaymentRequest = new Payhost.SinglePaymentRequest();
                 payment.SinglePaymentRequest.Item = request;
 
                 Payhost.PayHOST paygateInterface = new Payhost.PayHOSTClient();
 
-                //Payhost.SinglePaymentResponse1 response = paygateInterface.SinglePayment(payment);
-
-                paygateInterface.SinglePayment(payment);
+                Payhost.SinglePaymentResponse1 response = paygateInterface.SinglePayment(payment);
 
                 var r = response.SinglePaymentResponse.Item as Payhost.CardPaymentResponseType;
 
+                System.Diagnostics.Debugger.Break();
+                
                 //error handling
                 if (r.Status.StatusName.ToString() == "ValidationError")
                 {
-                    var lastResponse = r.StatusDetail;
+                    var lastResponse = r.Status.StatusDetail;
                 }
 
                 var status = r.Status as Payhost.StatusType;
                 var redirect = r.Redirect as Payhost.RedirectResponseType;
 
                 //store response in database
+                PaymentReference payRef = new PaymentReference();
+                payRef.TransactionId = Convert.ToInt32(r.Status.TransactionId);
+                payRef.StatusName = r.Status.StatusName.ToString();
+                payRef.TxStatusCode = Convert.ToInt32(r.Status.TransactionStatusCode);
+                payRef.TxStatusDescr = r.Status.TransactionStatusDescription;
+                payRef.ResultCode = r.Status.ResultCode;
+                payRef.ResultDescr = r.Status.ResultDescription;
+                payRef.Amount = r.Status.Amount/100;
+                payRef.RiskIndicator = r.Status.RiskIndicator;
+                payRef.PaymentTypeMethod = r.Status.PaymentType.Method.ToString();
+                payRef.PaymentTypeDetail = r.Status.PaymentType.Detail.ToString();
+                payRef.ShipmentId = penalty.ShipmentId;
+
+                System.Diagnostics.Debugger.Break();
+
+                _context.PaymentReference.Add(payRef);
+
+                //update penalty date paid
 
                 return status.TransactionStatusDescription.ToString();
             }
