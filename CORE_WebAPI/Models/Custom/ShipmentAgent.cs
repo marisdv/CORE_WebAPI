@@ -80,5 +80,15 @@ namespace CORE_WebAPI.Models
                 this.AgentImage = agent.AgentImage;
             }
         }
+        public string getFullName()
+        {
+            //System.Diagnostics.Debugger.Break();
+            return this.AgentName + " " + this.AgentSurname;
+        }
+
+        public string getBankDetails()
+        {
+            return this.BankAccNo + "\n" + this.BankAccType + "\n" + this.BankName + "\n" + this.BankBranchCode;
+        }
     }
 }

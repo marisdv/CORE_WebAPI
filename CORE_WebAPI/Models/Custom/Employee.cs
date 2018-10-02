@@ -73,7 +73,6 @@ namespace CORE_WebAPI.Models
 
         public string getFullName()
         {
-            System.Diagnostics.Debugger.Break();
             return this.EmployeeName + " " + this.EmployeeSurname;
         }
     }

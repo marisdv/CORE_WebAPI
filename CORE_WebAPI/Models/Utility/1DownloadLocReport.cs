@@ -9,11 +9,11 @@ namespace CORE_WebAPI.Models.Reports
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public List<ReportLine> Lines { get; set; }
+        public List<DownloadReportLine> Lines { get; set; }
         public int TotalDownloads { get; set; }
         public string EmpFullName { get; set; }
     }
-    public class ReportLine
+    public class DownloadReportLine
     {
         public string province { get; set; }
         public string city { get; set; }

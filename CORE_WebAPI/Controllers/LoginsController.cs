@@ -102,45 +102,52 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLogin([FromRoute] int id, [FromBody] Login login)
         {
-
-            Login updateLogin = _context.Login.FirstOrDefault(l => l.LoginId == id);
-
-            if (login.Password != null)
-            {
-                login.hashPassword();
-            }
-
-            updateLogin.UpdateChangedFields(login);
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != login.LoginId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(login).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LoginExists(id))
+                if (!ModelState.IsValid)
                 {
-                    return NotFound();
+                    return BadRequest(ModelState);
                 }
-                else
+                if (id != login.LoginId)
                 {
-                    throw;
+                    return BadRequest();
                 }
-            }
+                //System.Diagnostics.Debugger.Break();
 
-            return NoContent();
+                Login updateLogin = _context.Login.FirstOrDefault(l => l.LoginId == id);
+
+                System.Diagnostics.Debugger.Break();
+
+                updateLogin.UpdateChangedFields(login);
+
+                updateLogin.hashPassword();
+
+
+                _context.Entry(updateLogin).State = EntityState.Modified; //breaks here
+                System.Diagnostics.Debugger.Break();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!LoginExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return NoContent();
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // POST: api/Logins

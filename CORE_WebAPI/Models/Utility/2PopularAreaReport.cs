@@ -7,5 +7,6 @@ namespace CORE_WebAPI.Models.Reports
 {
     public class PopularAreaReport
     {
+        //not gonna happen :/
     }
 }

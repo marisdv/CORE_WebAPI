@@ -7,10 +7,18 @@ namespace CORE_WebAPI.Models.Reports
 {
     public class AgentSalaryReport
     {
-        public DateTime StartDate;
-        public DateTime EndDate;
-        public double TotalSalary;
-        public string EmpFullName;
-        
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public double TotalSalary { get; set; }
+        public string EmpFullName { get; set; }
+        public List<SalaryReportLine> Lines {get; set;}
+
+    }
+    public class SalaryReportLine
+    {
+        public string agentName { get; set; } //getFullName
+        public int noOfShipments { get; set; }
+        public double agentSalary { get; set; }
+        public string bankDetails { get; set; } //get bank details
     }
 }
