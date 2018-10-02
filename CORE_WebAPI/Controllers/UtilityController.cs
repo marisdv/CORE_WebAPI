@@ -85,85 +85,98 @@ namespace CORE_WebAPI.Controllers
 
         }
         #endregion
-
+        
         #region PAYMENT
-        // POST: api/Utility/payment
-        //[HttpPost("Payment")]
-        //public string Payment()//([FromBody] Transaction tx)
+        //struct CardDetailsModel
         //{
-        //accept cardNo, CVV, expDate and ShipmentID (penalty) from app
-        //try
-        //{
-        //    Payhost.SinglePaymentRequest1 payment = new Payhost.SinglePaymentRequest1();
-        //    Payhost.CardPaymentRequestType request = new Payhost.CardPaymentRequestType();
-
-        //    request.Account = new Payhost.PayGateAccountType();
-        //    request.Account.PayGateId = "10011064270";
-        //    request.Account.Password = "test";
-
-        //    string name = "Marissa";
-        //    string surname = "de Villiers";
-        //    string phone = "0796861912";
-        //    string email = "marissadev@gmail.com";
-
-        //    request.Customer = new Payhost.PersonType();
-        //    request.Customer.FirstName = name;
-        //    request.Customer.LastName = surname;
-        //    request.Customer.Mobile = new string[] { phone };
-        //    request.Customer.Email = new string[] { email };
-
-        //    request.ItemsElementName = new Payhost.ItemsChoiceType[]
-        //    {
-        //    Payhost.ItemsChoiceType.CardNumber,
-        //    Payhost.ItemsChoiceType.CardExpiryDate
-        //    };
-
-        //    string cardNo = "4000000000000002";
-        //    string date = "012020";
-        //    string cvv = "001";
-        //    string budget = "0";
-
-        //    int id = 3;
-        //    int amt = 4000; //R40 //remove comma - payhost format
-
-        //    request.Items = new string[] { cardNo, date };
-
-        //    request.CVV = cvv;
-        //    request.BudgetPeriod = budget;
-
-        //    request.Order = new Payhost.OrderType();
-        //    request.Order.MerchantOrderId = id.ToString(); ;//shipmentID (indicate that it's a penalty?)
-        //    request.Order.Currency = Payhost.CurrencyType.ZAR;
-        //    request.Order.Amount = amt;
-
-        //    payment.SinglePaymentRequest = new Payhost.SinglePaymentRequest();
-        //    payment.SinglePaymentRequest.Item = request;
-
-        //    Payhost.PayHOST paygateInterface = new Payhost.PayHOSTClient();
-
-        //    SinglePaymentResponse1 response = paygateInterface.SinglePaymentAsync(payment);
-
-        //    var r = response.SinglePaymentResponse.Item as Payhost.CardPaymentResponseType;
-
-        //    //error handling
-        //    if (r.Status.StatusName.ToString() == "ValidationError")
-        //    {
-        //        var lastResponse = r.StatusDetail;
-        //    }
-
-        //    var status = r.Status as Payhost.StatusType;
-        //    var redirect = r.Redirect as Payhost.RedirectResponseType;
-
-        //    return status.TransactionStatusDescription.ToString();
+        //    //card no
+              ////cvv
+              ////expiry
+              ////penaltyID
         //}
-        //catch (Exception ex)
-        //{
-        //    return ex.Message;
-        //}
-        //}
+        
+        //POST: api/Utility/payment
+        [HttpPost("Payment")]
+        public string Payment()//([FromBody] Transaction tx)
+        {
+            //accept cardNo, CVV, expDate and penaltyID) from app
+        try
+            {
+                Payhost.SinglePaymentRequest1 payment = new Payhost.SinglePaymentRequest1();
+                Payhost.CardPaymentRequestType request = new Payhost.CardPaymentRequestType();
+
+                request.Account = new Payhost.PayGateAccountType();
+                request.Account.PayGateId = "10011064270";
+                request.Account.Password = "test";
+
+                //get this from the post content
+                string name = "Marissa";
+                string surname = "de Villiers";
+                string phone = "0796861912";
+                string email = "marissadev@gmail.com";
+
+                request.Customer = new Payhost.PersonType();
+                request.Customer.FirstName = name;
+                request.Customer.LastName = surname;
+                request.Customer.Mobile = new string[] { phone };
+                request.Customer.Email = new string[] { email };
+
+                request.ItemsElementName = new Payhost.ItemsChoiceType[]
+                {
+                        Payhost.ItemsChoiceType.CardNumber,
+                        Payhost.ItemsChoiceType.CardExpiryDate
+                };
+
+                string cardNo = "4000000000000002";
+                string date = "012020";
+                string cvv = "001";
+                string budget = "0";
+
+                int id = 3; //shipment ID or Penalty ID - differenciate between the two
+                int amt = 4000; //R40 //remove comma - payhost format
+
+                request.Items = new string[] { cardNo, date };
+
+                request.CVV = cvv;
+                request.BudgetPeriod = budget;
+
+                request.Order = new Payhost.OrderType();
+                request.Order.MerchantOrderId = id.ToString(); ;//shipmentID (indicate that it's a penalty?)
+                request.Order.Currency = Payhost.CurrencyType.ZAR;
+                request.Order.Amount = amt;
+
+                payment.SinglePaymentRequest = new Payhost.SinglePaymentRequest();
+                payment.SinglePaymentRequest.Item = request;
+
+                Payhost.PayHOST paygateInterface = new Payhost.PayHOSTClient();
+
+                //Payhost.SinglePaymentResponse1 response = paygateInterface.SinglePayment(payment);
+
+                paygateInterface.SinglePayment(payment);
+
+                var r = response.SinglePaymentResponse.Item as Payhost.CardPaymentResponseType;
+
+                //error handling
+                if (r.Status.StatusName.ToString() == "ValidationError")
+                {
+                    var lastResponse = r.StatusDetail;
+                }
+
+                var status = r.Status as Payhost.StatusType;
+                var redirect = r.Redirect as Payhost.RedirectResponseType;
+
+                //store response in database
+
+                return status.TransactionStatusDescription.ToString();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
         #endregion
 
-            
+
         #region REPORTS
         public struct ReportModel
         {
@@ -203,7 +216,7 @@ namespace CORE_WebAPI.Controllers
                     lines.Add(line);
                     report.TotalDownloads += line.totalDownloads;
                 }
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
                 lines.Sort((x,y) => x.province.CompareTo(y.province));
                 report.Lines = lines;
                 //System.Diagnostics.Debugger.Break();
@@ -244,7 +257,7 @@ namespace CORE_WebAPI.Controllers
                 }
                 lines.Sort((y, x) => x.totalSent.CompareTo(y.totalSent));
                 report.Lines = lines;
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
                 return report;
             }
             catch (Exception ex)
@@ -262,21 +275,13 @@ namespace CORE_WebAPI.Controllers
         {
             try
             {
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
                 ShipmentDurationReport report = new ShipmentDurationReport();
 
                 report.EmpFullName = _context.Employee
                                                 .FirstOrDefault(e => e.EmployeeId == empModel.EmployeeId)
                                                 .getFullName();
 
-                //for each agent, calculate the duration of each shipment - 2 loops?
-                //add to total duration
-                //count the number of shipments
-                //calculate the average duation
-
-                //for each shipment, caclulate the shipment duration
-                //add to the total duration for each agent
-                //calculate the averate duration for each agent
                 List<DurationReportLine> lines = new List<DurationReportLine>();
                 foreach (ShipmentAgent agent in _context.ShipmentAgent.Include(s => s.Shipment))
                 {
@@ -287,7 +292,7 @@ namespace CORE_WebAPI.Controllers
                     line.noOfShipments = agent.Shipment.Count;
                     if (line.noOfShipments > 0)
                     {
-                        System.Diagnostics.Debugger.Break();
+                        //System.Diagnostics.Debugger.Break();
                         line.totalDuration = new TimeSpan();
                         foreach (var shipment in agent.Shipment)
                         {
@@ -302,12 +307,12 @@ namespace CORE_WebAPI.Controllers
                 }
 
                 report.Lines = lines;
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
                 return report;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
                 return new ShipmentDurationReport();
             }
         }

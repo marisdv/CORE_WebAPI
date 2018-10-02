@@ -11,6 +11,14 @@ namespace CORE_WebAPI.Models
             {
                 this.PackageTypeDescr = packageType.PackageTypeDescr;
             }
-        }
+            if (packageType.PackageTypePrice != 0)
+            {
+                this.PackageTypePrice = packageType.PackageTypePrice;
+            }
+            if (packageType.PackageTypeImage != null)
+            {
+                this.PackageTypeImage = packageType.PackageTypeImage;
+            }
+    }
     }
 }

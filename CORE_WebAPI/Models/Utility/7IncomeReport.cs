@@ -13,7 +13,7 @@ namespace CORE_WebAPI.Models.Reports
         public double ShipmentIncome { get; set; }
         public double PenaltyIncome { get; set; }
         public double AgentPayments { get; set; }
-        public double ProfitLoss { get; set; }
+        public double ProfitLoss { get; set; }      
         public bool isProfit { get; set; }
         public string EmpFullName { get; set; }
     }

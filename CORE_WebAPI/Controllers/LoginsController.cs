@@ -116,7 +116,7 @@ namespace CORE_WebAPI.Controllers
 
                 Login updateLogin = _context.Login.FirstOrDefault(l => l.LoginId == id);
 
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
 
                 updateLogin.UpdateChangedFields(login);
 
@@ -124,7 +124,7 @@ namespace CORE_WebAPI.Controllers
 
 
                 _context.Entry(updateLogin).State = EntityState.Modified; //breaks here
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
                 try
                 {
                     await _context.SaveChangesAsync();
