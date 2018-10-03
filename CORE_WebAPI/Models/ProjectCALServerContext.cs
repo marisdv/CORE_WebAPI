@@ -614,6 +614,8 @@ namespace CORE_WebAPI.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.TxDateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.TxStatusDescr)
                     .IsRequired()
                     .HasMaxLength(80)
@@ -678,6 +680,8 @@ namespace CORE_WebAPI.Models
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Otp).HasColumnName("OTP");
 
                 entity.Property(e => e.PhoneNumber)
                     .IsRequired()

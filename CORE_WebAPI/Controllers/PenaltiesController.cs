@@ -48,6 +48,32 @@ namespace CORE_WebAPI.Controllers
             return Ok(penalty);
         }
 
+        // GET: api/penalties/shipment/1
+        [HttpGet("shipment/{id}")]
+        public async Task<IActionResult> GetPenaltyByShipment([FromRoute] int id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var penalty = _context.Penalty.Where(m => m.ShipmentId == id);
+
+                if (penalty == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(penalty);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         // PUT: api/Penalties/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPenalty([FromRoute] int id, [FromBody] Penalty penalty)

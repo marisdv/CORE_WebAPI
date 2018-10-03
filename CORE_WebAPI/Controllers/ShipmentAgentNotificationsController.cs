@@ -65,6 +65,25 @@ namespace CORE_WebAPI.Controllers
             return Ok(notification);
         }
 
+        // GET: api/ShipmentAgentNotifications/agent/17
+        [HttpGet("agent/{id}")]
+        public async Task<IActionResult> GetNotificationByAgent([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var agent = _context.ShipmentAgentNotification.Where(m => m.AgentId == id);
+
+            if (agent == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(agent);
+        }
+
         // PUT: api/ShipmentAgentNotifications/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShipmentAgentNotification([FromRoute] int id, [FromBody] ShipmentAgentNotification shipmentAgentNotification)

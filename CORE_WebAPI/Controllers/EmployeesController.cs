@@ -123,12 +123,8 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee([FromRoute] int id, [FromBody] Employee employee)
         {
+            System.Diagnostics.Debugger.Break();
             Employee updateEmployee = _context.Employee.FirstOrDefault(e => e.EmployeeId == id);
-
-            updateEmployee.UpdateChangedFields(employee);
-
-            updateEmployee.hashPassword();
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -138,6 +134,11 @@ namespace CORE_WebAPI.Controllers
             {
                 return BadRequest();
             }
+
+            updateEmployee.UpdateChangedFields(employee);
+
+            updateEmployee.hashPassword();
+
 
             _context.Entry(updateEmployee).State = EntityState.Modified;
 

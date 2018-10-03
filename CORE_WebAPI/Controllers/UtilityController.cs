@@ -83,6 +83,9 @@ namespace CORE_WebAPI.Controllers
             smtp.Credentials = new NetworkCredential("projectcal@aurum.net.za", "Aurum370!");
             smtp.Send(outMail);
 
+            //figure out mail attachment code
+            //outMail.Attachment attachment = new Attachment("filee"); ;
+            
         }
         #endregion
 
@@ -180,6 +183,7 @@ namespace CORE_WebAPI.Controllers
                 payRef.PaymentTypeMethod = r.Status.PaymentType.Method.ToString();
                 payRef.PaymentTypeDetail = r.Status.PaymentType.Detail.ToString();
                 payRef.ShipmentId = penalty.ShipmentId;
+                payRef.TxDateTime = DateTime.Now;
 
                 //System.Diagnostics.Debugger.Break();
 
@@ -190,6 +194,8 @@ namespace CORE_WebAPI.Controllers
 
                 _context.SaveChangesAsync();
                 return status.TransactionStatusDescription.ToString();
+
+                //NB - ERROR HANDLING TO SEND RESPONSE TO APP
             }
             catch (Exception ex)
             {

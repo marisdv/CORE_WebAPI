@@ -78,17 +78,17 @@ namespace CORE_WebAPI.Controllers
         {
             System.Diagnostics.Debugger.Break();
 
+            PackageType updatePackageType = _context.PackageType.FirstOrDefault(p => p.PackageTypeId == id);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != packageType.PackageTypeId)
+            if (id != updatePackageType.PackageTypeId)
             {
                 return BadRequest();
             }
 
-            PackageType updatePackageType = _context.PackageType.FirstOrDefault(p => p.PackageTypeId == id);
 
             updatePackageType.UpdateChangedFields(packageType);
 

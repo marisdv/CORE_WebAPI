@@ -66,21 +66,21 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutFixedPrice([FromRoute] int id, [FromBody] FixedPrice fixedPrice)
         {
-            //System.Diagnostics.Debugger.Break();
+            System.Diagnostics.Debugger.Break();
+            FixedPrice updateFixedPrice = _context.FixedPrice.FirstOrDefault(f => f.FixedPriceId == id);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != fixedPrice.FixedPriceId)
+            if (id != updateFixedPrice.FixedPriceId)
             {
                 return BadRequest();
             }
-            FixedPrice updateFixedPrice = _context.FixedPrice.FirstOrDefault(f => f.FixedPriceId == id);
 
             updateFixedPrice.UpdateChangedFields(updateFixedPrice);
 
-            //System.Diagnostics.Debugger.Break();
+            System.Diagnostics.Debugger.Break();
             _context.Entry(updateFixedPrice).State = EntityState.Modified;
 
             try

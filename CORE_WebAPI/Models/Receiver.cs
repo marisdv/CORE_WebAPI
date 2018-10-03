@@ -14,6 +14,7 @@ namespace CORE_WebAPI.Models
         public string Name { get; set; }
         public string Surname { get; set; }
         public string PhoneNumber { get; set; }
+        public int? Otp { get; set; }
 
         public ICollection<Shipment> Shipment { get; set; }
     }

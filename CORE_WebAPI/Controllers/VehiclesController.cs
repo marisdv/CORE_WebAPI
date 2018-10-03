@@ -31,9 +31,10 @@ namespace CORE_WebAPI.Controllers
         //[JsonIgnore]
         public IEnumerable<Vehicle> GetVehicle()
         {
-            List<Vehicle> vehicles = _context.Vehicle.Include(vehicle => vehicle.VehicleMake)
-                                   .Include(vehicle => vehicle.VehicleType)
-                                   .Include(vehicle => vehicle.VehicleStatus).ToList();
+            List<Vehicle> vehicles = _context.Vehicle.ToList();
+                                    //.Include(vehicle => vehicle.VehicleMake)
+                                   //.Include(vehicle => vehicle.VehicleType)
+                                   //.Include(vehicle => vehicle.VehicleStatus)
             vehicles.ForEach(x => x.VehicleProofImage = null);
             return vehicles;
         }
@@ -52,14 +53,14 @@ namespace CORE_WebAPI.Controllers
         {
             VehicleGrid grid = new VehicleGrid();
 
-            grid.totalCount = _context.Vehicle.Include(vehicle => vehicle.VehicleMake)
-                                              .Include(vehicle => vehicle.VehicleType)
-                                              .Include(vehicle => vehicle.VehicleStatus).Count();
+            grid.totalCount = _context.Vehicle.Count();
+            //.Include(vehicle => vehicle.VehicleMake)
+            //.Include(vehicle => vehicle.VehicleType)
+            //.Include(vehicle => vehicle.VehicleStatus)
 
-
-            grid.vehicles = _context.Vehicle.Include(vehicle => vehicle.VehicleMake)
-                                            .Include(vehicle => vehicle.VehicleType)
-                                            .Include(vehicle => vehicle.VehicleStatus);
+            grid.vehicles = _context.Vehicle;//.Include(vehicle => vehicle.VehicleMake)
+                                            //.Include(vehicle => vehicle.VehicleType);
+                                            //.Include(vehicle => vehicle.VehicleStatus);
 
             return grid;
         }
@@ -74,9 +75,9 @@ namespace CORE_WebAPI.Controllers
             }
 
 
-            var vehicle = await _context.Vehicle.Include(veh => veh.VehicleMake)
-                                                .Include(veh => veh.VehicleType)
-                                                .Include(veh => veh.VehicleStatus)
+            var vehicle = await _context.Vehicle//.Include(veh => veh.VehicleMake)
+                                                //.Include(veh => veh.VehicleType)
+                                                //.Include(veh => veh.VehicleStatus)
                                                 .SingleOrDefaultAsync(m => m.VehicleId == id);
 
             vehicle.VehicleProofImage = null;
