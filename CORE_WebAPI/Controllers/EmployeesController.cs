@@ -180,21 +180,38 @@ namespace CORE_WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployee([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var employee = await _context.Employee.SingleOrDefaultAsync(m => m.EmployeeId == id);
-            if (employee == null)
+                var employee = await _context.Employee.SingleOrDefaultAsync(m => m.EmployeeId == id);
+
+                if (employee == null)
+                {
+                    return NotFound();
+                }
+
+                //my code
+                //var empTest = _context.Employee.Include(m => m.Application).Application.Count > 0;
+
+                //if(empTest)
+                //{
+
+                //}
+                //else
+
+                _context.Employee.Remove(employee);
+                await _context.SaveChangesAsync();
+
+                return Ok(employee);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(ex.InnerException.Message);
             }
-
-            _context.Employee.Remove(employee);
-            await _context.SaveChangesAsync();
-
-            return Ok(employee);
         }
 
         private bool EmployeeExists(int id)
