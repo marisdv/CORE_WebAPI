@@ -51,6 +51,7 @@ namespace CORE_WebAPI.Models
             {
                 this.VehicleProofImage = vehicle.VehicleProofImage;
             }
+
         }
     }
 }

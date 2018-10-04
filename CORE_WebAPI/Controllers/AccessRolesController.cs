@@ -117,6 +117,7 @@ namespace CORE_WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> PostAccessRole([FromBody] AccessRole accessRole)
         {
+            System.Diagnostics.Debugger.Break();
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -132,6 +133,7 @@ namespace CORE_WebAPI.Controllers
 
             role = accessRole;
             role.AccessRoleArea.Clear();
+
             if (_context.AccessRole.FirstOrDefault(dbRole => dbRole.AccessRoleName == role.AccessRoleName) == null)
             {
                 _context.AccessRole.Add(role);
@@ -150,9 +152,11 @@ namespace CORE_WebAPI.Controllers
 
                 _context.Entry(role).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+
+                System.Diagnostics.Debugger.Break();
                 return CreatedAtAction("GetAccessRole", new { id = accessRole.AccessRoleId }, accessRole);
             }
-            else return BadRequest("A role with this Name already exists.");
+            else return BadRequest("A role with this name already exists.");
 
         }
 

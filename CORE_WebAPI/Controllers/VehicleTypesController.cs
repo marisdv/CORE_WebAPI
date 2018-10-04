@@ -88,19 +88,17 @@ namespace CORE_WebAPI.Controllers
 
             updateVehicleType.UpdateChangedFields(vehicleType);
 
-
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != vehicleType.VehicleTypeId)
+            if (id != updateVehicleType.VehicleTypeId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(vehicleType).State = EntityState.Modified;
+            _context.Entry(updateVehicleType).State = EntityState.Modified;
 
             try
             {
@@ -125,15 +123,51 @@ namespace CORE_WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> PostVehicleType([FromBody] VehicleType vehicleType)
         {
+            System.Diagnostics.Debugger.Break();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.VehicleType.Add(vehicleType);
-            await _context.SaveChangesAsync();
+            List<int> packages = new List<int>();
+            //doesn't run through this loop
+            foreach(var package in vehicleType.VehiclePacakageLine)
+            {
+                packages.Add(package.PackageTypeId);
+            }
 
-            return CreatedAtAction("GetVehicleType", new { id = vehicleType.VehicleTypeId }, vehicleType);
+            VehicleType vehicle = new VehicleType();
+
+            vehicle = vehicleType;
+            vehicle.VehiclePacakageLine.Clear();
+
+            if (_context.VehicleType.FirstOrDefault(dbVeh => dbVeh.VehicleTypeDescr == vehicle.VehicleTypeDescr) == null)
+            {
+                _context.VehicleType.Add(vehicle);
+                await _context.SaveChangesAsync();
+
+                vehicle = _context.VehicleType.Last();
+
+                foreach (var id in packages)
+                {
+                    VehiclePacakageLine addPackLine = new VehiclePacakageLine();
+                    addPackLine.PackageTypeId = id;
+                    addPackLine.VehicleTypeId = vehicle.VehicleTypeId;
+
+                    vehicle.VehiclePacakageLine.Add(addPackLine);
+                }
+
+                //_context.VehicleType.Add(vehicleType);
+                _context.Entry(vehicle).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                System.Diagnostics.Debugger.Break();
+                return CreatedAtAction("GetVehicleType", new { id = vehicleType.VehicleTypeId }, vehicleType);
+            }
+
+            //System.Diagnostics.Debugger.Break();
+            else return BadRequest("A vehicle type with this name already exists");
         }
 
         // DELETE: api/VehicleTypes/5

@@ -48,6 +48,10 @@ namespace CORE_WebAPI.Controllers
         //    byte[] test = Convert.FromBase64String(image);
         //}
 
+        #region IMAGE
+        
+        #endregion
+
         #region EMAIL
         // POST: api/Utility/TestMail
         [HttpPost("TestMail")]
@@ -192,6 +196,8 @@ namespace CORE_WebAPI.Controllers
                 penalty.DatePaid = DateTime.Now;
                 _context.Entry(penalty).State = EntityState.Modified;
 
+                //change Paid attribute in Shipment table to 1
+
                 _context.SaveChangesAsync();
                 return status.TransactionStatusDescription.ToString();
 
@@ -203,8 +209,7 @@ namespace CORE_WebAPI.Controllers
             }
         }
         #endregion
-
-
+        
         #region REPORTS
         public struct ReportModel
         {

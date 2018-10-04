@@ -186,27 +186,25 @@ namespace CORE_WebAPI.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-
-                var employee = await _context.Employee.SingleOrDefaultAsync(m => m.EmployeeId == id);
+                //my code
+                Employee employee = await _context.Employee.Include(m => m.Application).SingleOrDefaultAsync(m => m.EmployeeId == id);
 
                 if (employee == null)
                 {
                     return NotFound();
                 }
 
-                //my code
-                //var empTest = _context.Employee.Include(m => m.Application).Application.Count > 0;
+                if (employee.Application.Count > 0)// || ||)
+                {
+                    return BadRequest("Employee cannot be deleted as they have existing applications");
+                }
+                else
+                {
+                    _context.Employee.Remove(employee);
+                    await _context.SaveChangesAsync();
 
-                //if(empTest)
-                //{
-
-                //}
-                //else
-
-                _context.Employee.Remove(employee);
-                await _context.SaveChangesAsync();
-
-                return Ok(employee);
+                    return Ok(employee);
+                }
             }
             catch (Exception ex)
             {

@@ -88,17 +88,20 @@ namespace CORE_WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShipmentAgentNotification([FromRoute] int id, [FromBody] ShipmentAgentNotification shipmentAgentNotification)
         {
+            ShipmentAgentNotification updateNotif = _context.ShipmentAgentNotification.FirstOrDefault(n => n.NotificationId == id);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != shipmentAgentNotification.NotificationId)
+            if (id != updateNotif.NotificationId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(shipmentAgentNotification).State = EntityState.Modified;
+            updateNotif.UpdateChangedFields(shipmentAgentNotification);
+
+            _context.Entry(updateNotif).State = EntityState.Modified;
 
             try
             {

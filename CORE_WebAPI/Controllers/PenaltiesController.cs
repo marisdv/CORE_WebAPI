@@ -109,6 +109,38 @@ namespace CORE_WebAPI.Controllers
             return NoContent();
         }
 
+
+        // POST: api/Penalties/checkpenalty
+        [HttpPost("checkpenalty/{id}")]
+        public IActionResult CheckPenaltyBySender(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                System.Diagnostics.Debugger.Break();
+
+                var shipments = _context.Shipment.Include(s=>s.Penalty).Where(s => s.SenderId == id).ToList();
+                
+                foreach (var ship in shipments)
+                {
+                    if (_context.Penalty.SingleOrDefault(p => p.ShipmentId == ship.ShipmentId && p.DatePaid == null) != null)
+                    {
+                        return Ok(_context.Penalty.SingleOrDefault(p => p.ShipmentId == ship.ShipmentId));
+                    }
+                   
+                }
+                return Ok("No Penalty");
+                //return BadRequest("No Penalty");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         // POST: api/Penalties
         [HttpPost]
         public async Task<IActionResult> PostPenalty([FromBody] Penalty penalty)

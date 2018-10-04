@@ -11,7 +11,17 @@ namespace CORE_WebAPI.Models
             {
                 this.VehicleTypeDescr = vehicleType.VehicleTypeDescr;
             }
-        
-         }
+
+            if (vehicleType.VehiclePacakageLine.Count > 0)
+            {
+                foreach (var pack in vehicleType.VehiclePacakageLine)
+                {
+                    if (pack.PackageTypeId != 0 && pack.VehicleTypeId != 0)
+                    {
+                        this.VehiclePacakageLine.Add(pack);
+                    }
+                }
+            }
+        }
     }
 }
