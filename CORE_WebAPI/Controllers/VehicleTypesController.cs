@@ -119,28 +119,36 @@ namespace CORE_WebAPI.Controllers
             return NoContent();
         }
 
+        public struct vehiclePackages
+        {
+            public string vehicleTypeDescription { get; set; }
+            public List<packageType> packageTypes { get; set; }
+        }
+
+        public struct packageType
+        {
+            public int packageTypeId { get; set; }
+            public int quantity { get; set; }
+        }
+
         // POST: api/VehicleTypes
         [HttpPost]
-        public async Task<IActionResult> PostVehicleType([FromBody] VehicleType vehicleType)
+        public async Task<IActionResult> PostVehicleType([FromBody] vehiclePackages vehicleType)
         {
-            System.Diagnostics.Debugger.Break();
+             System.Diagnostics.Debugger.Break();
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            List<int> packages = new List<int>();
+            List<packageType> types = new List<packageType>();
             //doesn't run through this loop
-            foreach(var package in vehicleType.VehiclePacakageLine)
-            {
-                packages.Add(package.PackageTypeId);
-            }
-
             VehicleType vehicle = new VehicleType();
 
-            vehicle = vehicleType;
-            vehicle.VehiclePacakageLine.Clear();
+            types = vehicleType.packageTypes;
+
+            vehicle.VehicleTypeDescr = vehicleType.vehicleTypeDescription;
 
             if (_context.VehicleType.FirstOrDefault(dbVeh => dbVeh.VehicleTypeDescr == vehicle.VehicleTypeDescr) == null)
             {
@@ -149,11 +157,12 @@ namespace CORE_WebAPI.Controllers
 
                 vehicle = _context.VehicleType.Last();
 
-                foreach (var id in packages)
+                foreach (var type in types)
                 {
                     VehiclePacakageLine addPackLine = new VehiclePacakageLine();
-                    addPackLine.PackageTypeId = id;
+                    addPackLine.PackageTypeId = type.packageTypeId;
                     addPackLine.VehicleTypeId = vehicle.VehicleTypeId;
+                    addPackLine.Quantity = type.quantity;
 
                     vehicle.VehiclePacakageLine.Add(addPackLine);
                 }
@@ -163,11 +172,11 @@ namespace CORE_WebAPI.Controllers
                 await _context.SaveChangesAsync();
 
                 System.Diagnostics.Debugger.Break();
-                return CreatedAtAction("GetVehicleType", new { id = vehicleType.VehicleTypeId }, vehicleType);
+                return CreatedAtAction("GetVehicleType", new { id = vehicle.VehicleTypeId }, vehicleType);
             }
 
             //System.Diagnostics.Debugger.Break();
-            else return BadRequest("A vehicle type with this name already exists");
+            else  return BadRequest("A vehicle type with this name already exists");
         }
 
         // DELETE: api/VehicleTypes/5

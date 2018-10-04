@@ -106,11 +106,13 @@ namespace CORE_WebAPI.Controllers
 
         //POST: api/Utility/payment
         [HttpPost("Payment")]
-        public string Payment([FromBody] CardDetailsModel details)
+        public IActionResult Payment([FromBody] CardDetailsModel details)
+        //public string Payment([FromBody] CardDetailsModel details)
         {
         try
+            //FIGURE OUT HOW TO USE EITHER PENALTY OR SHIPMENT - ORRRR MAYBE JUST MAKE ANOTHER CONTROLLER
             {
-                //System.Diagnostics.Debugger.Break();
+                System.Diagnostics.Debugger.Break();
 
                 Payhost.SinglePaymentRequest1 payment = new Payhost.SinglePaymentRequest1();
                 Payhost.CardPaymentRequestType request = new Payhost.CardPaymentRequestType();
@@ -144,11 +146,15 @@ namespace CORE_WebAPI.Controllers
 
                 //if-statement for penalty or shipment
 
-                //System.Diagnostics.Debugger.Break();
+                System.Diagnostics.Debugger.Break();
                 Penalty penalty = new Penalty();
                 penalty = _context.Penalty
-                                        .FirstOrDefault(m => m.PentaltyId == details.penaltyId);
-                
+                                          .FirstOrDefault(m => m.PentaltyId == details.penaltyId);
+
+                Shipment shipment = new Shipment();
+                shipment = _context.Shipment
+                                            .FirstOrDefault(s => s.ShipmentId == penalty.ShipmentId);
+
                 request.Order = new Payhost.OrderType();
                 request.Order.MerchantOrderId = penalty.PentaltyId.ToString(); //shipmentId or penaltyId
                 request.Order.Currency = Payhost.CurrencyType.ZAR;
@@ -163,7 +169,7 @@ namespace CORE_WebAPI.Controllers
 
                 var r = response.SinglePaymentResponse.Item as Payhost.CardPaymentResponseType;
 
-                //System.Diagnostics.Debugger.Break();
+                System.Diagnostics.Debugger.Break();
                 
                 //error handling
                 if (r.Status.StatusName.ToString() == "ValidationError")
@@ -189,23 +195,37 @@ namespace CORE_WebAPI.Controllers
                 payRef.ShipmentId = penalty.ShipmentId;
                 payRef.TxDateTime = DateTime.Now;
 
-                //System.Diagnostics.Debugger.Break();
+                System.Diagnostics.Debugger.Break();
 
                 _context.PaymentReference.Add(payRef);
                 
-                penalty.DatePaid = DateTime.Now;
-                _context.Entry(penalty).State = EntityState.Modified;
+                
 
-                //change Paid attribute in Shipment table to 1
+                
+
+                //NOT QUITE THERE YET
+                //change Paid attribute in Shipment table to 1 - update shipment where ID == X
+                //shipment.Paid = 0;
+                //_context.Entry(shipment).State = EntityState.Modified;
+                
 
                 _context.SaveChangesAsync();
-                return status.TransactionStatusDescription.ToString();
 
-                //NB - ERROR HANDLING TO SEND RESPONSE TO APP
+                if (r.Status.ResultCode == "990017")
+                {
+                    //send email
+                    penalty.DatePaid = DateTime.Now;
+                    _context.Entry(penalty).State = EntityState.Modified;
+                    return Ok();
+                }
+                else
+                    return BadRequest();
+
+                //return status.TransactionStatusDescription.ToString();
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return BadRequest(ex.Message);
             }
         }
         #endregion
