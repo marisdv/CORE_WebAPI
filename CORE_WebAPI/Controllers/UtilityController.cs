@@ -88,7 +88,7 @@ namespace CORE_WebAPI.Controllers
             smtp.Send(outMail);
 
             //figure out mail attachment code
-            //outMail.Attachment attachment = new Attachment("filee"); ;
+            //outMail.Attachment attachment = new Attachment("file"); ;
             
         }
         #endregion
@@ -96,21 +96,20 @@ namespace CORE_WebAPI.Controllers
         #region PAYMENT
         public struct CardDetailsModel
         {
+            //update this in the API
             public int senderId { get; set; }
-            public int penaltyId { get; set; } //or just transactionId -> penalty or payment
-            //boolean value for whether it is a penalty or a payment
-            public string cardNo { get; set; } //check format for this
-            public string expDate { get; set; } //check format for this
+            public int transactId { get; set; } //or just transactionId -> penalty or payment
+            public string cardNo { get; set; }
+            public string expDate { get; set; }
             public string cvv { get; set; }
+            public int type { get; set; }
         }
 
         //POST: api/Utility/payment
         [HttpPost("Payment")]
         public IActionResult Payment([FromBody] CardDetailsModel details)
-        //public string Payment([FromBody] CardDetailsModel details)
         {
         try
-            //FIGURE OUT HOW TO USE EITHER PENALTY OR SHIPMENT - ORRRR MAYBE JUST MAKE ANOTHER CONTROLLER
             {
                 System.Diagnostics.Debugger.Break();
 
@@ -132,6 +131,8 @@ namespace CORE_WebAPI.Controllers
                 request.Customer.Mobile = new string[] { sender.Login.PhoneNo };
                 request.Customer.Email = new string[] { sender.SenderEmail };
 
+                System.Diagnostics.Debugger.Break();
+
                 //System.Diagnostics.Debugger.Break();
                 request.ItemsElementName = new Payhost.ItemsChoiceType[]
                 {
@@ -143,27 +144,56 @@ namespace CORE_WebAPI.Controllers
 
                 request.CVV = details.cvv;
                 request.BudgetPeriod = "0";
-
-                //if-statement for penalty or shipment
-
-                System.Diagnostics.Debugger.Break();
-                Penalty penalty = new Penalty();
-                penalty = _context.Penalty
-                                          .FirstOrDefault(m => m.PentaltyId == details.penaltyId);
-
-                Shipment shipment = new Shipment();
-                shipment = _context.Shipment
-                                            .FirstOrDefault(s => s.ShipmentId == penalty.ShipmentId);
-
+                
                 request.Order = new Payhost.OrderType();
-                request.Order.MerchantOrderId = penalty.PentaltyId.ToString(); //shipmentId or penaltyId
+
+                Penalty penalty = new Penalty();
+                Shipment shipment = new Shipment();
+
+                string orderId;
+                decimal amount;
+
+                if (details.type == 0)
+                {
+                    //SHIPMENT
+                    System.Diagnostics.Debugger.Break();
+                    //create only shipment
+                    shipment = _context.Shipment
+                                                .FirstOrDefault(s => s.ShipmentId == details.transactId);
+
+                    orderId = shipment.ShipmentId.ToString();
+                    amount = shipment.TotalCost;
+                }
+                else
+                {
+                    //PENALTY
+                    System.Diagnostics.Debugger.Break();
+                    //create penalty
+                    penalty = _context.Penalty
+                                              .FirstOrDefault(m => m.PentaltyId == details.transactId);
+                    //create shipment
+                    shipment = _context.Shipment
+                                                .FirstOrDefault(s => s.ShipmentId == penalty.ShipmentId);
+
+                    orderId = penalty.ShipmentId.ToString();
+                    amount = penalty.PenaltyAmount;
+                }
+
+                if (amount <= 0)
+                {
+                    return BadRequest();
+                }
+
+                request.Order.MerchantOrderId = orderId;
                 request.Order.Currency = Payhost.CurrencyType.ZAR;
-                request.Order.Amount = Convert.ToInt32((penalty.PenaltyAmount*100));
+                request.Order.Amount = Convert.ToInt32((amount * 100));
 
                 payment.SinglePaymentRequest = new Payhost.SinglePaymentRequest();
                 payment.SinglePaymentRequest.Item = request;
 
                 Payhost.PayHOST paygateInterface = new Payhost.PayHOSTClient();
+                
+                System.Diagnostics.Debugger.Break();
 
                 Payhost.SinglePaymentResponse1 response = paygateInterface.SinglePayment(payment);
 
@@ -171,16 +201,19 @@ namespace CORE_WebAPI.Controllers
 
                 System.Diagnostics.Debugger.Break();
                 
-                //error handling
+                //error handling - not sure where this should fit in?
                 if (r.Status.StatusName.ToString() == "ValidationError")
                 {
-                    var lastResponse = r.Status.StatusDetail;
+                    //var lastResponse = r.Status.StatusDetail;
+                    return BadRequest();
                 }
 
                 var status = r.Status as Payhost.StatusType;
                 var redirect = r.Redirect as Payhost.RedirectResponseType;
 
-                //store response in database
+                System.Diagnostics.Debugger.Break();
+
+                //PAYMENT RESPONSE
                 PaymentReference payRef = new PaymentReference();
                 payRef.TransactionId = Convert.ToInt32(r.Status.TransactionId);
                 payRef.StatusName = r.Status.StatusName.ToString();
@@ -192,39 +225,63 @@ namespace CORE_WebAPI.Controllers
                 payRef.RiskIndicator = r.Status.RiskIndicator;
                 payRef.PaymentTypeMethod = r.Status.PaymentType.Method.ToString();
                 payRef.PaymentTypeDetail = r.Status.PaymentType.Detail.ToString();
-                payRef.ShipmentId = penalty.ShipmentId;
-                payRef.TxDateTime = DateTime.Now;
 
-                System.Diagnostics.Debugger.Break();
-
-                _context.PaymentReference.Add(payRef);
-                
-                
-
-                
-
-                //NOT QUITE THERE YET
-                //change Paid attribute in Shipment table to 1 - update shipment where ID == X
-                //shipment.Paid = 0;
-                //_context.Entry(shipment).State = EntityState.Modified;
-                
-
-                _context.SaveChangesAsync();
-
-                if (r.Status.ResultCode == "990017")
+                if (details.type == 0)
                 {
-                    //send email
-                    penalty.DatePaid = DateTime.Now;
-                    _context.Entry(penalty).State = EntityState.Modified;
-                    return Ok();
+                    //SHIPMENT
+                    payRef.ShipmentId = shipment.ShipmentId; //this should only save the shipment ID
                 }
                 else
-                    return BadRequest();
+                {
+                    //PENALTY
+                    payRef.ShipmentId = penalty.ShipmentId;
+                }
 
-                //return status.TransactionStatusDescription.ToString();
+                DateTime now = new DateTime();
+                now = DateTime.Now;
+                
+                payRef.TxDateTime = now;
+
+                System.Diagnostics.Debugger.Break();
+                
+                _context.PaymentReference.Add(payRef); //shipment payRef does not ssave
+                _context.SaveChangesAsync();
+
+                System.Diagnostics.Debugger.Break();
+                
+                if (r.Status.ResultCode == "990017")
+                {
+                    if (details.type == 0)
+                    {
+                        //SHIPMENT
+                        System.Diagnostics.Debugger.Break();
+                        //send shipment paid email
+                        shipment.Paid = 1;
+                        shipment.ShipmentStatusId = 3;
+                        _context.Entry(shipment).State = EntityState.Modified;
+                        _context.SaveChangesAsync();
+                        return Ok();
+                    }
+                    else
+                    {
+                        //PENALTY
+                        System.Diagnostics.Debugger.Break();
+                        //send penalty paid emai
+                        penalty.DatePaid = now;
+                        _context.Entry(penalty).State = EntityState.Modified;
+                        _context.SaveChangesAsync();
+                        return Ok();
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+                
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debugger.Break();
                 return BadRequest(ex.Message);
             }
         }
