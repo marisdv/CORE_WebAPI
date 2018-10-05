@@ -73,6 +73,8 @@ namespace CORE_WebAPI.Controllers
 
         public static void sendMail(string destination, string content, string subject)
         {
+            //the mail does not work on server??
+
             MailMessage outMail = new MailMessage();
             outMail.To.Add(destination);
             outMail.From = new MailAddress("projectcal@aurum.net.za");
@@ -88,8 +90,7 @@ namespace CORE_WebAPI.Controllers
             smtp.Send(outMail);
 
             //figure out mail attachment code
-            //outMail.Attachment attachment = new Attachment("file"); ;
-            
+            //outMail.Attachment attachment = new Attachment("file");
         }
         #endregion
 
@@ -109,9 +110,17 @@ namespace CORE_WebAPI.Controllers
         [HttpPost("Payment")]
         public IActionResult Payment([FromBody] CardDetailsModel details)
         {
-        try
+            Sender sender = new Sender();
+            Penalty penalty = new Penalty();
+            Shipment shipment = new Shipment();
+            PaymentReference payRef = new PaymentReference();
+            AuditLog log = new AuditLog();
+
+            DateTime now = new DateTime();
+            now = DateTime.Now;
+            try
             {
-                //System.Diagnostics.Debugger.Break();
+                System.Diagnostics.Debugger.Break();
 
                 Payhost.SinglePaymentRequest1 payment = new Payhost.SinglePaymentRequest1();
                 Payhost.CardPaymentRequestType request = new Payhost.CardPaymentRequestType();
@@ -121,7 +130,7 @@ namespace CORE_WebAPI.Controllers
                 request.Account.Password = "test";
 
                 //get Sender details
-                Sender sender = new Sender();
+                
                 sender = _context.Sender.Include(l => l.Login)
                                         .FirstOrDefault(m => m.SenderId == details.senderId);
 
@@ -131,7 +140,7 @@ namespace CORE_WebAPI.Controllers
                 request.Customer.Mobile = new string[] { sender.Login.PhoneNo };
                 request.Customer.Email = new string[] { sender.SenderEmail };
 
-                //System.Diagnostics.Debugger.Break();
+                System.Diagnostics.Debugger.Break();
 
                 request.ItemsElementName = new Payhost.ItemsChoiceType[]
                 {
@@ -146,8 +155,7 @@ namespace CORE_WebAPI.Controllers
                 
                 request.Order = new Payhost.OrderType();
 
-                Penalty penalty = new Penalty();
-                Shipment shipment = new Shipment();
+                
 
                 string orderId;
                 decimal amount;
@@ -155,7 +163,7 @@ namespace CORE_WebAPI.Controllers
                 if (details.type == 0)
                 {
                     //SHIPMENT
-                    //System.Diagnostics.Debugger.Break();
+                    System.Diagnostics.Debugger.Break();
                     //create only shipment
                     shipment = _context.Shipment
                                                 .FirstOrDefault(s => s.ShipmentId == details.transactId);
@@ -166,7 +174,7 @@ namespace CORE_WebAPI.Controllers
                 else
                 {
                     //PENALTY
-                    //System.Diagnostics.Debugger.Break();
+                    System.Diagnostics.Debugger.Break();
                     //create penalty
                     penalty = _context.Penalty
                                               .FirstOrDefault(m => m.PentaltyId == details.transactId);
@@ -198,7 +206,7 @@ namespace CORE_WebAPI.Controllers
 
                 var r = response.SinglePaymentResponse.Item as Payhost.CardPaymentResponseType;
 
-                //System.Diagnostics.Debugger.Break();
+                System.Diagnostics.Debugger.Break();
                 
                 //error handling - not sure where this should fit in?
                 if (r.Status.StatusName.ToString() == "ValidationError")
@@ -213,7 +221,7 @@ namespace CORE_WebAPI.Controllers
                 System.Diagnostics.Debugger.Break();
 
                 //PAYMENT RESPONSE
-                PaymentReference payRef = new PaymentReference();
+                
                 payRef.TransactionId = Convert.ToInt32(r.Status.TransactionId);
                 payRef.StatusName = r.Status.StatusName.ToString();
                 payRef.TxStatusCode = Convert.ToInt32(r.Status.TransactionStatusCode);
@@ -236,9 +244,6 @@ namespace CORE_WebAPI.Controllers
                     payRef.ShipmentId = penalty.ShipmentId;
                 }
 
-                DateTime now = new DateTime();
-                now = DateTime.Now;
-                
                 payRef.TxDateTime = now;
 
                 System.Diagnostics.Debugger.Break();
@@ -246,26 +251,16 @@ namespace CORE_WebAPI.Controllers
                 _context.PaymentReference.Add(payRef);
                 _context.SaveChangesAsync();
 
-                //System.Diagnostics.Debugger.Break();
+                System.Diagnostics.Debugger.Break();
 
-                AuditLog log = new AuditLog();
+                
                 if (r.Status.ResultCode == "990017")
                 {
                     if (details.type == 0)
                     {
                         //SHIPMENT
-                        //System.Diagnostics.Debugger.Break();
-                        
-                        //send shipment paid email
-                        string content = "Good day " + sender.getFullName() + ",\n\n" +
-                                         "The payment for your Shipment has been received.\n\n" +
-                                         //shipment details?
-                                         "Amount: R" + amount.ToString() +
-                                         "\nDate & Time: " + now.ToString() +
-                                         "\n\nKind regards,\nThe Project CAL Team";
-                        
-                        sendMail(sender.SenderEmail, content, "Project CAL: Shipment Invoice");
-                        
+                        System.Diagnostics.Debugger.Break();
+
                         //save shipment
                         shipment.Paid = 1;
                         shipment.ShipmentStatusId = 3;
@@ -275,31 +270,33 @@ namespace CORE_WebAPI.Controllers
                         //AUDIT LOG - shipment payment
                         log.AuditUserName = sender.getFullName();
                         log.UserTypeId = 1;
-                        log.ItemAffected = "Sender: Payment successfully made for shipment requested on " + shipment.ShipmentDate.ToLongDateString()  + "." + "ShipmentID: " + shipment.ShipmentId.ToString();
+                        log.ItemAffected = "Sender: Payment successfully made for shipment requested on " + shipment.ShipmentDate.ToLongDateString() + "." + "ShipmentID: " + shipment.ShipmentId.ToString();
                         log.AuditTypeId = 5;
                         log.TxAmount = amount;
                         log.AuditDateTime = now;
 
                         _context.AuditLog.Add(log);
                         _context.SaveChangesAsync();
+                        
+                        /*
+                        //send shipment paid email
+                        string content = "Good day " + sender.getFullName() + ",\n\n" +
+                                         "The payment for your Shipment has been received.\n\n" +
+                                         //shipment details?
+                                         "Amount: R" + amount.ToString() +
+                                         "\nDate & Time: " + now.ToString() +
+                                         "\n\nKind regards,\nThe Project CAL Team";
+                        
+                        sendMail(sender.SenderEmail, content, "Project CAL: Shipment Invoice");
+                        */
 
                         return Ok();
                     }
                     else
                     {
                         //PENALTY
-                        //System.Diagnostics.Debugger.Break();
-                        //send penalty paid email
-                        //send shipment paid email
-                        string content = "Good day " + sender.getFullName() + ",\n\n" +
-                                         "The payment for your Shipment Penalty has been received.\n\n" +
-                                         //shipment & penalty details?
-                                         "Amount: R" + amount.ToString() +
-                                         "\nDate & Time: " + now.ToString() +
-                                         "\n\nKind regards,\nThe Project CAL Team";
-
-                        sendMail(sender.SenderEmail, content, "Project CAL: Shipment Penalty Invoice");
-
+                        System.Diagnostics.Debugger.Break();
+                        
                         //save penalty
                         penalty.DatePaid = now;
                         _context.Entry(penalty).State = EntityState.Modified;
@@ -308,7 +305,7 @@ namespace CORE_WebAPI.Controllers
                         //AUDIT LOG - penalty payment
                         log.AuditUserName = sender.getFullName();
                         log.UserTypeId = 1;
-                        log.ItemAffected = "Sender: Payment failed for shipment requested on " + shipment.ShipmentDate.ToLongDateString() + "." + "ShipmentID: " + shipment.ShipmentId.ToString();
+                        log.ItemAffected = "Sender: Penalty paid for shipment delivered on " + shipment.ShipmentDate + " at " + shipment.DeliveryTime.ToString() + "." + "ShipmentID: " + shipment.ShipmentId.ToString();
                         log.AuditTypeId = 5;
                         log.TxAmount = amount;
                         log.AuditDateTime = now;
@@ -316,24 +313,40 @@ namespace CORE_WebAPI.Controllers
                         _context.AuditLog.Add(log);
                         _context.SaveChangesAsync();
 
+                        //FAILURE TO SEND MAIL
+                        //what kind of response does the mail server send?
+                        /*
+                        //send penalty paid email
+                        string content = "Good day " + sender.getFullName() + ",\n\n" +
+                                         "The payment for your Shipment Penalty has been received.\n\n" +
+                                         //shipment & penalty details?
+                                         "Amount: R" + amount.ToString() +
+                                         "\nDate & Time: " + now.ToString() +
+                                         "\n\nKind regards,\nThe Project CAL Team";
+
+                        sendMail(sender.SenderEmail, content, "Project CAL: Shipment Penalty Invoice");
+                        */
+
                         return Ok();
                     }
                 }
                 else
                 {
+                    //check that penalty audit log entries aren't swapped...
                     //AUDIT LOG - payment failed
                     log.AuditUserName = sender.getFullName();
                     log.UserTypeId = 1;
                     if (details.type == 0)
                     {
-                        log.ItemAffected = "Sender: Penalty paid for shipment delivered on " + shipment.ShipmentDate + " at " + shipment.DeliveryTime.ToString() + "." + "ShipmentID: " + shipment.ShipmentId.ToString();
+                        log.ItemAffected = "Sender: Payment declined for shipment requested on " + shipment.ShipmentDate.ToLongDateString() + "." + "ShipmentID: " + shipment.ShipmentId.ToString();
+                            
                     }
                     else
                     {
-                        log.ItemAffected = "Sender: Penalty payment failed for shipment delivered on " + shipment.ShipmentDate + " at " + shipment.DeliveryTime.ToString() + "." + "ShipmentID: " + shipment.ShipmentId.ToString();
+                        log.ItemAffected = "Sender: Penalty declined failed for shipment delivered on " + shipment.ShipmentDate + " at " + shipment.DeliveryTime.ToString() + "." + "ShipmentID: " + shipment.ShipmentId.ToString();
                     }
                     log.AuditTypeId = 6;
-                    log.TxAmount = amount;
+                    log.TxAmount = null;
                     log.AuditDateTime = now;
 
                     _context.AuditLog.Add(log);
@@ -345,7 +358,20 @@ namespace CORE_WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                //System.Diagnostics.Debugger.Break();
+                System.Diagnostics.Debugger.Break();
+
+                log.AuditUserName = sender.getFullName();
+                log.UserTypeId = 1;
+                //payment went through by the time we get here... - that should not happen
+
+                log.ItemAffected = "Sender: Email failed to send. " + ex.Message;
+                log.AuditTypeId = 5;
+                log.TxAmount = null;
+                log.AuditDateTime = now;
+
+                _context.AuditLog.Add(log);
+                _context.SaveChangesAsync();
+
                 return BadRequest(ex.Message);
             }
         }
