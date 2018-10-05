@@ -42,5 +42,10 @@ namespace CORE_WebAPI.Models
                 this.LoginId = sender.LoginId;
             }
         }
+        public string getFullName()
+        {
+            //System.Diagnostics.Debugger.Break();
+            return this.SenderName + " " + this.SenderSurname;
+        }
     }
 }

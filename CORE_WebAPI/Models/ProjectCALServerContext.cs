@@ -189,7 +189,7 @@ namespace CORE_WebAPI.Models
                 entity.Property(e => e.ItemAffected)
                     .IsRequired()
                     .HasColumnName("Item_Affected")
-                    .HasMaxLength(100)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TxAmount)
