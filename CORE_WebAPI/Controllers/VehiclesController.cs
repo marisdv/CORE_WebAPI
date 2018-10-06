@@ -43,7 +43,7 @@ namespace CORE_WebAPI.Controllers
                 //vehicles.ForEach(x => x.VehicleProofImage = null);
                 return vehicles;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 System.Diagnostics.Debugger.Break();
                 throw;

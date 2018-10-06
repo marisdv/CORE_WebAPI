@@ -164,21 +164,43 @@ namespace CORE_WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccessRole([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var accessRole = await _context.AccessRole.SingleOrDefaultAsync(m => m.AccessRoleId == id);
-            if (accessRole == null)
+                //should package be included?
+                AccessRole accessRole = await _context.AccessRole.Include(a => a.AccessRoleArea).Include(e => e.Employee).SingleOrDefaultAsync(v => v.AccessRoleId == id);
+
+                if (accessRole == null)
+                {
+                    return NotFound("The Access Role was not found.");
+                }
+
+                System.Diagnostics.Debugger.Break();
+
+                if (accessRole.Employee.Count > 0)
+                {
+                    return BadRequest("The selected Access Role cannot be deleted because it is assigned to an Employee.");
+                }
+                else
+                {
+                    _context.AccessRole.Remove(accessRole);
+
+                    //also delete access role area lines where this access role is linked
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok(accessRole);
+                }
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                System.Diagnostics.Debugger.Break();
+                return BadRequest(ex.Message);
             }
-
-            _context.AccessRole.Remove(accessRole);
-            await _context.SaveChangesAsync();
-
-            return Ok(accessRole);
         }
 
         private bool AccessRoleExists(int id)

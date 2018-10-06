@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security;
-using System.Security;
 using Microsoft.AspNet.Identity;
 
 namespace CORE_WebAPI.Models

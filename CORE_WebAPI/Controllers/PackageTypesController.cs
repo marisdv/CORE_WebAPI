@@ -141,21 +141,44 @@ namespace CORE_WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePackageType([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var packageType = await _context.PackageType.SingleOrDefaultAsync(m => m.PackageTypeId == id);
-            if (packageType == null)
+                //should package be included?
+                PackageType packageType = await _context.PackageType.Include(v => v.VehiclePacakageLine).Include(p => p.Package).SingleOrDefaultAsync(v => v.PackageTypeId == id);
+
+                System.Diagnostics.Debugger.Break();
+                if (packageType == null)
+                {
+                    return NotFound("The Package Type was not found.");
+                }
+
+                System.Diagnostics.Debugger.Break();
+
+                if (packageType.Package.Count > 0)
+                {
+                    return BadRequest("The selected Package Type cannot be deleted because it is assigned to a Package.");
+                }
+                else
+                {
+                    _context.PackageType.Remove(packageType);
+
+                    //also delete vehicle package lines where this package type is used
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok(packageType);
+                }
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                System.Diagnostics.Debugger.Break();
+                return BadRequest(ex.InnerException.Message);
             }
-
-            _context.PackageType.Remove(packageType);
-            await _context.SaveChangesAsync();
-
-            return Ok(packageType);
         }
 
         private bool PackageTypeExists(int id)

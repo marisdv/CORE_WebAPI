@@ -170,8 +170,7 @@ namespace CORE_WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
-                throw;
+                return BadRequest(ex.Message);
             }
            
         }

@@ -183,21 +183,46 @@ namespace CORE_WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVehicleType([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var vehicleType = await _context.VehicleType.SingleOrDefaultAsync(m => m.VehicleTypeId == id);
-            if (vehicleType == null)
+                //should vehicle be included?
+                VehicleType vehicleType = await _context.VehicleType.Include(v => v.VehiclePacakageLine).Include(v => v.Vehicle).SingleOrDefaultAsync(v => v.VehicleTypeId == id);
+
+                if (vehicleType == null)
+                {
+                    return NotFound("The Vehicle Type was not found.");
+                }
+
+                System.Diagnostics.Debugger.Break();
+
+                if (vehicleType.Vehicle.Count > 0)
+                {
+                    return BadRequest("The selected Vehicle Type cannot be deleted because it is assigned to a Vehicle.");
+                }
+                else
+                {
+                    
+                    _context.VehicleType.Remove(vehicleType);
+
+                    //also delete vehicle package lines where this vehicle type is used
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok(vehicleType);
+                    
+                }
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                System.Diagnostics.Debugger.Break();
+                return BadRequest(ex.InnerException.Message);
             }
-
-            _context.VehicleType.Remove(vehicleType);
-            await _context.SaveChangesAsync();
-
-            return Ok(vehicleType);
+            
         }
 
         private bool VehicleTypeExists(int id)

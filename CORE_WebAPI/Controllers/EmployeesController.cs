@@ -191,7 +191,7 @@ namespace CORE_WebAPI.Controllers
 
                 if (employee == null)
                 {
-                    return NotFound();
+                    return NotFound("The Employee was not found.");
                 }
 
                 if (employee.Application.Count > 0)// || ||)
