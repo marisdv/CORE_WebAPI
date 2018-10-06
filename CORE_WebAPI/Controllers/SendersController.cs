@@ -149,14 +149,15 @@ namespace CORE_WebAPI.Controllers
 
                 //delete login & cascade to sender
                 
-                //get login?
                 //Login login = await _context.Login.SingleOrDefaultAsync(l => l.)
 
                 //Login object fetch login for the Sender
                 //Login login = await _context.Login.Include(s => s.Sender).Where();
 
-
                 Sender sender = await _context.Sender.Include(s => s.Shipment).Include(s=>s.BasketLine).Include(l=>l.Login).SingleOrDefaultAsync(s => s.SenderId == id);
+                
+                //Login login = await _context.Login.SingleOrDefaultAsync(s => )
+
 
                 System.Diagnostics.Debugger.Break();
 
@@ -196,7 +197,7 @@ namespace CORE_WebAPI.Controllers
             catch (Exception ex)
             {
                 System.Diagnostics.Debugger.Break();
-                return BadRequest(ex.InnerException.Message);
+                return BadRequest(ex.Message);
             }
             
         }

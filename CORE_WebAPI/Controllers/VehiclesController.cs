@@ -37,8 +37,8 @@ namespace CORE_WebAPI.Controllers
                 List<Vehicle> vehicles = _context.Vehicle
                                         /*.Include(vehicle => vehicle.VehicleMake)
                                         .Include(vehicle => vehicle.VehicleType)
-                                        .Include(agent => agent.Agent)
-                                        .Include(vehicle => vehicle.VehicleStatus)*/.ToList();
+                                        .Include(agent => agent.Agent)*/
+                                        .Include(vehicle => vehicle.VehicleStatus).ToList();
 
                 //vehicles.ForEach(x => x.VehicleProofImage = null);
                 return vehicles;
@@ -68,13 +68,13 @@ namespace CORE_WebAPI.Controllers
             grid.totalCount = _context.Vehicle
                                     /*.Include(vehicle => vehicle.VehicleMake)
                                     .Include(vehicle => vehicle.VehicleType)
-                                    .Include(agent => agent.Agent)
-                                    .Include(vehicle => vehicle.VehicleStatus)*/.Count();
+                                    .Include(agent => agent.Agent)*/
+                                    .Include(vehicle => vehicle.VehicleStatus).Count();
 
             grid.vehicles = _context.Vehicle.Include(vehicle => vehicle.VehicleMake)
                                     /*.Include(vehicle => vehicle.VehicleType)
-                                    .Include(agent => agent.Agent)
-                                    .Include(vehicle => vehicle.VehicleStatus)*/;
+                                    .Include(agent => agent.Agent)*/
+                                    .Include(vehicle => vehicle.VehicleStatus);
 
             return grid;
         }

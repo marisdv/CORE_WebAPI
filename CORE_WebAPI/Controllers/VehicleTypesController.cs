@@ -220,7 +220,7 @@ namespace CORE_WebAPI.Controllers
             catch (Exception ex)
             {
                 System.Diagnostics.Debugger.Break();
-                return BadRequest(ex.InnerException.Message);
+                return BadRequest(ex.Message);
             }
             
         }

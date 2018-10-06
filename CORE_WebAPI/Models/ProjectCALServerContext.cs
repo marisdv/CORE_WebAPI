@@ -54,7 +54,7 @@ namespace CORE_WebAPI.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=.;Database=ProjectCALServer;Trusted_Connection=True;");
             }
         }
@@ -112,7 +112,6 @@ namespace CORE_WebAPI.Models
                 entity.HasOne(d => d.AccessRole)
                     .WithMany(p => p.AccessRoleArea)
                     .HasForeignKey(d => d.AccessRoleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ACCESS_ROLE_AREA_ACCESS_ROLE");
             });
 
@@ -736,7 +735,6 @@ namespace CORE_WebAPI.Models
                 entity.HasOne(d => d.Login)
                     .WithMany(p => p.Sender)
                     .HasForeignKey(d => d.LoginId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SENDER_LOGIN");
             });
 
@@ -1124,13 +1122,11 @@ namespace CORE_WebAPI.Models
                 entity.HasOne(d => d.PackageType)
                     .WithMany(p => p.VehiclePacakageLine)
                     .HasForeignKey(d => d.PackageTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VEHICLE_PACAKAGE_LINE_PACKAGE_TYPE");
 
                 entity.HasOne(d => d.VehicleType)
                     .WithMany(p => p.VehiclePacakageLine)
                     .HasForeignKey(d => d.VehicleTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VEHICLE_PACAKAGE_LINE_VEHICLE_TYPE");
             });
 

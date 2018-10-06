@@ -242,7 +242,8 @@ namespace CORE_WebAPI.Controllers
                         //AUDIT LOG - shipment payment
                         log.AuditUserName = sender.getFullName();
                         log.UserTypeId = 1;
-                        log.ItemAffected = "Sender: Payment successfully made for shipment requested on " + shipment.ShipmentDate.ToLongDateString() + ". " + "ShipmentID: " + shipment.ShipmentId.ToString();
+                        log.ItemAffected = "Sender: Payment successfully made for shipment requested on " 
+                            + shipment.ShipmentDate.ToLongDateString() + ". " + "ShipmentID: " + shipment.ShipmentId.ToString();
                         log.AuditTypeId = 5;
                         log.TxAmount = amount;
                         log.AuditDateTime = now;
