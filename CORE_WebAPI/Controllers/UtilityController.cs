@@ -312,7 +312,8 @@ namespace CORE_WebAPI.Controllers
                     if (details.type == 0)
                     {
                         log.ItemAffected = "Sender: Payment declined for shipment requested on " + shipment.ShipmentDate.ToLongDateString() + ". " + "ShipmentID: " + shipment.ShipmentId.ToString();
-                            
+                        shipment.Paid = 0;
+                        shipment.ShipmentStatusId = 2; 
                     }
                     else
                     {
@@ -322,6 +323,7 @@ namespace CORE_WebAPI.Controllers
                     log.TxAmount = null;
                     log.AuditDateTime = now;
 
+                    _context.Entry(shipment).State = EntityState.Modified;
                     _context.AuditLog.Add(log);
                     _context.SaveChangesAsync();
 

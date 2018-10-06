@@ -146,47 +146,26 @@ namespace CORE_WebAPI.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-
-                //delete login & cascade to sender
                 
-                //Login login = await _context.Login.SingleOrDefaultAsync(l => l.)
-
-                //Login object fetch login for the Sender
-                //Login login = await _context.Login.Include(s => s.Sender).Where();
-
                 Sender sender = await _context.Sender.Include(s => s.Shipment).Include(s=>s.BasketLine).Include(l=>l.Login).SingleOrDefaultAsync(s => s.SenderId == id);
                 
-                //Login login = await _context.Login.SingleOrDefaultAsync(s => )
+                Login login = await _context.Login.FirstOrDefaultAsync(l => l.LoginId == sender.LoginId);
 
 
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
 
                 if (sender == null)
                 {
                     return NotFound("The Sender was not found.");
                 }
-
-                //if sender has shipment or basket
-                //if count for shipment > 0
-                //if count for basket > 0
-                    //do not delete login
+                
                 if (sender.Shipment.Count > 0 || sender.BasketLine.Count > 0)
                 {
                     return BadRequest("The selected Sender cannot be deleted because there are items in their basket or they have requested a Shipment before.");
                 }
                 else
                 {
-                //else
-                    //delete login, cascade to sender
-                    
-                    //delete login
-
-                    //delete sender
-
-                    _context.Sender.Remove(sender);
-
-                    //need to delete the sender's login
-                    //_context.Sender.Remove(sender.Login);
+                    _context.Login.Remove(login);
 
                     await _context.SaveChangesAsync();
                     
@@ -196,8 +175,8 @@ namespace CORE_WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debugger.Break();
-                return BadRequest(ex.Message);
+                //System.Diagnostics.Debugger.Break();
+                return BadRequest(ex.InnerException.Message);
             }
             
         }

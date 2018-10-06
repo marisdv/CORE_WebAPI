@@ -341,9 +341,56 @@ namespace CORE_WebAPI.Controllers
                 return new IncomeReport();
             }
         }
-        
+
         #endregion
-    
+
+        #region Dashboard Graph
+        // POST: api/reports/dashboard
+        [HttpPost("dashboard")]
+        public DashboardGraph GetDashboardGraph()
+        {
+            try
+            {
+                //System.Diagnostics.Debugger.Break();
+                DashboardGraph report = new DashboardGraph();
+
+                DateTime now = new DateTime(2018, 10, 03);
+                //now = Convert.ToDateTime(2018-10-04);
+                //now = DateTime.Now;
+
+                List<ShipmentStatusLine> lines = new List<ShipmentStatusLine>();
+                foreach (Shipment shipment in _context.Shipment)
+                {
+                    if (shipment.ShipmentDate.Date == now.Date)
+                    {
+                        //System.Diagnostics.Debugger.Break();
+                        ShipmentStatusLine line = new ShipmentStatusLine();
+                        foreach (ShipmentStatus status in _context.ShipmentStatus)
+                        {
+                            //System.Diagnostics.Debugger.Break();
+                            line.statusDescr = status.ShipmentStatusDescr;
+                            if(shipment.ShipmentStatusId == status.ShipmentStatusId)
+                            {
+                                line.statusCount++;
+                                lines.Add(line);
+                            }
+                        }
+                        report.totalShipments++;
+                    }
+                }
+
+                System.Diagnostics.Debugger.Break();
+
+                return report;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debugger.Break();
+                return new DashboardGraph();
+            }
+        }
+        #endregion
+
         #region 2PopularArea - not gonna happen
         #endregion
         #endregion
