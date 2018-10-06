@@ -28,17 +28,27 @@ namespace CORE_WebAPI.Controllers
 
         // GET: api/Vehicles
         [HttpGet]
-        //[JsonIgnore]
         public IEnumerable<Vehicle> GetVehicle()
         {
-            List<Vehicle> vehicles = _context.Vehicle
-                                    .Include(vehicle => vehicle.VehicleMake)
-                                    .Include(vehicle => vehicle.VehicleType)
-                                    .Include(agent => agent.Agent)
-                                    .Include(vehicle => vehicle.VehicleStatus).ToList();
-                                    
-            vehicles.ForEach(x => x.VehicleProofImage = null);
-            return vehicles;
+            try
+            {
+                System.Diagnostics.Debugger.Break();
+
+                List<Vehicle> vehicles = _context.Vehicle
+                                        /*.Include(vehicle => vehicle.VehicleMake)
+                                        .Include(vehicle => vehicle.VehicleType)
+                                        .Include(agent => agent.Agent)
+                                        .Include(vehicle => vehicle.VehicleStatus)*/.ToList();
+
+                //vehicles.ForEach(x => x.VehicleProofImage = null);
+                return vehicles;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debugger.Break();
+                throw;
+            }
+
         }
 
         // GET: /api/vehicles/proofimage/4
@@ -56,15 +66,15 @@ namespace CORE_WebAPI.Controllers
             VehicleGrid grid = new VehicleGrid();
 
             grid.totalCount = _context.Vehicle
-                                    .Include(vehicle => vehicle.VehicleMake)
+                                    /*.Include(vehicle => vehicle.VehicleMake)
                                     .Include(vehicle => vehicle.VehicleType)
                                     .Include(agent => agent.Agent)
-                                    .Include(vehicle => vehicle.VehicleStatus).Count();
+                                    .Include(vehicle => vehicle.VehicleStatus)*/.Count();
 
             grid.vehicles = _context.Vehicle.Include(vehicle => vehicle.VehicleMake)
-                                    .Include(vehicle => vehicle.VehicleType)
+                                    /*.Include(vehicle => vehicle.VehicleType)
                                     .Include(agent => agent.Agent)
-                                    .Include(vehicle => vehicle.VehicleStatus);
+                                    .Include(vehicle => vehicle.VehicleStatus)*/;
 
             return grid;
         }

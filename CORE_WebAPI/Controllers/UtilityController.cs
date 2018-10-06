@@ -120,7 +120,7 @@ namespace CORE_WebAPI.Controllers
             now = DateTime.Now;
             try
             {
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
 
                 Payhost.SinglePaymentRequest1 payment = new Payhost.SinglePaymentRequest1();
                 Payhost.CardPaymentRequestType request = new Payhost.CardPaymentRequestType();
@@ -140,7 +140,7 @@ namespace CORE_WebAPI.Controllers
                 request.Customer.Mobile = new string[] { sender.Login.PhoneNo };
                 request.Customer.Email = new string[] { sender.SenderEmail };
 
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
 
                 request.ItemsElementName = new Payhost.ItemsChoiceType[]
                 {
@@ -155,15 +155,13 @@ namespace CORE_WebAPI.Controllers
                 
                 request.Order = new Payhost.OrderType();
 
-                
-
                 string orderId;
                 decimal amount;
 
                 if (details.type == 0)
                 {
                     //SHIPMENT
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     //create only shipment
                     shipment = _context.Shipment
                                                 .FirstOrDefault(s => s.ShipmentId == details.transactId);
@@ -174,7 +172,7 @@ namespace CORE_WebAPI.Controllers
                 else
                 {
                     //PENALTY
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     //create penalty
                     penalty = _context.Penalty
                                               .FirstOrDefault(m => m.PentaltyId == details.transactId);
@@ -200,13 +198,13 @@ namespace CORE_WebAPI.Controllers
 
                 Payhost.PayHOST paygateInterface = new Payhost.PayHOSTClient();
                 
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
 
                 Payhost.SinglePaymentResponse1 response = paygateInterface.SinglePayment(payment);
 
                 var r = response.SinglePaymentResponse.Item as Payhost.CardPaymentResponseType;
 
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
                 
                 //error handling - not sure where this should fit in?
                 if (r.Status.StatusName.ToString() == "ValidationError")
@@ -246,12 +244,12 @@ namespace CORE_WebAPI.Controllers
 
                 payRef.TxDateTime = now;
 
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
                 
                 _context.PaymentReference.Add(payRef);
                 _context.SaveChangesAsync();
 
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
 
                 
                 if (r.Status.ResultCode == "990017")
@@ -259,7 +257,7 @@ namespace CORE_WebAPI.Controllers
                     if (details.type == 0)
                     {
                         //SHIPMENT
-                        System.Diagnostics.Debugger.Break();
+                        //System.Diagnostics.Debugger.Break();
 
                         //save shipment
                         shipment.Paid = 1;
@@ -270,7 +268,7 @@ namespace CORE_WebAPI.Controllers
                         //AUDIT LOG - shipment payment
                         log.AuditUserName = sender.getFullName();
                         log.UserTypeId = 1;
-                        log.ItemAffected = "Sender: Payment successfully made for shipment requested on " + shipment.ShipmentDate.ToLongDateString() + "." + "ShipmentID: " + shipment.ShipmentId.ToString();
+                        log.ItemAffected = "Sender: Payment successfully made for shipment requested on " + shipment.ShipmentDate.ToLongDateString() + ". " + "ShipmentID: " + shipment.ShipmentId.ToString();
                         log.AuditTypeId = 5;
                         log.TxAmount = amount;
                         log.AuditDateTime = now;
@@ -278,7 +276,7 @@ namespace CORE_WebAPI.Controllers
                         _context.AuditLog.Add(log);
                         _context.SaveChangesAsync();
                         
-                        /*
+                        
                         //send shipment paid email
                         string content = "Good day " + sender.getFullName() + ",\n\n" +
                                          "The payment for your Shipment has been received.\n\n" +
@@ -288,14 +286,14 @@ namespace CORE_WebAPI.Controllers
                                          "\n\nKind regards,\nThe Project CAL Team";
                         
                         sendMail(sender.SenderEmail, content, "Project CAL: Shipment Invoice");
-                        */
+                        
 
                         return Ok();
                     }
                     else
                     {
                         //PENALTY
-                        System.Diagnostics.Debugger.Break();
+                        //System.Diagnostics.Debugger.Break();
                         
                         //save penalty
                         penalty.DatePaid = now;
@@ -305,7 +303,7 @@ namespace CORE_WebAPI.Controllers
                         //AUDIT LOG - penalty payment
                         log.AuditUserName = sender.getFullName();
                         log.UserTypeId = 1;
-                        log.ItemAffected = "Sender: Penalty paid for shipment delivered on " + shipment.ShipmentDate + " at " + shipment.DeliveryTime.ToString() + "." + "ShipmentID: " + shipment.ShipmentId.ToString();
+                        log.ItemAffected = "Sender: Penalty paid for shipment delivered on " + shipment.ShipmentDate + " at " + shipment.DeliveryTime.ToString() + ". " + "ShipmentID: " + shipment.ShipmentId.ToString();
                         log.AuditTypeId = 5;
                         log.TxAmount = amount;
                         log.AuditDateTime = now;
@@ -315,7 +313,7 @@ namespace CORE_WebAPI.Controllers
 
                         //FAILURE TO SEND MAIL
                         //what kind of response does the mail server send?
-                        /*
+                        
                         //send penalty paid email
                         string content = "Good day " + sender.getFullName() + ",\n\n" +
                                          "The payment for your Shipment Penalty has been received.\n\n" +
@@ -325,7 +323,7 @@ namespace CORE_WebAPI.Controllers
                                          "\n\nKind regards,\nThe Project CAL Team";
 
                         sendMail(sender.SenderEmail, content, "Project CAL: Shipment Penalty Invoice");
-                        */
+                        
 
                         return Ok();
                     }
@@ -338,12 +336,12 @@ namespace CORE_WebAPI.Controllers
                     log.UserTypeId = 1;
                     if (details.type == 0)
                     {
-                        log.ItemAffected = "Sender: Payment declined for shipment requested on " + shipment.ShipmentDate.ToLongDateString() + "." + "ShipmentID: " + shipment.ShipmentId.ToString();
+                        log.ItemAffected = "Sender: Payment declined for shipment requested on " + shipment.ShipmentDate.ToLongDateString() + ". " + "ShipmentID: " + shipment.ShipmentId.ToString();
                             
                     }
                     else
                     {
-                        log.ItemAffected = "Sender: Penalty declined failed for shipment delivered on " + shipment.ShipmentDate + " at " + shipment.DeliveryTime.ToString() + "." + "ShipmentID: " + shipment.ShipmentId.ToString();
+                        log.ItemAffected = "Sender: Penalty payment declined for shipment delivered on " + shipment.ShipmentDate + " at " + shipment.DeliveryTime.ToString() + ". " + "ShipmentID: " + shipment.ShipmentId.ToString();
                     }
                     log.AuditTypeId = 6;
                     log.TxAmount = null;

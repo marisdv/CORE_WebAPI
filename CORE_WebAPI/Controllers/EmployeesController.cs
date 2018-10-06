@@ -186,7 +186,7 @@ namespace CORE_WebAPI.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                //my code
+
                 Employee employee = await _context.Employee.Include(m => m.Application).SingleOrDefaultAsync(m => m.EmployeeId == id);
 
                 if (employee == null)
@@ -196,7 +196,7 @@ namespace CORE_WebAPI.Controllers
 
                 if (employee.Application.Count > 0)// || ||)
                 {
-                    return BadRequest("Employee cannot be deleted as they have existing applications");
+                    return BadRequest("The selected Employee cannot be deleted because they have existing reviewed applications.");
                 }
                 else
                 {

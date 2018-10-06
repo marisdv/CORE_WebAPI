@@ -140,21 +140,42 @@ namespace CORE_WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSender([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var sender = await _context.Sender.SingleOrDefaultAsync(m => m.SenderId == id);
-            if (sender == null)
+                Sender sender = await _context.Sender.Include(s => s.Shipment).Include(s=>s.BasketLine).SingleOrDefaultAsync(s => s.SenderId == id);
+
+                //get login
+
+                if (sender == null)
+                {
+                    return NotFound();
+                }
+
+                if (sender.Shipment.Count >0 || sender.BasketLine.Count>0)
+                {
+                    return BadRequest("The selected Sender cannot be deleted because there are items in their basket or they have requested a Shipment before.");
+                }
+                else
+                {
+                    _context.Sender.Remove(sender);
+                    await _context.SaveChangesAsync();
+
+                    //delete login
+
+                    return Ok(sender);
+                }
+
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(ex.InnerException.Message);
             }
-
-            _context.Sender.Remove(sender);
-            await _context.SaveChangesAsync();
-
-            return Ok(sender);
+            
         }
 
         private bool SenderExists(int id)
