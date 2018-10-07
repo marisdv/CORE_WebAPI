@@ -12,6 +12,7 @@ namespace CORE_WebAPI.Models.Reports
     }
     public class ShipmentStatusLine
     {
+        public int statusId { get; set; }
         public string statusDescr { get; set; }
         public int statusCount { get; set; }
     }

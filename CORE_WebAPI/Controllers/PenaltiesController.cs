@@ -133,7 +133,6 @@ namespace CORE_WebAPI.Controllers
                    
                 }
                 return BadRequest("No Penalty");
-                //return BadRequest("No Penalty");
             }
             catch (Exception ex)
             {

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CORE_WebAPI.Models;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace CORE_WebAPI.Controllers
 {
@@ -16,11 +18,13 @@ namespace CORE_WebAPI.Controllers
     public class PackageTypesController : Controller
     {
         private readonly ProjectCALServerContext _context;
+        private readonly IHostingEnvironment _env;
         private string baseURL = "C:\\img\\packages\\";
 
-        public PackageTypesController(ProjectCALServerContext context)
+        public PackageTypesController(ProjectCALServerContext context, IHostingEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         // GET: api/PackageTypes
@@ -31,13 +35,37 @@ namespace CORE_WebAPI.Controllers
             packageType.ForEach(x=> x.PackageTypeImage = null);
             return packageType;
         }
-
+        
         // GET: /api/package/image/4
         [HttpGet("image/{id}")]
         public IActionResult GetPackageImage(int id)
         {
-            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + id + ".jpg");
-            return File(imageByte, "image/jpeg");
+            List<string> files = new List<string>();
+            files.Add(".bmp");
+            files.Add(".jpeg");
+            files.Add(".jpg");
+            files.Add(".png");
+            files.Add(".tif");
+            files.Add(".tiff");
+
+            try
+            {
+                foreach (string filetype in files)
+                {
+                    if(System.IO.File.Exists(baseURL + id + filetype))
+                    {
+                        byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + id + filetype);
+                        return File(imageByte, "image/*");
+                    }
+                }
+                return NotFound("File was not found.");
+                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
         }
 
         // GET: /packagetypesgrid
@@ -135,6 +163,38 @@ namespace CORE_WebAPI.Controllers
                 return BadRequest(ex.InnerException.Message);
             }
             
+        }
+
+        //POST: /api/PackageTypes/image/{id}
+        [HttpPost("image/{id}")]
+        public async Task<IActionResult> UploadPackageTypeImage(IFormFile file, int id)
+        {
+            System.Diagnostics.Debugger.Break();
+            try
+            {
+                if (file != null)
+                {
+                    //var fileName = Path.Combine(baseURL, Path.GetFileName(file.FileName)); //set new filename & get extention
+
+                    string ext = System.IO.Path.GetExtension(file.FileName);
+                    var fileName = Path.Combine(baseURL, id.ToString() + ext); 
+
+                    using (var stream = new FileStream(fileName, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                }
+                else
+                {
+                    return BadRequest("No file uploaded.");
+                }
+
+                return Ok("Upload successful");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/PackageTypes/5

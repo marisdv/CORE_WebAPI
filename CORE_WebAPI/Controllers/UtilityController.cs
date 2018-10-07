@@ -337,7 +337,6 @@ namespace CORE_WebAPI.Controllers
 
                 log.AuditUserName = sender.getFullName();
                 log.UserTypeId = 1;
-                //payment went through by the time we get here... - that should not happen
 
                 log.ItemAffected = "Sender: Email failed to send. " + ex.Message;
                 log.AuditTypeId = 5;

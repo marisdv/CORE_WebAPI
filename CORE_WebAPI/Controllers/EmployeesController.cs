@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CORE_WebAPI.Models;
 using Microsoft.AspNetCore.Cors;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace CORE_WebAPI.Controllers
 {
@@ -16,11 +18,13 @@ namespace CORE_WebAPI.Controllers
     public class EmployeesController : Controller
     {
         private readonly ProjectCALServerContext _context;
+        private readonly IHostingEnvironment _env;
         private string baseURL = "C:\\img\\employees\\";
 
-        public EmployeesController(ProjectCALServerContext context)
+        public EmployeesController(ProjectCALServerContext context, IHostingEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         // GET: api/Employees
@@ -34,8 +38,30 @@ namespace CORE_WebAPI.Controllers
         [HttpGet("image/{id}")]
         public IActionResult GetEmployeeImage(int id)
         {
-            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + id + ".jpg");
-            return File(imageByte, "image/jpeg");
+            List<string> files = new List<string>();
+            files.Add(".bmp");
+            files.Add(".jpeg");
+            files.Add(".jpg");
+            files.Add(".png");
+            files.Add(".tif");
+            files.Add(".tiff");
+
+            try
+            {
+                foreach (string filetype in files)
+                {
+                    if (System.IO.File.Exists(baseURL + id + filetype))
+                    {
+                        byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + id + filetype);
+                        return File(imageByte, "image/*");
+                    }
+                }
+                return NotFound("File was not found.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // GET: /employeegrid
@@ -74,26 +100,28 @@ namespace CORE_WebAPI.Controllers
         [HttpGet("phone/{id}")]
         public async Task<IActionResult> GetEmployeeByPhone([FromRoute] string id)
         {
+            System.Diagnostics.Debugger.Break();
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var application = await _context.Employee
+            var employee = await _context.Employee
                                                    .SingleOrDefaultAsync(m => m.EmployeePhone == id);
 
-            if (application == null)
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            return Ok(application);
+            return Ok(employee);
         }
 
         //Verify Employee Password
         [HttpPost("verify/{id}")]
         public async Task<IActionResult> VerifyPassword([FromRoute] string id, [FromBody] Employee employee)
         {
+            System.Diagnostics.Debugger.Break();
             bool valid = false;
             try
             {
@@ -114,6 +142,7 @@ namespace CORE_WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debugger.Break();
                 return BadRequest(ex.Message);
             }
 
@@ -174,6 +203,36 @@ namespace CORE_WebAPI.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetEmployee", new { id = employee.EmployeeId }, employee);
+        }
+
+        //POST: /api/Employees/image/{id}
+        [HttpPost("image/{id}")]
+        public async Task<IActionResult> UploadPackageTypeImage(IFormFile file, int id)
+        {
+            System.Diagnostics.Debugger.Break();
+            try
+            {
+                if (file != null)
+                {
+                    string ext = System.IO.Path.GetExtension(file.FileName);
+                    var fileName = Path.Combine(baseURL, id.ToString() + ext);
+
+                    using (var stream = new FileStream(fileName, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                }
+                else
+                {
+                    return BadRequest("No file uploaded.");
+                }
+
+                return Ok("Upload successful");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/Employees/5

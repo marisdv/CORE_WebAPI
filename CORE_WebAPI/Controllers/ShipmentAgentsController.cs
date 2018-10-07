@@ -36,16 +36,32 @@ namespace CORE_WebAPI.Controllers
         [HttpGet("agentimage/{id}")]
         public IActionResult GetAgentImage(int id)
         {
-            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL1 + id + ".jpg");
-            return File(imageByte, "image/jpg");
+            try
+            {
+                byte[] imageByte = System.IO.File.ReadAllBytes(baseURL1 + id + ".jpg");
+                return File(imageByte, "image/jpg");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         // GET: /api/shipmentagents/licenceimage/13
         [HttpGet("licenceimage/{id}")]
         public IActionResult GetAgentLicenceImage(int id)
         {
-            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL2 + id + ".jpg");
-            return File(imageByte, "image/jpeg");
+            try
+            {
+                byte[] imageByte = System.IO.File.ReadAllBytes(baseURL2 + id + ".jpg");
+                return File(imageByte, "image/jpeg");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         // GET: /shipmentagentgrid

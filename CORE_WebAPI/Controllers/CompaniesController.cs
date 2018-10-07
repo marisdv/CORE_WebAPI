@@ -34,8 +34,16 @@ namespace CORE_WebAPI.Controllers
         [HttpGet("image/{id}")]
         public IActionResult GetACompanyImage(int id)
         {
-            byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + id + ".jpg");
-            return File(imageByte, "image/jpeg");
+            try
+            {
+                byte[] imageByte = System.IO.File.ReadAllBytes(baseURL + id + ".jpg");
+                return File(imageByte, "image/jpeg");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         // GET: api/Companies/5

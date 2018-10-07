@@ -11,55 +11,51 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CORE_WebAPI.Controllers
 {
+    [Produces("application/json")] //not sure about this
     [Route("api/image")]
-    [ApiController]
     [EnableCors("MyPolicy")]
-    [Consumes("image/jpg")]
+    //[Consumes("image/jpg")] //not sure about this
     public class ImageController : ControllerBase
     {
-        private readonly IHostingEnvironment _env;
+        private readonly IHostingEnvironment _env; //hosting environment to find a root path
         private readonly ProjectCALServerContext _context;
-
+        
         public ImageController(ProjectCALServerContext context, IHostingEnvironment env)
         {
             _context = context;
             _env = env;
         }
 
-        //maybe only for form on API?
-        //[HttpGet]
-        //public IActionResult Upload_Image()
-        //{
-        //    return View();
-        //}
+        //POST: /api/image/upload
+        [HttpPost("upload")]
+        public async Task<IActionResult> Upload_Image(IFormFile file)
+        {
+            System.Diagnostics.Debugger.Break();
+            try
+            {
+                if (file != null)
+                {
+                    var fileName = Path.Combine(_env.WebRootPath, Path.GetFileName(file.FileName)); //set new filename & get extention
 
-        //[HttpPost("upload")]
-        //public async Task<IActionResult> Upload_Image(IFormFile file)
-        //{
-        //    System.Diagnostics.Debugger.Break();
-        //    //try
-        //    //{
-        //        var uploads = Path.Combine(_env.WebRootPath, "uploads");
-        //        if (file.Length > 0)
-        //        {
-        //            using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
-        //            {
-        //                await file.CopyToAsync(fileStream);
-        //            }
-        //        }
-        //    //}
-        //    //catch (Exception ex)
-        //    //{
-        //    //    return ;
-        //    //}
-        //}
+                    //var fileName = Path.Combine(packageURL, packageID + Path.GetExtention(file.FileName)); 
 
-        //// POST: api/Utility/image
-        //[HttpPost]
-        //public void Post([FromBody] string image)
-        //{
+                    using (var stream = new FileStream(fileName, FileMode.Create))
+                    {
+                        //set filename to ID of the thing uploaded
+                        await file.CopyToAsync(stream);
+                    }
+                }
+                else
+                {
+                    return BadRequest("No file uploaded.");
+                }
 
-        //    byte[] test = Convert.FromBase64String(image);
-        //}
+                return Ok("Upload successful");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

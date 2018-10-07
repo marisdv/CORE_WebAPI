@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CORE_WebAPI.Models;
 using CORE_WebAPI.Models.Reports;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace CORE_WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("MyPolicy")]
     public class ReportsController : ControllerBase
     {
 
@@ -21,8 +23,7 @@ namespace CORE_WebAPI.Controllers
         {
             _context = context;
         }
-
-        #region REPORTS
+        
         public struct ReportModel
         {
             public DateTime StartDate { get; set; }
@@ -169,7 +170,7 @@ namespace CORE_WebAPI.Controllers
         }
         #endregion
         
-        #region 5DailyShipments - graph (only this graph is necessary) //not working yet
+        #region 5DailyShipments - graph (only this graph is necessary)
         /*
         // POST: api/reports/dailyshipments
         [HttpPost("dailyshipments")]
@@ -177,7 +178,7 @@ namespace CORE_WebAPI.Controllers
         {
             try
             {
-                System.Diagnostics.Debugger.Break();
+               
                 DailyShipmentsReport report = new DailyShipmentsReport();
 
                 //TODO: restrict report to dates provided   
@@ -188,15 +189,34 @@ namespace CORE_WebAPI.Controllers
                                                 .getFullName();
 
                 List<DailyShipmentsReportLine> lines = new List<DailyShipmentsReportLine>();
-                
+
+                //foreach date in provided range
+                //count the number of shipments per day - .Count()?
+                DailyShipmentsReportLine line = new DailyShipmentsReportLine();
+                //foreach (Shipment shipment in _context.Shipment.Where(s=>s.ShipmentDate >= repModel.StartDate && s.ShipmentDate <= repModel.EndDate))
+                //{
+                //    line.date = shipment.ShipmentDate;
+                //} 
+                System.Diagnostics.Debugger.Break();
+                //var test = _context.Database.ExecuteSqlCommand("dbo.ShipmentAgentLines @StartDate = \""+repModel.StartDate+"\", @EndDate = \""+repModel.EndDate+"\"");
+                    //dbContext.Set().FromSql("dbo.SomeSproc @Id = {0}, @Name = {1}", 45, "Ada")
+                lines.Add(line);
+                //noOfShipments++
+                //create a LINE
+
                 //only check the days in the range given
                 //for each day in the date range given, count the number of shipments completed
+                //NOT THIS LOOP
                 foreach (Shipment shipment in _context.Shipment)
                 {
-                    DailyShipmentsReportLine line = new DailyShipmentsReportLine();
-                    
-                    lines.Add(line);
-                    
+                    foreach(DailyShipmentsReportLine myLine in lines)
+                    {
+                       if (shipment.ShipmentDate == line.date)
+                        {
+                            myLine.noOfShipments++;
+                        }
+
+                    }
                 }
                 report.Lines = lines;
                 System.Diagnostics.Debugger.Break();
@@ -354,33 +374,43 @@ namespace CORE_WebAPI.Controllers
                 //System.Diagnostics.Debugger.Break();
                 DashboardGraph report = new DashboardGraph();
 
-                DateTime now = new DateTime(2018, 10, 03);
-                //now = Convert.ToDateTime(2018-10-04);
-                //now = DateTime.Now;
+                //REMEMBER TO CHANGE THIS BACK  
+                //DateTime now = new DateTime(2018, 10, 04);
+                DateTime now = new DateTime();
+                now = DateTime.Now;
 
                 List<ShipmentStatusLine> lines = new List<ShipmentStatusLine>();
+                foreach (ShipmentStatus status in _context.ShipmentStatus)
+                {
+                    //System.Diagnostics.Debugger.Break();
+                    ShipmentStatusLine line = new ShipmentStatusLine();
+                    line.statusId = status.ShipmentStatusId;
+                    line.statusDescr = status.ShipmentStatusDescr;
+                    lines.Add(line);
+                }
+                
                 foreach (Shipment shipment in _context.Shipment)
                 {
                     if (shipment.ShipmentDate.Date == now.Date)
                     {
                         //System.Diagnostics.Debugger.Break();
-                        ShipmentStatusLine line = new ShipmentStatusLine();
-                        foreach (ShipmentStatus status in _context.ShipmentStatus)
+                        foreach (ShipmentStatusLine myLine in lines)
                         {
-                            //System.Diagnostics.Debugger.Break();
-                            line.statusDescr = status.ShipmentStatusDescr;
-                            if(shipment.ShipmentStatusId == status.ShipmentStatusId)
+                            if (shipment.ShipmentStatusId == myLine.statusId)
                             {
-                                line.statusCount++;
-                                lines.Add(line);
+                                myLine.statusCount++;
                             }
                         }
+                        
                         report.totalShipments++;
                     }
                 }
+                //System.Diagnostics.Debugger.Break();
 
-                System.Diagnostics.Debugger.Break();
+                lines.RemoveAll(a => a.statusCount == 0);
 
+                report.Lines = lines;
+                
                 return report;
             }
             catch (Exception ex)
@@ -393,6 +423,6 @@ namespace CORE_WebAPI.Controllers
 
         #region 2PopularArea - not gonna happen
         #endregion
-        #endregion
+
     }
 }

@@ -10,7 +10,7 @@ namespace CORE_WebAPI.Models.Reports
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string EmpFullName { get; set; }
-
+        public List<DailyShipmentsReportLine> Lines { get; set; }
 
         //count shipments for each date in a given range
     }
